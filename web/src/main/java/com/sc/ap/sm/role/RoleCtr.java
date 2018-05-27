@@ -1,25 +1,6 @@
-package com.sc.ap.admin.role;
+package com.sc.ap.sm.role;
 
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.log.StaticLog;
-import com.jfinal.aop.Before;
-import com.jfinal.aop.Clear;
-import com.jfinal.kit.StrKit;
-import com.jfinal.plugin.activerecord.Page;
-import com.jfinal.plugin.activerecord.tx.Tx;
-import com.jfinal.plugin.ehcache.CacheKit;
-import com.sc.ap.Consts;
-import com.sc.ap.model.Res;
-import com.sc.ap.model.Role;
-import com.sc.ap.model.RoleRes;
-import com.sc.ap.model.UserRole;
 import com.sc.ap.core.CoreController;
-import com.sc.ap.interceptors.AdminAAuthInterceptor;
-import com.sc.ap.interceptors.OpLogInterceptor;
-
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**

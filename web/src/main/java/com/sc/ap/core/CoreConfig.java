@@ -2,11 +2,12 @@ package com.sc.ap.core;
 
 
 import com.sc.ap.interceptors.UserInterceptor;
+import com.sc.ap.sm.dd.DdCtr;
+import com.sc.ap.sm.param.ParamCtr;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.druid.filter.stat.StatFilter;
 import com.alibaba.druid.wall.WallFilter;
-import com.cybermkd.mongo.plugin.MongoJFinalPlugin;
 import com.jfinal.config.Constants;
 import com.jfinal.config.Handlers;
 import com.jfinal.config.Interceptors;
@@ -28,7 +29,7 @@ import com.jfplugin.mail.MailPlugin;
 import com.sc.ap.CMNCtr;
 import com.sc.ap.Consts;
 import com.sc.ap.IndexCtr;
-import com.sc.ap.admin.HomeCtr;
+import com.sc.ap.sm.HomeCtr;
 import com.sc.ap.interceptors.AdminAAuthInterceptor;
 import com.sc.ap.interceptors.AdminIAuthInterceptor;
 import com.sc.ap.interceptors.ExceptionInterceptor;
@@ -70,6 +71,9 @@ public class CoreConfig extends JFinalConfig {
 			@Override
 			public void config() {
 				addInterceptor(new AdminAAuthInterceptor());
+				add("/api/param", ParamCtr.class);
+				add("/api/dd", DdCtr.class);
+
 			}
 		});
 		routes.add(new Routes() {

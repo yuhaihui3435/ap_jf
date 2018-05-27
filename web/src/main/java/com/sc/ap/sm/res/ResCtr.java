@@ -1,4 +1,4 @@
-package com.sc.ap.admin.res;
+package com.sc.ap.sm.res;
 
 
 import com.jfinal.aop.Before;
@@ -18,7 +18,7 @@ import java.util.List;
  * 简介
  * <p>
  * 项目名称:  [cms]
- * 包:       [com.dbd.cms.controller.admin]
+ * 包:       [com.dbd.cms.controller.sm]
  * 类名称:    [ResCtr]
  * 类描述:    [菜单管理]
  * 创建人:    [于海慧]

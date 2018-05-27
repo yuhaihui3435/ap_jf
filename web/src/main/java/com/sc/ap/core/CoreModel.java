@@ -1,14 +1,13 @@
 package com.sc.ap.core;
 
 import cn.hutool.core.util.ArrayUtil;
-import com.jfinal.plugin.activerecord.Model;
-import com.jfinal.plugin.activerecord.Table;
-import com.jfinal.plugin.activerecord.TableMapping;
+import com.jfinal.plugin.activerecord.*;
 import com.sc.ap.Consts;
 import com.sc.ap.kits.DateKit;
 import org.jsoup.Jsoup;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -83,21 +82,39 @@ public abstract class CoreModel<M extends CoreModel<M>> extends Model<M> {
 				: Consts.STATUS.forbidden.getValTxt());
 	}
 
-	public List<M> findByPropEQ(String name, Object val) {
-		return super.find("select * from " + getTableName() + " where " + name + "=?", val);
+	public List<M> findByPropEQ(String name, Object val){
+		return super.find("select * from "+getTableName()+" where "+name+"=?",val);
+	}
+	public List<M> findByPropEQWithDat(String name, Object val){
+		return super.find("select * from "+getTableName()+" where "+name+"=? and dAt is null",val);
+	}
+	public M findFristByPropEQ(String name,Object val){
+		return super.findFirst("select * from "+getTableName()+" where "+name+"=?",val);
+	}
+	public List<M> findByPropEQAndIdNEQ(String name, Object val,Object id){
+		return super.find("select * from "+getTableName()+" where "+name+"=? and id!=?",val,id);
+	}
+	public List<M> findByPropEQAndIdNEQWithDat(String name, Object val,Object id){
+		return super.find("select * from "+getTableName()+" where "+name+"=? and id!=? and dAt is null",val,id);
 	}
 
-	public M findFristByPropEQ(String name, Object val) {
-		return super.findFirst("select * from " + getTableName() + " where " + name + "=?", val);
+
+	public List<M> findByPropLIKE(String name, String val){
+		return super.find("select * from "+getTableName()+" where "+name+" like ?","%"+val+"%");
 	}
 
-	public List<M> findByPropLIKE(String name, String val) {
-		return super.find("select * from " + getTableName() + " where " + name + " like ?", "%" + val + "%");
+	public List<M> findByAndCond( Map<String,String> cond){
+		SqlPara sqlPara=Db.getSqlPara("queryByAndCond",cond);
+		return super.find(sqlPara);
 	}
 
-	public List<M> findAll() {
-		return super.find("select * from " + getTableName());
+	public Page<M> pageByAndCond( Map<String,String> cond,int pn,int ps){
+		SqlPara sqlPara=Db.getSqlPara("queryByAndCond",cond);
+		return super.paginate(pn,ps,sqlPara);
 	}
+
+
+
 
 
 	public  String getTableName(){

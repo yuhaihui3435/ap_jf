@@ -1,4 +1,4 @@
-package com.sc.ap.admin;
+package com.sc.ap.sm;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
@@ -15,7 +15,6 @@ import com.jfinal.plugin.ehcache.CacheKit;
 import com.jfinal.render.JsonRender;
 import com.sc.ap.Consts;
 import com.sc.ap.model.LogOp;
-import com.sc.ap.model.Res;
 import com.sc.ap.model.User;
 import com.sc.ap.core.CoreController;
 import com.sc.ap.interceptors.AdminAAuthInterceptor;

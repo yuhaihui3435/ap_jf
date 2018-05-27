@@ -1,6 +1,7 @@
-package com.sc.ap.admin.param;
+package com.sc.ap.sm.param;
 
 import com.jfinal.aop.Before;
+import com.jfinal.core.ActionKey;
 import com.jfinal.plugin.activerecord.tx.Tx;
 import com.sc.ap.model.Param;
 import com.sc.ap.core.CoreController;
@@ -14,11 +15,13 @@ import java.util.Map;
 /**
  * Created by yuhaihui8913 on 2017/12/1.
  */
+
 public class ParamCtr extends CoreController {
 
     /**
      * 查询系统设置参数
      */
+    @ActionKey("/api/param/json")
     public void getSettingJSON() {
         List<Param> paramList = Param.dao.find("select * from " + Param.TABLE);
         Map<String,String> map=new HashMap<>();
@@ -32,6 +35,7 @@ public class ParamCtr extends CoreController {
      * 系统参数设置
      *
      */
+    @ActionKey("/api/param/save")
     @Before(Tx.class)
     public void save() {
 //        List<UploadFile> fileList = getFiles();

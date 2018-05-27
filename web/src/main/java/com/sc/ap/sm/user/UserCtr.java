@@ -1,25 +1,6 @@
-package com.sc.ap.admin.user;
+package com.sc.ap.sm.user;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSONObject;
-import com.jfinal.aop.Before;
-import com.jfinal.aop.Clear;
-import com.jfinal.plugin.activerecord.Page;
-import com.jfinal.plugin.activerecord.tx.Tx;
-import com.jfinal.plugin.ehcache.CacheKit;
-import com.sc.ap.Consts;
-import com.sc.ap.model.Role;
-import com.sc.ap.model.User;
-import com.sc.ap.model.UserRole;
 import com.sc.ap.core.CoreController;
-import com.sc.ap.interceptors.AdminAAuthInterceptor;
-import com.sc.ap.kits.ext.BCrypt;
-
-import java.math.BigInteger;
-import java.util.Date;
-import java.util.List;
 
 
 /**

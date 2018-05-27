@@ -23,12 +23,10 @@ public class AdminAAuthInterceptor implements Interceptor{
     public void intercept(Invocation invocation) {
         CoreController controller=(CoreController) invocation.getController();
         String ak=invocation.getActionKey();
-        User user=controller.getAttr(Consts.CURR_USER);
         HttpServletRequest request=controller.getRequest();
         boolean flag=false;
         Set<String> resStrs=controller.getAttr(Consts.CURR_USER_RESES);
-
-        if(resStrs.contains(ak)){
+        if(resStrs!=null&&resStrs.contains(ak)){
             flag=true;
         }
 
@@ -40,7 +38,7 @@ public class AdminAAuthInterceptor implements Interceptor{
             invocation.invoke();
         } else {
             if(ReqKit.isAjaxRequest(controller.getRequest())){
-                controller.renderUnauthorizationJSON("admin");
+                controller.renderUnauthorizationJSON("sm");
             }else {
                 throw new CoreException("访问权限认证失败！");
             }

@@ -1,4 +1,4 @@
-package com.sc.ap.admin.role;
+package com.sc.ap.sm.role;
 
 import com.jfinal.core.Controller;
 import com.sc.ap.Consts;
@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * 简介
  * <p>
- * 项目名称: [cms] 包: [com.dbd.cms.controller.admin.role] 类名称: [RoleValidator] 类描述:
+ * 项目名称: [cms] 包: [com.dbd.cms.controller.sm.role] 类名称: [RoleValidator] 类描述:
  * [] 创建人: [于海慧] 创建时间: [2016/12/6] 修改人: [] 修改时间: [] 修改备注: [] 版本: [v1.0]
  */
 public class RoleValidator extends CoreValidator {

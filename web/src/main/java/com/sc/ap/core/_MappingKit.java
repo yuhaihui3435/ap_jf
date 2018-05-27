@@ -1,14 +1,7 @@
 package com.sc.ap.core;
 
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
-import com.sc.ap.model.LogOp;
-import com.sc.ap.model.Param;
-import com.sc.ap.model.Res;
-import com.sc.ap.model.Role;
-import com.sc.ap.model.RoleRes;
-
-import com.sc.ap.model.User;
-import com.sc.ap.model.UserRole;
+import com.sc.ap.model.*;
 
 
 /**
@@ -27,7 +20,7 @@ public class _MappingKit {
 
 	public static void mapping(ActiveRecordPlugin arp) {
 
-		arp.addMapping("log_op", "id", LogOp.class);
+		arp.addMapping("s_log_op", "id", LogOp.class);
 
 		arp.addMapping("s_param", "id", Param.class);
 		arp.addMapping("s_res", "id", Res.class);
@@ -36,6 +29,7 @@ public class _MappingKit {
 
 		arp.addMapping("s_user", "id", User.class);
 		arp.addMapping("s_user_role", "id", UserRole.class);
+		arp.addMapping("s_dd","id",Dd.class);
 
 	}
 }

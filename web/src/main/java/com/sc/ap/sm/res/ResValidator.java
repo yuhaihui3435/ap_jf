@@ -1,13 +1,8 @@
-package com.sc.ap.admin.res;
+package com.sc.ap.sm.res;
 
 
 import com.jfinal.core.Controller;
-import com.jfinal.kit.LogKit;
-import com.sc.ap.Consts;
-import com.sc.ap.model.Res;
 import com.sc.ap.core.CoreValidator;
-
-import java.util.List;
 
 /**
  * Created by yuhaihui8913 on 2016/12/6.

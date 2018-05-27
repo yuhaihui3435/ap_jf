@@ -3,6 +3,7 @@ package com.sc.ap.core;
 import cn.hutool.log.StaticLog;
 import com.jfinal.plugin.ehcache.CacheKit;
 import com.sc.ap.Consts;
+import com.sc.ap.model.Dd;
 import com.sc.ap.model.Param;
 import java.util.List;
 
@@ -13,9 +14,9 @@ public class CoreData {
 
 	public static void loadAllCache() {
 		loadParam();
-//		loadTax();
+		loadDd();
 	}
-
+	//数据系统参数
 	public static void loadParam() {
 		List<Param> list = Param.dao.find("select * from " + Param.TABLE);
 		CacheKit.removeAll(Consts.CACHE_NAMES.paramCache.name());
@@ -26,17 +27,17 @@ public class CoreData {
         }
         StaticLog.info("系统参数加载成功");
 	}
-
-//	public static void loadTax() {
-//		CacheKit.removeAll(Consts.CACHE_NAMES.taxonomy.name());
-//		List<Taxonomy> list = Taxonomy.dao.findAllModule();
-//		List<Taxonomy> list1 = null;
-//		for (Taxonomy taxonomy : list) {
-//			list1 = Taxonomy.dao.findByModuleExcept(taxonomy.getModule());
-//			CacheKit.put(Consts.CACHE_NAMES.taxonomy.name(), taxonomy.getModule().concat("List"), list1);
-//			for (Taxonomy taxonomy1 : list1) {
-//				CacheKit.put(Consts.CACHE_NAMES.taxonomy.name(), taxonomy1.getId().toString(), taxonomy1);
-//			}
-//		}
-//	}
+	//读取数据字典
+	public static void loadDd() {
+		CacheKit.removeAll(Consts.CACHE_NAMES.dd.name());
+		List<Dd> list = Dd.dao.findParentAll();
+		List<Dd> list1 = null;
+		for (Dd dd : list) {
+			list1 = dd.getChildren();
+			CacheKit.put(Consts.CACHE_NAMES.dd.name(), dd.getDict().concat("List"), list1);
+			for (Dd dd1 : list1) {
+				CacheKit.put(Consts.CACHE_NAMES.dd.name(), "id_"+dd.getId(), dd);
+			}
+		}
+	}
 }

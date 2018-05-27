@@ -1,13 +1,7 @@
-package com.sc.ap.admin.user;
+package com.sc.ap.sm.user;
 
 import com.jfinal.core.Controller;
-import com.jfinal.kit.LogKit;
-import com.sc.ap.Consts;
-import com.sc.ap.model.User;
 import com.sc.ap.core.CoreValidator;
-
-import java.math.BigInteger;
-import java.util.List;
 
 /**
  * Created by yuhaihui8913 on 2017/12/1.

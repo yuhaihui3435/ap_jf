@@ -19,20 +19,20 @@ public abstract class BaseDd<M extends BaseDd<M>> extends CoreModel<M> implement
 	}
 
 
-	public void setCode(String code) {
-		set("code", code);
+	public void setVal(String val) {
+		set("val", val);
 	}
 	
-	public String getCode() {
-		return getStr("code");
+	public String getVal() {
+		return getStr("val");
 	}
 
-	public void setTxt(String txt) {
-		set("txt", txt);
+	public void setName(String name) {
+		set("name", name);
 	}
 	
-	public String getTxt() {
-		return getStr("txt");
+	public String getName() {
+		return getStr("name");
 	}
 
 	public void setOpId(Integer opId) {
@@ -43,12 +43,12 @@ public abstract class BaseDd<M extends BaseDd<M>> extends CoreModel<M> implement
 		return getInt("opId");
 	}
 
-	public void setModule(String module) {
-		set("module", module);
+	public void setDict(String dict) {
+		set("dict", dict);
 	}
 	
-	public String getModule() {
-		return getStr("module");
+	public String getDict() {
+		return getStr("dict");
 	}
 
 	public void setIdx(Integer idx) {
@@ -59,12 +59,12 @@ public abstract class BaseDd<M extends BaseDd<M>> extends CoreModel<M> implement
 		return getInt("idx");
 	}
 
-	public void setParentId(Long parentId) {
-		set("parentId", parentId);
+	public void setPId(Long pId) {
+		set("pId", pId);
 	}
 	
-	public Long getParentId() {
-		return getLong("parentId");
+	public Long getPId() {
+		return getLong("pId");
 	}
 
 	public void setLAt(java.util.Date lAt) {

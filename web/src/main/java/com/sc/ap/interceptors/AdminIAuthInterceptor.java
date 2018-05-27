@@ -31,7 +31,7 @@ public class AdminIAuthInterceptor implements Interceptor {
 					"select * from s_user where status='0' and id=? ", new BigInteger(userId));
 			if (user == null) {
 				if (ReqKit.isAjaxRequest(controller.getRequest())) {
-					controller.renderUnauthenticationJSON("admin");
+					controller.renderUnauthenticationJSON("sm");
 
 				} else {
 					throw new CoreException("你的账户被停用");
@@ -47,7 +47,7 @@ public class AdminIAuthInterceptor implements Interceptor {
 		} else {
 			CookieKit.remove(controller, Consts.USER_ACCESS_TOKEN);
 			if (ReqKit.isAjaxRequest(controller.getRequest())) {
-				controller.renderUnauthenticationJSON("admin");
+				controller.renderUnauthenticationJSON("sm");
 			} else {
 				throw new CoreException("身份认证失败，请登录！");
 			}
