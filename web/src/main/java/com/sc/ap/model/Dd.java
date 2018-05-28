@@ -40,8 +40,8 @@ public class Dd extends BaseDd<Dd> {
 		Kv kv= Kv.create();
 		kv.put("name=",dd.getName());
 		kv.put("dict=",dd.getDict());
-		kv.put("id<>",dd.getId());
-		kv.put("dAt","is null");
+		kv.put("id<> ",dd.getId());
+		kv.put("dAt","");
 		Kv  kv1=Kv.by("cond",kv);
 		kv1.put("table",dd.getTableName());
 		return  Dd.dao.findByAndCond(kv1);
@@ -51,8 +51,8 @@ public class Dd extends BaseDd<Dd> {
 		Kv kv= Kv.create();
 		kv.put("val=",dd.getVal());
 		kv.put("dict=",dd.getDict());
-		kv.put("id<>",dd.getId());
-		kv.put("dAt","is null");
+		kv.put("id<> ",dd.getId());
+		kv.put("dAt","");
 		Kv  kv1=Kv.by("cond",kv);
 		kv1.put("table",dd.getTableName());
 		return  Dd.dao.findByAndCond(kv1);
