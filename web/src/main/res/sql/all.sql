@@ -1,5 +1,5 @@
-#namespace("userSql")
-  ###include("user.sql")
+#namespace("genSql")
+  #include("gen.sql")
 #end
 
 #sql("queryByAndCond")

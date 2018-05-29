@@ -30,6 +30,8 @@ public class _MappingKit {
 		arp.addMapping("s_user", "id", User.class);
 		arp.addMapping("s_user_role", "id", UserRole.class);
 		arp.addMapping("s_dd","id",Dd.class);
+		arp.addMapping("s_gen_cfg","id",GenCfg.class);
+		arp.addMapping("s_gen_source","id",GenSource.class);
 
 	}
 }

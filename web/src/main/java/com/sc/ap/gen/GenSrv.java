@@ -1,5 +1,6 @@
 package com.sc.ap.gen;
 
+import com.jfinal.core.JFinal;
 import com.jfinal.kit.Prop;
 import com.jfinal.kit.PropKit;
 import com.jfinal.kit.StrKit;
@@ -11,6 +12,7 @@ import com.jfinal.plugin.activerecord.generator.TableMeta;
 import com.jfinal.plugin.activerecord.generator.TypeMapping;
 import com.jfinal.plugin.druid.DruidPlugin;
 import com.sc.ap.core.CoreException;
+import com.sc.ap.model.User;
 
 import javax.sql.DataSource;
 import java.sql.*;

@@ -2,6 +2,7 @@ package com.sc.ap.core;
 
 
 import com.sc.ap.gen.GenCtr;
+import com.sc.ap.gen.GenSourceCtr;
 import com.sc.ap.interceptors.UserInterceptor;
 import com.sc.ap.sm.dd.DdCtr;
 import com.sc.ap.sm.param.ParamCtr;
@@ -75,6 +76,7 @@ public class CoreConfig extends JFinalConfig {
 				add("/api/param", ParamCtr.class);
 				add("/api/dd", DdCtr.class);
 				add("/api/gen", GenCtr.class);
+				add("/api/genSource", GenSourceCtr.class);
 
 			}
 		});
