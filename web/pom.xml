@@ -126,17 +126,12 @@
 			<groupId>cn.fsdev</groupId>
 			<artifactId>jfinal-mail-plugin</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.lowagie</groupId>
-			<artifactId>itext</artifactId>
-			<version>2.1.7</version>
-		</dependency>
-		<dependency>
-			<groupId>com.lowagie</groupId>
-			<artifactId>itext-rtf</artifactId>
-			<version>2.1.7</version>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>com.cgs.db</groupId>-->
+			<!--<artifactId>db-meta</artifactId>-->
+		<!--</dependency>-->
 	</dependencies>
+
 	<build>
 		<finalName>ap_jf</finalName>
 	</build>

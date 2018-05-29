@@ -1,6 +1,7 @@
 package com.sc.ap.core;
 
 
+import com.sc.ap.gen.GenCtr;
 import com.sc.ap.interceptors.UserInterceptor;
 import com.sc.ap.sm.dd.DdCtr;
 import com.sc.ap.sm.param.ParamCtr;
@@ -73,6 +74,7 @@ public class CoreConfig extends JFinalConfig {
 				addInterceptor(new AdminAAuthInterceptor());
 				add("/api/param", ParamCtr.class);
 				add("/api/dd", DdCtr.class);
+				add("/api/gen", GenCtr.class);
 
 			}
 		});
