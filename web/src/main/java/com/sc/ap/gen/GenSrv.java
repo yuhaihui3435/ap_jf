@@ -25,15 +25,14 @@ public class GenSrv {
     protected Dialect dialect = null;
 
     public GenSrv(){
-        metaBuilder=new MetaBuilder(getDataSource());
 
     }
 
-    public static DataSource getDataSource() {
-        Prop p = PropKit.use("config.properties");
-        DruidPlugin druidPlugin = new DruidPlugin(p.get("db.default.url"), p.get("db.default.user"), p.get("db.default.password"));
+    public  GenSrv initDataSource(String url,String user,String pwd) {
+        DruidPlugin druidPlugin = new DruidPlugin(url, user, pwd);
         druidPlugin.start();
-        return druidPlugin.getDataSource();
+        metaBuilder=new MetaBuilder(druidPlugin.getDataSource());
+        return this;
     }
 
 

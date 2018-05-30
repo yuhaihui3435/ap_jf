@@ -1,11 +1,12 @@
 package com.sc.ap.gen;
 
+import com.jfinal.aop.Before;
 import com.jfinal.kit.Kv;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.sc.ap.core.CoreController;
 import com.sc.ap.model.GenSource;
-import com.sun.tools.javac.jvm.Gen;
+
 
 /**
  * 简介
@@ -28,13 +29,13 @@ public class GenSourceCtr extends CoreController {
         Page<GenSource> page=GenSource.dao.paginate(getPN(),getPS(), Db.getSqlPara("genSql.byNameLike", Kv.by("name",name)));
         renderJson(page);
     }
-
+    @Before({GenSourceValidator.class})
     public void save(){
         GenSource genSource=getApModel(GenSource.class);
         genSource.save();
         renderSuccessJSON("数据源保存成功");
     }
-
+    @Before({GenSourceValidator.class})
     public void update(){
         GenSource genSource=getApModel(GenSource.class);
         genSource.update();
