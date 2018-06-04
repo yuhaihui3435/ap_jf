@@ -88,7 +88,7 @@ public abstract class CoreModel<M extends CoreModel<M>> extends Model<M> {
 	public List<M> findByPropEQWithDat(String name, Object val){
 		return super.find("select * from "+getTableName()+" where "+name+"=? and dAt is null",val);
 	}
-	public M findFristByPropEQ(String name,Object val){
+	public M findFirstByPropEQ(String name,Object val){
 		return super.findFirst("select * from "+getTableName()+" where "+name+"=?",val);
 	}
 	public List<M> findByPropEQAndIdNEQ(String name, Object val,Object id){
@@ -103,12 +103,17 @@ public abstract class CoreModel<M extends CoreModel<M>> extends Model<M> {
 		return super.find("select * from "+getTableName()+" where "+name+" like ?","%"+val+"%");
 	}
 
-	public List<M> findByAndCond( Map<String,String> cond){
+	public List<M> findByAndCond( Map<String,Object> cond){
 		SqlPara sqlPara=Db.getSqlPara("queryByAndCond",cond);
 		return super.find(sqlPara);
 	}
 
-	public Page<M> pageByAndCond( Map<String,String> cond,int pn,int ps){
+	public M findFirstByAndCond( Map<String,Object> cond){
+		SqlPara sqlPara=Db.getSqlPara("queryByAndCond",cond);
+		return super.findFirst(sqlPara);
+	}
+
+	public Page<M> pageByAndCond( Map<String,Object> cond,int pn,int ps){
 		SqlPara sqlPara=Db.getSqlPara("queryByAndCond",cond);
 		return super.paginate(pn,ps,sqlPara);
 	}
