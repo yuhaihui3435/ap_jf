@@ -62,6 +62,7 @@ public class GenSrv {
             genCfgCol=genCfgCols.get(i);
             genCfgCol1=genCfgColSrv.findByTblIdAndCol(tblId,genCfgCol.getCol());
             if (genCfgCol1==null){
+                genCfgCol.setTblId(tblId);
                 genCfgCol.save();
             }else{
                 genCfgCol1.setTpe(genCfgCol.getTpe());
@@ -77,10 +78,14 @@ public class GenSrv {
             genCfgTbl1 = genCfgTblSrv.findByGsIdAndTbl(genCfgTbl.getGsId(), genCfgTbl.getTbl());
             if (genCfgTbl1 == null) {
                 genCfgTbl.save();
+                saveCol(genCfgTbl.getGenCfgColList(),genCfgTbl.getId());
+            }else{
+                saveCol(genCfgTbl.getGenCfgColList(),genCfgTbl1.getId());
             }
         }
 
     }
+
 
 
 }

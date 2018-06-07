@@ -1,15 +1,13 @@
 package com.sc.ap.core;
 
 import cn.hutool.core.util.ArrayUtil;
+import com.jfinal.kit.Kv;
 import com.jfinal.plugin.activerecord.*;
 import com.sc.ap.Consts;
 import com.sc.ap.kits.DateKit;
 import org.jsoup.Jsoup;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by 于海慧（125227112@qq.com） on 2016/11/30.
@@ -109,7 +107,7 @@ public abstract class CoreModel<M extends CoreModel<M>> extends Model<M> {
 	}
 
 	public M findFirstByAndCond( Map<String,Object> cond){
-		SqlPara sqlPara=Db.getSqlPara("queryByAndCond",cond);
+		SqlPara sqlPara=Db.getSqlPara("queryFirstByAndCond",cond);
 		return super.findFirst(sqlPara);
 	}
 
@@ -122,9 +120,17 @@ public abstract class CoreModel<M extends CoreModel<M>> extends Model<M> {
 
 
 
-	public  String getTableName(){
+	public String getTableName(){
 		return TableMapping.me().getTable(getClass()).getName();
 	};
+
+
+	public static Kv buildParamMap(Class clz,Kv cond){
+		Kv kv=Kv.by("table",TableMapping.me().getTable(clz).getName());
+		kv.put("cond",cond);
+		return kv;
+	}
+
 
 	public String getLAtStr(){
 		String[] ans=_getAttrNames();

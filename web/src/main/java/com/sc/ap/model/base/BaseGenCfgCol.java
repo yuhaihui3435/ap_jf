@@ -18,12 +18,12 @@ public abstract class BaseGenCfgCol<M extends BaseGenCfgCol<M>> extends CoreMode
 		return getInt("id");
 	}
 
-	public void setTblId(String tblId) {
+	public void setTblId(Integer tblId) {
 		set("tblId", tblId);
 	}
 	
-	public String getTblId() {
-		return getStr("tblId");
+	public Integer getTblId() {
+		return getInt("tblId");
 	}
 
 	public void setCol(String col) {
@@ -65,5 +65,7 @@ public abstract class BaseGenCfgCol<M extends BaseGenCfgCol<M>> extends CoreMode
 	public Integer getOpId() {
 		return getInt("opId");
 	}
+
+
 
 }
