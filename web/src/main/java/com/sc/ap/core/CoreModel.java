@@ -118,8 +118,6 @@ public abstract class CoreModel<M extends CoreModel<M>> extends Model<M> {
 
 
 
-
-
 	public String getTableName(){
 		return TableMapping.me().getTable(getClass()).getName();
 	};

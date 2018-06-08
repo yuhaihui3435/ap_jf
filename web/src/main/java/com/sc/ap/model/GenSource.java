@@ -8,4 +8,16 @@ import com.sc.ap.model.base.BaseGenSource;
 @SuppressWarnings("serial")
 public class GenSource extends BaseGenSource<GenSource> {
 	public static final GenSource dao = new GenSource().dao();
+	public String getBaseModelPackage(){
+		return getBasePackage()+".model.base";
+	}
+	public String getModelPackage(){
+		return getBasePackage()+".model";
+	}
+	public String getServicePakcage(){
+		return getBasePackage()+".service";
+	}
+	public String getControllerPackage(){
+		return getBasePackage()+".controller";
+	}
 }

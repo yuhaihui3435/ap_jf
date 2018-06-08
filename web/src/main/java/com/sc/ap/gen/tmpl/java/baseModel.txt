@@ -1,0 +1,37 @@
+package #(baseModelPackage);
+
+import com.jfinal.plugin.activerecord.Model;
+import com.jfinal.plugin.activerecord.IBean;
+import #(basePackage).core.CoreModel;
+
+/**
+ * Generated ap-jf.
+ */
+#if (generateChainSetter)
+@SuppressWarnings({"serial", "unchecked"})
+#else
+@SuppressWarnings("serial")
+#end
+public abstract class Base#(tbl.className)<M extends Base#(tbl.className)<M>> extends CoreModel<M> implements IBean {
+
+#set(b = generateChainSetter??false)
+#for(cm : tbl.genCfgColList)
+	#set(argName = javaKeyword.contains(cm.col) ? '_' + cm.col : cm.col)
+	public #(b ? 'M' : 'void') set#(firstCharToUpperCase(cm.col))(#(cm.tpe) #(argName)) {
+		set("#(cm.col)", #(argName));
+		#if (b)
+		return (M)this;
+		#end
+	}
+
+	#set(getterOfModel = getterTypeMap.get(cm.tpe))
+	#if (isBlank(getterOfModel))
+		#set(getterOfModel = 'get')
+	#end
+	public #(cm.Tpe) get#(firstCharToUpperCase(cm.col))() {
+		return #(getterOfModel)("#(cm.col)");
+	}
+
+#end
+}
+

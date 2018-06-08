@@ -25,7 +25,7 @@ import java.math.BigInteger;
 
 /**
  * 参考：spring-security https://github.com/spring-projects/spring-security/
- * blob/master/web/src/main/java/org/springframework/security/
+ * blob/master/web/src/main.txt/java/org/springframework/security/
  * web/authentication/rememberme/TokenBasedRememberMeServices.java
  * ....AbstractRememberMeServices.java
  */

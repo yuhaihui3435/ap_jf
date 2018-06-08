@@ -3,8 +3,10 @@ package com.sc.ap.model;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
+import com.jfinal.kit.StrKit;
 import com.sc.ap.model.base.BaseGenCfgTbl;
 
+import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +18,11 @@ public class GenCfgTbl extends BaseGenCfgTbl<GenCfgTbl> {
 
 	private String modelName;
 
+	private String className;
+
+
 	public static final GenCfgTbl dao = new GenCfgTbl().dao();
+
 	private List<GenCfgCol> genCfgColList=new ArrayList<>();
 
 	public void addGenCfgCol(GenCfgCol genCfgCol){
@@ -38,32 +44,21 @@ public class GenCfgTbl extends BaseGenCfgTbl<GenCfgTbl> {
 		this.genCfgColList = genCfgColList;
 	}
 
-	public String getModelName(){
-		if(StrUtil.isBlank(modelName)) {
-			String tblName = getTbl();
-			String[] strings = tblName.split("_");
-			StringBuilder stringBuilder = new StringBuilder();
-			if (ArrayUtil.contains(prefixs(), strings[0])) {
-				for (int i = 1; i < strings.length; i++) {
-					stringBuilder.append(StrUtil.upperFirst(strings[i]));
-				}
-			} else {
-				for (int i = 0; i < strings.length; i++) {
-					stringBuilder.append(StrUtil.upperFirst(strings[i]));
-				}
-			}
-			modelName = stringBuilder.toString();
-		}
+
+	public String getModelName() {
 		return modelName;
 	}
 
-	public String[] prefixs(){
-		GenSource genSource=GenSource.dao.findById(getGsId());
-		String prefixs=genSource.getRemovePrefix();
-		String[] strings=prefixs.split(",");
-		return strings;
+	public void setModelName(String modelName) {
+		this.modelName = modelName;
 	}
 
+	public String getClassName() {
 
+		return StrUtil.isNotBlank(modelName)?StrKit.firstCharToUpperCase(modelName):null;
+	}
 
+	public void setClassName(String className) {
+		this.className = className;
+	}
 }

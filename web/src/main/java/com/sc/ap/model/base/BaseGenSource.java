@@ -114,4 +114,12 @@ public abstract class BaseGenSource<M extends BaseGenSource<M>> extends CoreMode
 		return getStr("remark");
 	}
 
+	public void setBasePackage(String basePackage) {
+		set("basePackage", basePackage);
+	}
+
+	public String getBasePackage() {
+		return getStr("basePackage");
+	}
+
 }

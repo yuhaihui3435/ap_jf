@@ -1,0 +1,43 @@
+package #(basePackage).controller.#(tbl.modelName);
+import #(basePackage).core.CoreController;
+import #(basePackage).service.#(tbl.modelName).#(tbl.className)Service;
+import com.jfinal.kit.LogKit;
+import com.jfinal.aop.Duang;
+import java.util.*;
+import com.jfinal.aop.Before;
+import com.jfinal.plugin.activerecord.tx.Tx;
+import com.jfinal.kit.Kv;
+
+pubilc class #(tbl.className)Controller extends CoreController{
+
+    private #(tbl.className)Service #(tbl.modelName)Service=Duang.duang(#(tbl.className).class.getSimpleName(),#(tbl.className).class);
+
+    public void list(){
+        #(tbl.className) #(tbl.modelName)=getApModel(#(tbl.className).class);
+
+
+    }
+
+    public void page(){
+
+    }
+    @Before({#(className)Validator.class})
+    public void save(){
+
+    }
+    @Before({#(className)Validator.class})
+    public void update(){
+
+    }
+    @Before({#(className)Validator.class})
+    public void del(){
+
+    }
+
+    public void view(){
+
+    }
+
+
+
+}

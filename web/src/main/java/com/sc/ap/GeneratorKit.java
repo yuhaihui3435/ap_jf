@@ -21,14 +21,14 @@ public class GeneratorKit {
 	}
 	
 	public static void main(String[] args) {
-		// base model 所使用的包名
-		String baseModelPackageName = "com.sc.ap.model.base";
-		// base model 文件保存路径
-		String baseModelOutputDir = "C:/work/tmp/GeneratorClass/model/base";
+		// base model.txt 所使用的包名
+		String baseModelPackageName = "com.sc.ap.model.txt.base";
+		// base model.txt 文件保存路径
+		String baseModelOutputDir = "C:/work/tmp/GeneratorClass/model.txt/base";
 		
-		// model 所使用的包名 (MappingKit 默认使用的包名)
-		String modelPackageName = "com.sc.ap.model";
-		// model 文件保存路径 (MappingKit 与 DataDictionary 文件默认保存路径)
+		// model.txt 所使用的包名 (MappingKit 默认使用的包名)
+		String modelPackageName = "com.sc.ap.model.txt";
+		// model.txt 文件保存路径 (MappingKit 与 DataDictionary 文件默认保存路径)
 		String modelOutputDir = baseModelOutputDir + "/..";
 		
 		// 创建生成器

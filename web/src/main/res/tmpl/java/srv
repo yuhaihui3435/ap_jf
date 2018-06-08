@@ -1,4 +1,0 @@
-package #(basePackage).srv.#(table.tbl);
-import #(basePackage).core.CoreService;
-
-

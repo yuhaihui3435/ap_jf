@@ -1,0 +1,25 @@
+package #(basePackage).service.#(tbl.modelName);
+import #(basePackage).core.CoreService;
+import #(basePackage).model.#(tbl.className)
+
+
+public class #(tbl.className)Service extends CoreService{
+
+    private static #(tbl.className) #(tbl.modelName)dao=#(tbl.className).dao;
+
+    public List<#(tbl.className)> findAll(#(tbl.className) #(tbl.modelName)){
+         Kv kv= Kv.create();
+         #for(col:tbl.genCfgColList)
+            #if(col.configJSON.equalQuery??false)
+         kv.put("#(col.col)=",#(tbl.modelName).get#(firstCharToUpperCase(col.col))());
+            #else if(col.configJSON.likeQuery??false)
+         kv.put("#(col.col) like","%"+#(tbl.modelName).get#(firstCharToUpperCase(col.col))()+"%");
+            #end
+         #end
+         kv=#(tbl.className).buildParamMap(#(tbl.className).class,kv);
+         return #(tbl.modelName)dao.findFirstByAndCond(kv);
+    }
+
+}
+
+
