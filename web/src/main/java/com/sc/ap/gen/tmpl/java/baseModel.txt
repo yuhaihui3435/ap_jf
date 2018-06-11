@@ -3,6 +3,8 @@ package #(baseModelPackage);
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.IBean;
 import #(basePackage).core.CoreModel;
+import com.sc.ap.kits.DateKit;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * Generated ap-jf.
@@ -18,7 +20,7 @@ public abstract class Base#(tbl.className)<M extends Base#(tbl.className)<M>> ex
 #for(cm : tbl.genCfgColList)
 	#set(argName = javaKeyword.contains(cm.col) ? '_' + cm.col : cm.col)
 	public #(b ? 'M' : 'void') set#(firstCharToUpperCase(cm.col))(#(cm.tpe) #(argName)) {
-		set("#(cm.col)", #(argName));
+		set("#(cm.orgCol)", #(argName));
 		#if (b)
 		return (M)this;
 		#end
@@ -28,8 +30,8 @@ public abstract class Base#(tbl.className)<M extends Base#(tbl.className)<M>> ex
 	#if (isBlank(getterOfModel))
 		#set(getterOfModel = 'get')
 	#end
-	public #(cm.Tpe) get#(firstCharToUpperCase(cm.col))() {
-		return #(getterOfModel)("#(cm.col)");
+	public #(cm.tpe) get#(firstCharToUpperCase(cm.col))() {
+		return #(getterOfModel)("#(cm.orgCol)");
 	}
 
 #end

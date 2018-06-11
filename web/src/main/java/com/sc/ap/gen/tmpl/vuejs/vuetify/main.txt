@@ -1,0 +1,304 @@
+<template>
+<v-container fluid grid-list-md >
+  <v-dialog v-model="dialog" persistent max-width="500px">
+      <v-card >
+        <v-card-title>
+          <span class="headline">{{title}}</span>
+        </v-card-title>
+        <v-card-text>
+            <v-form v-model="fValid" ref="form" lazy-validation>
+                <v-container grid-list-md>
+                  <v-layout wrap>
+                      #for(col:tbl.genCfgColList)
+                        #if((col.configJSON.inputType=='text'||col.configJSON.inputType=='textArea'))
+                           <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt='add'||#end#if(col.configJSON.updateShow??false)opt='update'#end">
+                              <v-text-field v-model="param.#(col.col)"  label="#(col.note)"
+                                  :rules="[
+                                  #if(col.configJSON.isRequired??false)rules.required,#end
+                                  #if(col.configJSON.isEmail??false)rules.email,#end
+                                  #if(col.configJSON.isPhone??false)rules.phone,#end
+                                  #if(col.configJSON.isNum??false)rules.digital,#end
+                                  #if(col.configJSON.isChart??false)rules.chart,#end
+                                  #if(col.configJSON.isChinese??false)rules.chinese,#end
+                                  #if(notBlank(col.configJSON.max??null))#if(col.configJSON.isRequired??false)(v) => !!v#else(v)=>!!!v#end&&v.length <= #(col.configJSON.max) || '最多 #(col.configJSON.max) 字符',#end
+                                  #if(notBlank(col.configJSON.min??null))#if(col.configJSON.isRequired??false)(v) => !!v#else(v)=>!!!v#end&&v.length >= #(col.configJSON.min) || '最少 #(col.configJSON.min) 字符',#end
+                                  ]"
+                                  #if(notBlank(col.configJSON.max??null)):counter="#(col.configJSON.max)"#end>
+                              </v-text-field>
+                           </v-flex>
+                        #end
+                        #if((col.configJSON.inputType=='date'))
+                           <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt='add'||#end#if(col.configJSON.updateShow??false)opt='update'#end">
+                              <v-menu
+                                        ref="#(col.col)Menu"
+                                        :close-on-content-click="false"
+                                        v-model="#(col.col)Menu"
+                                        :return-value.sync="date"
+                                        :nudge-right="40"
+                                        lazy
+                                        transition="scale-transition"
+                                        offset-y
+                                        full-width
+                                        max-width="290px"
+                                        min-width="290px"
+                                      >
+                                        <v-text-field
+                                          slot="activator"
+                                          v-model="#(tbl.modelName).#(col.col)"
+                                          label="#(col.note)"
+                                          prepend-icon="event"
+                                          readonly
+                                          :rules="[#if(col.configJSON.isRequired??false)rules.required,#end]"
+                                        ></v-text-field>
+                                        <v-date-picker v-model="#(tbl.modelName).#(col.col)" locale="zh-cn"  @input="$refs.#(col.col)Menu.save(#(tbl.modelName).#(col.col))"></v-date-picker>
+                                      </v-menu>
+                           </v-flex>
+                        #end
+                        #if((col.configJSON.inputType=='time'))
+                             <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt='add'||#end#if(col.configJSON.updateShow??false)opt='update'#end">
+                                                      <v-menu
+                                                                ref="#(col.col)Menu"
+                                                                :close-on-content-click="false"
+                                                                v-model="#(col.col)Menu"
+                                                                :return-value.sync="date"
+                                                                :nudge-right="40"
+                                                                lazy
+                                                                transition="scale-transition"
+                                                                offset-y
+                                                                full-width
+                                                                max-width="290px"
+                                                                min-width="290px"
+                                                              >
+                                                                <v-text-field
+                                                                  slot="activator"
+                                                                  v-model="#(tbl.modelName).#(col.col)"
+                                                                  label="#(col.note)"
+                                                                  prepend-icon="access_time"
+                                                                  readonly
+                                                                  :rules="[#if(col.configJSON.isRequired??false)rules.required,#end]"
+                                                                ></v-text-field>
+                                                                <v-date-picker v-model="#(tbl.modelName).#(col.col)" locale="zh-cn"  @input="$refs.#(col.col)Menu.save(#(tbl.modelName).#(col.col))"></v-date-picker>
+                                                              </v-menu>
+                             </v-flex>
+                        #end
+                        #if((col.configJSON.inputType=='time'))
+                            <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt='add'||#end#if(col.configJSON.updateShow??false)opt='update'#end">
+                                                                              <v-menu
+                                                                                        ref="#(col.col)Menu"
+                                                                                        :close-on-content-click="false"
+                                                                                        v-model="#(col.col)Menu"
+                                                                                        :return-value.sync="date"
+                                                                                        :nudge-right="40"
+                                                                                        lazy
+                                                                                        transition="scale-transition"
+                                                                                        offset-y
+                                                                                        full-width
+                                                                                        max-width="290px"
+                                                                                        min-width="290px"
+                                                                                      >
+                                                                                        <v-text-field
+                                                                                          slot="activator"
+                                                                                          v-model="#(tbl.modelName).#(col.col)"
+                                                                                          label="#(col.note)"
+                                                                                          prepend-icon="access_time"
+                                                                                          readonly
+                                                                                          :rules="[#if(col.configJSON.isRequired??false)rules.required,#end]"
+                                                                                        ></v-text-field>
+                                                                                        <v-date-picker v-model="#(tbl.modelName).#(col.col)" locale="zh-cn"  @input="$refs.#(col.col)Menu.save(#(tbl.modelName).#(col.col))"></v-date-picker>
+                                                                                      </v-menu>
+                            </v-flex>
+                        #end
+                      #end
+                  </v-layout>
+                </v-container>
+            </v-form>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="error darken-1" flat @click.native="dialog = false">关闭</v-btn>
+          <v-btn color="success darken-1" flat @click.native="save" :loading="loading" v-show="opt=='add'" :disabled="loading||!fValid">保存</v-btn>
+          <v-btn color="success darken-1" flat @click.native="update" v-show="opt=='update'" :loading="loading" :disabled="loading||!fValid">保存</v-btn>
+        </v-card-actions>
+      </v-card>
+  </v-dialog>
+  <v-dialog v-model="viewDialog" persistent max-width="500px">
+        <v-card >
+          <v-card-title>
+            <span class="headline">查看详细</span>
+          </v-card-title>
+          <v-card-text>
+              <v-form v-model="fValid" ref="form" lazy-validation>
+                  <v-container grid-list-md>
+                    <v-layout wrap>
+                        #for(col:tbl.genCfgColList)
+                          #if(col.configJSON.viewShow??false)
+                             <v-flex xs12 sm6 md4>
+                                #(tbl.modelName)View.#(col.col)
+                             </v-flex>
+                          #end
+                        #end
+                    </v-layout>
+                  </v-container>
+              </v-form>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="error darken-1" flat @click.native="viewDialog = false">关闭</v-btn>
+          </v-card-actions>
+        </v-card>
+    </v-dialog>
+  <v-layout row wrap>
+        <v-flex xs12 sm12 md12 >
+          <v-card >
+            <v-toolbar color="blue" dark>
+              <v-toolbar-title>#(tbl.note)列表</v-toolbar-title>
+              <v-spacer></v-spacer>
+            </v-toolbar>
+            <v-data-table :headers="#(tbl.modelName)Headers" :items="#(tbl.modelName)List" hide-actions class="elevation-1" no-data-text="数据为空" no-results-text="没有筛选到正确的数据">
+              <template slot="items" slot-scope="props">
+                 #for(col:tbl.genCfgColList)
+                 #if(col.tableShow??false)
+                    <td>{{ props.item.#(col.col) }}</td>
+                 #end
+                 #end
+                <td class=" layout px-0">
+                  <v-btn icon class="mx-0" @click="toEdit(props.item)">
+                    <v-icon color="teal">edit</v-icon>
+                  </v-btn>
+                  <v-btn icon class="mx-0" @click="del(props.item)">
+                    <v-icon color="pink">delete</v-icon>
+                  </v-btn>
+                  <v-btn icon class="mx-0" @click="view(props.item)">
+                      <v-icon color="teal">fas fa-eye</v-icon>
+                  </v-btn>
+                </td>
+              </template>
+          </v-data-table>
+          </v-card>
+        </v-flex>
+  </v-layout>
+</v-container>
+</template>
+<script>
+import { mapState } from "vuex";
+import Kit from "../../../libs/kit.js";
+export default {
+  data() {
+    return {
+      fValid: true,
+      valid: true,
+      #(tbl.modelName)Param:{},//列表查询参数数据对象
+      #(tbl.modelName)View:{},//查询详细数据对象
+      loading: false,
+      title: "新增#(tbl.note)",
+      rules: Kit.inputRules,
+      #(tbl.modelName)Headers: [
+        #for(col:tbl.genCfgColList)
+        #if(col.tableShow??false)
+        {
+          text: "#(col.note)",
+          #if(col.isSort??false)sortable: true,#else sortable: false, #end
+          value: "#(col.col)"
+        },
+        #end
+        #end
+        { text: "操作", sortable: false }
+      ],
+      dialog: false,
+      viewDialog:false,
+      opt: "",
+      dateFormatted:null,
+
+    };
+  },
+  computed: {
+    ...mapState({
+      #(tbl.modelName): state => state.#(tbl.modelName).#(tbl.modelName),
+      #(tbl.modelName)List: state => state.#(tbl.modelName).#(tbl.modelName)List,
+    })
+  },
+  mounted() {
+    this.refresh();
+  },
+
+  methods: {
+    refresh() {
+      this.$store.dispatch("page_#(tbl.modelName)",this.#(tbl.modelName)Param);
+    },
+    toAdd() {
+          this.$refs.form.reset();
+          this.opt = "add";
+          this.$store.commit("set#(tbl.className)", {});
+          this.title = "新增#(tbl.note)";
+          this.dialog = true;
+    },
+    toEdit(#(tbl.modelName)) {
+          this.$refs.form.reset();
+          this.opt = "update";
+          this.$store.commit("set#(tbl.className)", dd);
+          this.dialog = true;
+          this.title = "修改#(tbl.note)" ;
+    },
+    save() {
+      let vm = this;
+      this.loading = true;
+      if (this.$refs.form.validate()) {
+        this.$store
+          .dispatch("save_#(tbl.modelName)")
+          .then(res => {
+            vm.loading = false;
+            if (res.resCode == "success") {
+              vm.dialog = false;
+              vm.refresh();
+            }
+          })
+          .catch(() => {
+            vm.loading = false;
+            vm.dialog = false;
+          });
+      }
+    },
+    update(#(tbl.modelName)) {
+      let vm = this;
+      this.loading = true;
+      if (this.$refs.form.validate()) {
+        this.$store
+          .dispatch("update_#(tbl.modelName)")
+          .then(res => {
+            vm.loading = false;
+            if (res.resCode == "success") {
+              vm.dialog = false;
+              vm.refresh();
+            }
+          })
+          .catch(() => {
+            vm.loading = false;
+            vm.dialog = false;
+          });
+      }
+    },
+    del(#(tbl.modelName)) {
+      let vm = this;
+      this.$APDialog.confirm(function(ret) {
+        if (ret) {
+          vm.$store.dispatch("del_#(tbl.modelName)", { id: #(tbl.modelName).id }).then(res => {
+            if (res.resCode == "success") {
+                vm.refresh();
+            }
+          });
+        } else {
+        }
+      });
+    },
+    view(#(tbl.modelName)){
+        let vm = this;
+        vm.viewDialog=true;
+        vm.$store.dispatch("get_#(tbl.modelName)", { id: #(tbl.modelName).id }).then(res=>{
+            vm.#(tbl.modelName)View=res;
+        })
+    }
+  }
+};
+</script>
+<style>
+</style>

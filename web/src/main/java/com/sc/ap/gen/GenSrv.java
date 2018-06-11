@@ -1,9 +1,7 @@
 package com.sc.ap.gen;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.ZipUtil;
-import com.alibaba.fastjson.JSON;
 import com.jfinal.aop.Before;
 import com.jfinal.aop.Duang;
 import com.jfinal.kit.*;
@@ -39,11 +37,9 @@ public class GenSrv {
     protected String srvtemplate = "/com/sc/ap/gen/tmpl/java/srv.txt";
     protected String ctrtemplate = "/com/sc/ap/gen/tmpl/java/ctr.txt";
     protected String validatortemplate = "/com/sc/ap/gen/tmpl/java/validator.txt";
-    protected String vueMaintemplate = "/com/sc/ap/gen/tmpl/vuejs/main.txt";
-    protected String vueRoutertemplate = "/com/sc/ap/gen/tmpl/vuejs/router.txt";
-    protected String vueStoretemplate = "/com/sc/ap/gen/tmpl/java/store.txt";
-
-
+    protected String vueMaintemplate = "/com/sc/ap/gen/tmpl/vuejs/vuetify/main.txt";
+    protected String vueRoutertemplate = "/com/sc/ap/gen/tmpl/vuejs/vuetify/router.txt";
+    protected String vueStoretemplate = "/com/sc/ap/gen/tmpl/vuejs/vuetify/store.txt";
     public GenSrv() {
         this.getterTypeMap = new HashMap<String, String>() {
             {
@@ -57,7 +53,6 @@ public class GenSrv {
             }
         };
     }
-
     public void initEngine(){
         this.engine = new Engine();
         this.engine.setToClassPathSourceFactory();
@@ -65,22 +60,17 @@ public class GenSrv {
         this.engine.addSharedObject("getterTypeMap", this.getterTypeMap);
         this.engine.addSharedObject("javaKeyword", JavaKeyword.me);
     }
-
     public GenSrv initDataSource(String url, String user, String pwd) {
         DruidPlugin druidPlugin = new DruidPlugin(url, user, pwd);
         druidPlugin.start();
         metaBuilder = new MetaBuilder(druidPlugin.getDataSource());
         return this;
     }
-
-
     public List<TableMeta> getTableMetas() {
         if (metaBuilder == null)
             throw new CoreException("MetaBuilder 获取失败");
         return metaBuilder.build();
     }
-
-
     public void setDialect(Dialect dialect) {
         this.dialect = dialect;
     }
@@ -95,7 +85,10 @@ public class GenSrv {
                 genCfgCol.setTblId(tblId);
                 genCfgCol.save();
             }else{
+                genCfgCol1.setNote(genCfgCol.getNote());
+                genCfgCol1.setCol(genCfgCol.getCol());
                 genCfgCol1.setTpe(genCfgCol.getTpe());
+                genCfgCol1.setOrgCol(genCfgCol.getOrgCol());
                 genCfgCol1.update();
             }
         }
@@ -110,11 +103,12 @@ public class GenSrv {
                 genCfgTbl.save();
                 saveCol(genCfgTbl.getGenCfgColList(),genCfgTbl.getId());
             }else{
+                genCfgTbl.setId(genCfgTbl1.getId());
+                genCfgTbl.update();
                 saveCol(genCfgTbl.getGenCfgColList(),genCfgTbl1.getId());
             }
         }
     }
-
     public Map<String,Object> getGenData(Integer tblId){
         LogKit.info("查询tbl配置元数据");
         GenCfgTbl genCfgTbl=GenCfgTbl.dao.findById(tblId);
@@ -133,23 +127,21 @@ public class GenSrv {
         LogKit.info("查询tbl配置源数据结束");
         return ret;
     }
-
-    public void genCodeFile(String action,Map<String,Object> data){
+    public void genCodeFile(String action,String jsName,Map<String,Object> data){
         initEngine();
         switch (action){
             case TYPE_ALL:
                 genJavaCode(data);
-                genVuejsCode(data);
+                genVuejsCode(data,jsName);
                 break;
             case TYPE_JAVA:
                 genJavaCode(data);
                 break;
             case TYPE_JS:
-                genVuejsCode(data);
+                genVuejsCode(data,jsName);
                 break;
         }
     }
-
     public List<FileInfo> getGenJavaCode(Integer tblId){
         GenCfgTbl genCfgTbl=GenCfgTbl.dao.findById(tblId);
         GenSource genSource=GenSource.dao.findById(genCfgTbl.getGsId());
@@ -165,7 +157,6 @@ public class GenSrv {
         }
         return ret;
     }
-
     public List<FileInfo> getGenVuejsCode(Integer tblId){
         GenCfgTbl genCfgTbl=GenCfgTbl.dao.findById(tblId);
         GenSource genSource=GenSource.dao.findById(genCfgTbl.getGsId());
@@ -181,10 +172,93 @@ public class GenSrv {
         }
         return ret;
     }
+    private String buildOutPath(Integer tblId){
+        GenCfgTbl genCfgTbl=GenCfgTbl.dao.findById(tblId);
+        GenSource genSource=GenSource.dao.findById(genCfgTbl.getGsId());
+        return GEN_CODE_OUT_PATH+genSource.getName()+ "-"+genCfgTbl.getTbl()+"/"+DateKit.dateToStr(new Date(),DateKit.yyyyMMdd);
+    }
+    private String buildOutPath(GenSource genSource,GenCfgTbl genCfgTbl){
+        return GEN_CODE_OUT_PATH+genSource.getName()+ "-"+genCfgTbl.getTbl()+"/"+DateKit.dateToStr(new Date(),DateKit.yyyyMMdd);
+    }
+    private void genJavaCode(Map<String,Object> data){
+        LogKit.info("开始生成Java代码");
+        GenCfgTbl genCfgTbl=(GenCfgTbl)data.get("tbl");
+        String modelName=genCfgTbl.getModelName();
+        String className=genCfgTbl.getClassName();
+        String outDir=(String)data.get("outDir")+"/java/"+modelName+"/";
+        String model_java=className+JAVA_FILE_SUFFIX;
+        String baseModel_java="Base"+className+JAVA_FILE_SUFFIX;
+        String service_java=className+"Service"+JAVA_FILE_SUFFIX;
+        String controller_java=className+"Controller"+JAVA_FILE_SUFFIX;
+        String validator_java=className+"Validator"+JAVA_FILE_SUFFIX;
+        String model_txt=className+TXT_FILE_SUFFIX;
+        String baseModel_txt="Base"+className+TXT_FILE_SUFFIX;
+        String service_txt=className+"Service"+TXT_FILE_SUFFIX;
+        String controller_txt=className+"Controller"+TXT_FILE_SUFFIX;
+        String validator_txt=className+"Validator"+TXT_FILE_SUFFIX;
+        File file= FileUtil.file(outDir);
+        if(!file.exists())file.mkdirs();
+        File[] files=file.listFiles();
+        //删除之前生成的Java文件
+        for (int i = 0; i < files.length; i++) {
+            files[i].delete();
+        }
+        com.jfinal.template.Template template=engine.getTemplate(modeltemplate);
+        engine.getTemplate(modeltemplate).render(data,new File(outDir+"/"+model_java));
+        engine.getTemplate(modeltemplate).render(data,new File(outDir+"/"+model_txt));
+        engine.getTemplate(baseModeltemplate).render(data,new File(outDir+"/"+baseModel_java));
+        engine.getTemplate(baseModeltemplate).render(data,new File(outDir+"/"+baseModel_txt));
+        engine.getTemplate(srvtemplate).render(data,new File(outDir+"/"+service_java));
+        engine.getTemplate(srvtemplate).render(data,new File(outDir+"/"+service_txt));
+        engine.getTemplate(ctrtemplate).render(data,new File(outDir+"/"+controller_java));
+        engine.getTemplate(ctrtemplate).render(data,new File(outDir+"/"+controller_txt));
+        engine.getTemplate(validatortemplate).render(data,new File(outDir+"/"+validator_java));
+        engine.getTemplate(validatortemplate).render(data,new File(outDir+"/"+validator_txt));
+        File zipFile=new File(outDir+"javaCode.zip");
+        files=file.listFiles();
+        List<File> javaFiles=new ArrayList<>();
+        for (File file1:files){
+            if(file1.getName().contains(JAVA_FILE_SUFFIX)){
+                javaFiles.add(file1);
+            }
+        }
+        ZipUtil.zip(zipFile,false,javaFiles.toArray(new File[javaFiles.size()]));
+        LogKit.info("生成java代码完成");
+    }
 
-
-
-
+    private void genVuejsCode(Map<String,Object> data,String jsName){
+        String vueMaintemplate = "/com/sc/ap/gen/tmpl/vuejs/"+jsName+"/main.txt";
+        String vueStoretemplate = "/com/sc/ap/gen/tmpl/vuejs/"+jsName+"/store.txt";
+        LogKit.info("开始生成Vuejs代码");
+        GenCfgTbl genCfgTbl=(GenCfgTbl)data.get("tbl");
+        String modelName=genCfgTbl.getModelName();
+        String outDir=(String)data.get("outDir")+"/js/"+modelName+"/";
+        String main="main"+VUE_FILE_SUFFIX;
+        String store="store"+JS_FILE_SUFFIX;
+        String main_txt="main"+TXT_FILE_SUFFIX;
+        String store_txt="store"+TXT_FILE_SUFFIX;
+        File file= FileUtil.file(outDir);
+        if(!file.exists())file.mkdirs();
+        File[] files=file.listFiles();
+        //删除之前生成的JS文件
+        for (int i = 0; i < files.length; i++) {
+            files[i].delete();
+        }
+        engine.getTemplate(vueMaintemplate).render(data,new File(outDir+"/"+main+""));
+        engine.getTemplate(vueStoretemplate).render(data,new File(outDir+"/"+store+""));
+        engine.getTemplate(vueMaintemplate).render(data,new File(outDir+"/"+main_txt+""));
+        engine.getTemplate(vueStoretemplate).render(data,new File(outDir+"/"+store_txt+""));
+        File zipFile=new File(outDir+"vuejsCode.zip");
+        files=file.listFiles();
+        List<File> javaFiles=new ArrayList<>();
+        for (File file1:files){
+            if(!file1.getName().contains(TXT_FILE_SUFFIX)){
+                javaFiles.add(file1);
+            }
+        }
+        ZipUtil.zip(zipFile,false,javaFiles.toArray(new File[javaFiles.size()]));
+        LogKit.info("生成vuejs代码完成");
+    }
 
     class FileInfo{
         public FileInfo(String name,String path,String soruce){
@@ -219,122 +293,5 @@ public class GenSrv {
         public void setSource(String source) {
             this.source = source;
         }
-    }
-
-//    private String buildJavaOutPath(Integer tblId){
-//        return buildOutPath(tblId)+"/java/";
-//    }
-
-    private String buildOutPath(Integer tblId){
-        GenCfgTbl genCfgTbl=GenCfgTbl.dao.findById(tblId);
-        GenSource genSource=GenSource.dao.findById(genCfgTbl.getGsId());
-        return GEN_CODE_OUT_PATH+genSource.getName()+ "-"+genCfgTbl.getTbl()+"/"+DateKit.dateToStr(new Date(),DateKit.yyyyMMdd);
-    }
-
-    private String buildOutPath(GenSource genSource,GenCfgTbl genCfgTbl){
-        return GEN_CODE_OUT_PATH+genSource.getName()+ "-"+genCfgTbl.getTbl()+"/"+DateKit.dateToStr(new Date(),DateKit.yyyyMMdd);
-    }
-
-
-//    private String buildVuejsOutPath(Integer tblId){
-//        return buildOutPath(tblId)+"/vuejs/";
-//    }
-
-
-    private void genJavaCode(Map<String,Object> data){
-        LogKit.info("开始生成Java代码");
-        GenCfgTbl genCfgTbl=(GenCfgTbl)data.get("tbl");
-        String modelName=genCfgTbl.getModelName();
-        String className=genCfgTbl.getClassName();
-        String outDir=(String)data.get("outDir")+"/java/"+modelName+"/";
-        String model_java=className+JAVA_FILE_SUFFIX;
-        String baseModel_java="Base"+className+JAVA_FILE_SUFFIX;
-        String service_java=className+"Service"+JAVA_FILE_SUFFIX;
-        String controller_java=className+"Controller"+JAVA_FILE_SUFFIX;
-        String validator_java=className+"Validator"+JAVA_FILE_SUFFIX;
-        String model_txt=className+TXT_FILE_SUFFIX;
-        String baseModel_txt="Base"+className+TXT_FILE_SUFFIX;
-        String service_txt=className+"Service"+TXT_FILE_SUFFIX;
-        String controller_txt=className+"Controller"+TXT_FILE_SUFFIX;
-        String validator_txt=className+"Validator"+TXT_FILE_SUFFIX;
-        
-        File file= FileUtil.file(outDir);
-        if(!file.exists())file.mkdirs();
-        File[] files=file.listFiles();
-        //删除之前生成的Java文件
-        for (int i = 0; i < files.length; i++) {
-            files[i].delete();
-        }
-        com.jfinal.template.Template template=engine.getTemplate(modeltemplate);
-        engine.getTemplate(modeltemplate).render(data,new File(outDir+"/"+model_java));
-        engine.getTemplate(modeltemplate).render(data,new File(outDir+"/"+model_txt));
-        engine.getTemplate(baseModeltemplate).render(data,new File(outDir+"/"+baseModel_java));
-        engine.getTemplate(baseModeltemplate).render(data,new File(outDir+"/"+baseModel_txt));
-        engine.getTemplate(srvtemplate).render(data,new File(outDir+"/"+service_java));
-        engine.getTemplate(srvtemplate).render(data,new File(outDir+"/"+service_txt));
-        engine.getTemplate(ctrtemplate).render(data,new File(outDir+"/"+controller_java));
-        engine.getTemplate(ctrtemplate).render(data,new File(outDir+"/"+controller_txt));
-        engine.getTemplate(validatortemplate).render(data,new File(outDir+"/"+validator_java));
-        engine.getTemplate(validatortemplate).render(data,new File(outDir+"/"+validator_txt));
-
-
-        File zipFile=new File(outDir+"javaCode.zip");
-
-        files=file.listFiles();
-
-        List<File> javaFiles=new ArrayList<>();
-
-        for (File file1:files){
-            if(file1.getName().contains(JAVA_FILE_SUFFIX)){
-                javaFiles.add(file1);
-            }
-        }
-
-        ZipUtil.zip(zipFile,false,javaFiles.toArray(new File[javaFiles.size()]));
-
-        LogKit.info("生成java代码完成");
-    }
-
-    private void genVuejsCode(Map<String,Object> data){
-        LogKit.info("开始生成Vuejs代码");
-        String modelName=(String)data.get("modelName");
-        String outDir=(String)data.get("outDir")+"/js/"+modelName+"/";
-        String main="main"+VUE_FILE_SUFFIX;
-        String store="store"+JS_FILE_SUFFIX;
-        String router="router"+ JS_FILE_SUFFIX;
-        String main_txt="main"+TXT_FILE_SUFFIX;
-        String store_txt="store"+TXT_FILE_SUFFIX;
-        String router_txt="router"+ TXT_FILE_SUFFIX;
-        File file= FileUtil.file(outDir);
-        if(!file.exists())file.mkdirs();
-        File[] files=file.listFiles();
-        //删除之前生成的Java文件
-        for (int i = 0; i < files.length; i++) {
-            files[i].delete();
-        }
-        engine.getTemplate(modeltemplate).render(data,new File(outDir+"/"+main+""));
-        engine.getTemplate(modeltemplate).render(data,new File(outDir+"/"+store+""));
-        engine.getTemplate(modeltemplate).render(data,new File(outDir+"/"+router+""));
-        engine.getTemplate(modeltemplate).render(data,new File(outDir+"/"+main_txt+""));
-        engine.getTemplate(modeltemplate).render(data,new File(outDir+"/"+store_txt+""));
-        engine.getTemplate(modeltemplate).render(data,new File(outDir+"/"+router_txt+""));
-
-        File zipFile=new File(outDir+"vuejsCode.zip");
-
-        files=file.listFiles();
-
-        List<File> javaFiles=new ArrayList<>();
-
-        for (File file1:files){
-            if(!file1.getName().contains(TXT_FILE_SUFFIX)){
-                javaFiles.add(file1);
-            }
-        }
-
-
-
-        ZipUtil.zip(zipFile,false,javaFiles.toArray(new File[javaFiles.size()]));
-
-        LogKit.info("生成vuejs代码完成");
     }
 }

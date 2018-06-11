@@ -22,8 +22,7 @@ public class GenCfgCol extends BaseGenCfgCol<GenCfgCol> {
 	}
 
 	public void setAttributeName(String attributeName) {
-		this.attributeName = attributeName;
-	}
+		this.attributeName = attributeName;}
 
 	public Map<String,Object> getConfigJSON(){
 		return StrUtil.isNotBlank(getTxt())? JSON.parseObject(getTxt(), HashMap.class):null;

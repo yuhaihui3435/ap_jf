@@ -34,4 +34,12 @@ public abstract class BaseGenCfgTbl<M extends BaseGenCfgTbl<M>> extends CoreMode
 		return getInt("gsId");
 	}
 
+	public void setNote(String note) {
+		set("note", note);
+	}
+
+	public String getNote() {
+		return getStr("note");
+	}
+
 }

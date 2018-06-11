@@ -1,5 +1,6 @@
 package com.sc.ap.gen;
 
+import cn.hutool.core.util.StrUtil;
 import com.jfinal.aop.Duang;
 import com.jfinal.plugin.activerecord.generator.ColumnMeta;
 import com.jfinal.plugin.activerecord.generator.TableMeta;
@@ -26,20 +27,22 @@ public class GenCtr extends CoreController {
         GenCfgTbl genCfgTbl=null;
         GenCfgCol genCfgCol=null;
         List<GenCfgTbl> genCfgTbls=new ArrayList<>();
-        for(TableMeta tableMeta:list){
-            genCfgTbl=new GenCfgTbl();
+        for(TableMeta tableMeta:list) {
+            genCfgTbl = new GenCfgTbl();
             genCfgTbl.setGsId(gsId);
             genCfgTbl.setTbl(tableMeta.name);
-            for (ColumnMeta columnMeta:tableMeta.columnMetas){
-                genCfgCol=new GenCfgCol();
+            genCfgTbl.setNote(GenKit.getTableComment(genSource.getName(),tableMeta.name));
+            for (ColumnMeta columnMeta : tableMeta.columnMetas) {
+                genCfgCol = new GenCfgCol();
                 genCfgCol.setTpe(columnMeta.javaType);
                 genCfgCol.setCol(columnMeta.attrName);
+                genCfgCol.setOrgCol(columnMeta.name);
                 genCfgCol.setCAt(new Date());
+                genCfgCol.setNote(GenKit.getColumnComment(genSource.getName(),tableMeta.name,columnMeta.name));
                 genCfgTbl.addGenCfgCol(genCfgCol);
             }
             genCfgTbls.add(genCfgTbl);
         }
-
         genSrv.saveTbl(genCfgTbls);
 
         renderSuccessJSON("数据源中表信息本地同步成功");
@@ -65,10 +68,12 @@ public class GenCtr extends CoreController {
     public void genCode(){
         String action=getPara("action");
         Integer[] tblIds=getParaValuesToInt("tblId");
+        String jsName=getPara("jsName","vuetify");
+
         Map data;
         for (Integer tblId:tblIds){
             data=genSrv.getGenData(tblId);
-            genSrv.genCodeFile(action,data);
+            genSrv.genCodeFile(action,jsName,data);
         }
         renderSuccessJSON("生成代码成功请查看");
     }

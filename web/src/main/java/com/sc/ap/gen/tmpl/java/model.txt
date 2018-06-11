@@ -8,5 +8,26 @@ package #(modelPackage);
 @SuppressWarnings("serial")
 public class #(tbl.className) extends Base#(tbl.className)<#(tbl.className)> {
 	public static final #(tbl.className) dao = new #(tbl.className)().dao();
+	#for(cm : tbl.genCfgColList)
+	    #if(cm.tpe=='java.util.Date'&&cm.configJSON.dateQuery??false)
+        //#(cm.col)比较的开始时间
+    	private String begin#(firstCharToUpperCase(cm.col));
+    	//#(cm.col)比较的结束时间
+    	private String end#(firstCharToUpperCase(cm.col));
+    	public String getBegin#(firstCharToUpperCase(cm.col))(){
+    	    return StrUtil.isNotBlank(this.begin#(firstCharToUpperCase(cm.col)))?DateKit.getDateTimeBegin(this.begin#(firstCharToUpperCase(cm.col))):null;
+    	}
+    	public void setBegin#(firstCharToUpperCase(cm.col))(String begin){
+    	    this.begin#(firstCharToUpperCase(cm.col))=begin;
+    	}
+
+    	public String getEnd#(firstCharToUpperCase(cm.col))(){
+        	return StrUtil.isNotBlank(this.end#(firstCharToUpperCase(cm.col)))?DateKit.getDateTimeEnd(this.end#(firstCharToUpperCase(cm.col))):null;
+        }
+        public void setEnd#(firstCharToUpperCase(cm.col))(String end){
+        	this.end#(firstCharToUpperCase(cm.col))=end;
+        }
+    	#end
+    #end
 }
 

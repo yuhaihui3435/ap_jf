@@ -2,6 +2,7 @@ package com.sc.ap.core;
 
 import cn.hutool.core.util.ArrayUtil;
 import com.jfinal.kit.Kv;
+import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.*;
 import com.sc.ap.Consts;
 import com.sc.ap.kits.DateKit;

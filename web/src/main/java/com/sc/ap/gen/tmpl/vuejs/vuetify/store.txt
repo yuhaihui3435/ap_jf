@@ -1,0 +1,91 @@
+const #(tbl.modelName) = {
+    state: {
+      #(tbl.modelName): {},
+      #(tbl.modelName)List:[],
+      totalPage:0,
+      pageNumber:1,
+      pageSize:15,
+      totalRow:0,
+    },
+    mutations: {
+      set#(tbl.className)(state, obj) {
+        state.#(tbl.modelName) = Object.assign({}, obj)
+      },
+      set#(tbl.className)List(state, list) {
+        state.#(tbl.modelName)List = list
+      },
+      set#(tbl.className)Page(state, page) {
+        state.#(tbl.modelName)List = page.list
+        state.totalPage=page.totalPage
+        state.pageNumber=page.pageNumber
+        state.pageSize=page.pageSize
+        state.totalRow=page.totalRow
+      },
+    },
+    actions: {
+      list_#(tbl.modelName): function ({
+        commit,
+        state
+      }, param) {
+        this._vm.$http.post('/api/#(tbl.modelName)/list',param).then((res) => {
+          commit('set#(tbl.className)List', res)
+        });
+      },
+      page_#(tbl.modelName): function ({
+              commit,
+              state
+      }, param) {
+         this._vm.$http.post('/api/#(tbl.modelName)/page',param).then((res) => {
+            commit('set#(tbl.className)Page', res)
+         });
+      },
+      save_#(tbl.modelName): function ({
+        commit,
+        state
+      }, param) {
+          let vm=this._vm;
+        return new Promise(function (resolve, reject) {
+          vm.$http.post('/api/#(tbl.modelName)/save', state.#(tbl.modelName)).then((res) => {
+              resolve(res)
+          });
+        })
+
+      },
+      update_#(tbl.modelName): function ({
+        commit,
+        state
+      }, param) {
+          let vm=this._vm;
+        return new Promise(function (resolve, reject) {
+          vm.$http.post('/api/#(tbl.modelName)/update', state.#(tbl.modelName)).then((res) => {
+              resolve(res)
+          });
+        })
+      },
+      del_#(tbl.modelName): function ({
+        commit,
+        state
+      }, param) {
+          let vm=this._vm;
+        return new Promise(function (resolve, reject) {
+          vm.$http.post('/api/#(tbl.modelName)/logicDel', param).then((res) => {
+              resolve(res)
+          });
+        })
+      },
+      get_#(tbl.modelName): function ({
+        commit,
+        state
+      }, param) {
+          let vm=this._vm;
+        return new Promise(function (resolve, reject) {
+          vm.$http.post('/api/#(tbl.modelName)/get', param).then((res) => {
+              commit('set#(tbl.className)',res)
+          });
+        })
+      },
+    },
+
+  }
+
+export default #(tbl.modelName)

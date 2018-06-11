@@ -1,7 +1,11 @@
 package #(basePackage).service.#(tbl.modelName);
 import #(basePackage).core.CoreService;
 import #(basePackage).model.#(tbl.className)
-
+import cn.hutool.core.util.StrUtil;
+import com.jfinal.aop.Before;
+import com.jfinal.plugin.activerecord.tx.Tx;
+import com.jfinal.kit.Kv;
+import java.util.*;
 
 public class #(tbl.className)Service extends CoreService{
 
@@ -11,13 +15,123 @@ public class #(tbl.className)Service extends CoreService{
          Kv kv= Kv.create();
          #for(col:tbl.genCfgColList)
             #if(col.configJSON.equalQuery??false)
-         kv.put("#(col.col)=",#(tbl.modelName).get#(firstCharToUpperCase(col.col))());
+                #if(col.tpe!='java.lang.String')
+                    if(#(tbl.modelName).get#(firstCharToUpperCase(col.col))()!=null){
+                        kv.put("#(col.orgCol)=",#(tbl.modelName).get#(firstCharToUpperCase(col.col))());
+                    }
+                #else
+                    if(StrUitl.isNotBlank(#(tbl.modelName).get#(firstCharToUpperCase(col.col))())){
+                         kv.put("#(col.orgCol)=",#(tbl.modelName).get#(firstCharToUpperCase(col.col))());
+                    }
+                #end
             #else if(col.configJSON.likeQuery??false)
-         kv.put("#(col.col) like","%"+#(tbl.modelName).get#(firstCharToUpperCase(col.col))()+"%");
+                #if(col.tpe!='java.lang.String')
+                    if(#(tbl.modelName).get#(firstCharToUpperCase(col.col))()!=null){
+                        kv.put("#(col.orgCol) like","%"+#(tbl.modelName).get#(firstCharToUpperCase(col.col))()+"%");
+                    }
+                #else
+                    if(StrUitl.isNotBlank(#(tbl.modelName).get#(firstCharToUpperCase(col.col))())){
+                        kv.put("#(col.orgCol) like","%"+#(tbl.modelName).get#(firstCharToUpperCase(col.col))()+"%");
+                    }
+                #end
+            #else if(col.configJSON.dateQuery??false)
+                    if(StrUitl.isNotBlank(#(tbl.modelName).getBegin#(firstCharToUpperCase(col.col))())){
+                          kv.put("#(col.orgCol) >=",#(tbl.modelName).getBegin#(firstCharToUpperCase(col.col))());
+                    }
+                    if(StrUitl.isNotBlank(#(tbl.modelName).getEnd#(firstCharToUpperCase(col.col))())){
+                          kv.put("#(col.orgCol) <=",#(tbl.modelName).getEnd#(firstCharToUpperCase(col.col))());
+                    }
             #end
          #end
          kv=#(tbl.className).buildParamMap(#(tbl.className).class,kv);
          return #(tbl.modelName)dao.findFirstByAndCond(kv);
+    }
+
+
+    public Page<#(tbl.className)> findPage(#(tbl.className) #(tbl.modelName),int pn,int ps){
+        Kv kv= Kv.create();
+             #for(col:tbl.genCfgColList)
+                #if(col.configJSON.equalQuery??false)
+                    #if(col.tpe!='java.lang.String')
+                        if(#(tbl.modelName).get#(firstCharToUpperCase(col.col))()!=null){
+                            kv.put("#(col.orgCol)=",#(tbl.modelName).get#(firstCharToUpperCase(col.col))());
+                        }
+                    #else
+                        if(StrUitl.isNotBlank(#(tbl.modelName).get#(firstCharToUpperCase(col.col))())){
+                             kv.put("#(col.orgCol)=",#(tbl.modelName).get#(firstCharToUpperCase(col.col))());
+                        }
+                    #end
+                #else if(col.configJSON.likeQuery??false)
+                    #if(col.tpe!='java.lang.String')
+                        if(#(tbl.modelName).get#(firstCharToUpperCase(col.col))()!=null){
+                            kv.put("#(col.orgCol) like","%"+#(tbl.modelName).get#(firstCharToUpperCase(col.col))()+"%");
+                        }
+                    #else
+                        if(StrUitl.isNotBlank(#(tbl.modelName).get#(firstCharToUpperCase(col.col))())){
+                            kv.put("#(col.orgCol) like","%"+#(tbl.modelName).get#(firstCharToUpperCase(col.col))()+"%");
+                        }
+                    #end
+                #else if(col.configJSON.dateQuery??false)
+                      if(StrUitl.isNotBlank(#(tbl.modelName).getBegin#(firstCharToUpperCase(col.col))())){
+                            kv.put("#(col.orgCol) >=",#(tbl.modelName).getBegin#(firstCharToUpperCase(col.col))());
+                      }
+                      if(StrUitl.isNotBlank(#(tbl.modelName).getEnd#(firstCharToUpperCase(col.col))())){
+                            kv.put("#(col.orgCol) <=",#(tbl.modelName).getEnd#(firstCharToUpperCase(col.col))());
+                      }
+                #end
+             #end
+             kv=#(tbl.className).buildParamMap(#(tbl.className).class,kv);
+             return #(tbl.modelName)dao.pageByAndCond(kv,pn,ps);
+    }
+
+    public #(tbl.className) findOne(Integer id){
+           return #(tbl.modelName)dao.findById(id);
+    }
+
+    public void save(#(tbl.className) #(tbl.modelName)){
+        #(tbl.modelName).save();
+    }
+
+    public void update(#(tbl.className) #(tbl.modelName)){
+            #(tbl.modelName).update();
+    }
+
+
+    public void logicDel(Integer id,Integer opId){
+            #(tbl.className) #(tbl.modelName)=findOne(id);
+
+            #for(col:tbl.genCfgColList)
+                #if(col.col=='opId'||col.col=='oper'||col.col=='operId')
+                if(opId!=null){
+                    #(tbl.modelName).set#(firstCharToUpperCase(col.col))(opId)
+                }
+                #end
+            #end
+
+            #(tbl.modelName).apDel();
+
+    }
+
+    public void del(Integer id){
+            #(tbl.className) #(tbl.modelName)=findOne(id);
+            #(tbl.modelName).del();
+    }
+    @Before({Tx.class})
+    public void batchLogicDel(Integer[] ids,Integer opId){
+            if(ids!=null){
+                for(Integer id:ids){
+                    logicDel(id,opId)
+                }
+            }
+    }
+
+    @Before({Tx.class})
+    public void batchDel(Integer[] ids){
+           if(ids!=null){
+                for(Integer id:ids){
+                    del(id)
+                }
+           }
     }
 
 }

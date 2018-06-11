@@ -29,3 +29,11 @@
     #end
     #(dAt) #(orderby) limit 1
 #end
+
+#sql("queryColumnComment")
+  select column_comment from INFORMATION_SCHEMA.Columns where table_name='#(tableName)' and table_schema='#(tableSchema)' and column_name='#(columnName)'
+#end
+
+#sql("queryTableComment")
+  select table_comment from INFORMATION_SCHEMA.Tables where table_name='#(tableName)' and table_schema='#(tableSchema)'
+#end

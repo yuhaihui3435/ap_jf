@@ -18,7 +18,7 @@ import java.util.*;
  * 修改备注:  []
  * 版本:     [v1.0]
  */
-public class DateKit {
+public final class DateKit {
 
     private DateKit(){
 
@@ -160,6 +160,16 @@ public class DateKit {
     public static String getTimeStampEnd(Date date){
         String date_str_e=dateToStr(date,DateKit.yyyy_MM_dd)+" 23:59:59.999";
         return date_str_e;
+    }
+
+    public static String getDateTimeBegin(String date){
+        Date date1=DateKit.strToDate(date,yyyy_MM_dd);
+        return getTimeStampBegin(date1);
+    }
+
+    public static String getDateTimeEnd(String date){
+        Date date1=DateKit.strToDate(date,yyyy_MM_dd);
+        return getTimeStampEnd(date1);
     }
 
 

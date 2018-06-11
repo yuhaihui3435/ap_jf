@@ -66,6 +66,20 @@ public abstract class BaseGenCfgCol<M extends BaseGenCfgCol<M>> extends CoreMode
 		return getInt("opId");
 	}
 
+	public void setNote(String note) {
+		set("note", note);
+	}
 
+	public String getNote() {
+		return getStr("note");
+	}
+
+	public void setOrgCol(String orgCol) {
+		set("orgCol", orgCol);
+	}
+
+	public String getOrgCol() {
+		return getStr("orgCol");
+	}
 
 }
