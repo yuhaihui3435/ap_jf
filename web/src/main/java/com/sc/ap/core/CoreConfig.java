@@ -3,6 +3,7 @@ package com.sc.ap.core;
 
 import com.sc.ap.gen.GenCtr;
 import com.sc.ap.gen.GenSourceCtr;
+import com.sc.ap.gen.directive.ColNoteResolve;
 import com.sc.ap.interceptors.UserInterceptor;
 import com.sc.ap.sm.dd.DdCtr;
 import com.sc.ap.sm.param.ParamCtr;
@@ -106,6 +107,7 @@ public class CoreConfig extends JFinalConfig {
 		engine.addSharedMethod(new StrUtil());
 		engine.addSharedObject("cKit", new CollectionUtil());
 		engine.setDevMode(ResKit.getConfigBoolean("devMode", true));
+
 		// 使用JF模板渲染通用页面
 		engine.addSharedFunction("/WEB-INF/template/www/_layout.html");
 	}

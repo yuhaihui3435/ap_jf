@@ -282,10 +282,10 @@ export default {
       #if((col.configJSON.inputType=='select'))#(tbl.modelName)SelectData:[],#end
       #if((col.configJSON.inputType=='radio'))#(tbl.modelName)RadioData:[],#end
       #if((col.configJSON.inputType=='checkbox'))#(tbl.modelName)CheckboxData:[],#end
-      #if((col.configJSON.inputType=='date')&&(#if(col.configJSON.addShow??false)||#if(col.configJSON.updateShow??false)))#(col.col)DateMenu:false #end
-      #if((col.configJSON.inputType=='time')&&(#if(col.configJSON.addShow??false)||#if(col.configJSON.updateShow??false)))#(col.col)TimeMenu:false #end
-      #if((col.configJSON.inputType=='date')&&(#if(col.configJSON.dateQuery??false)))#(col.col)QueryDateMenu:false #end
-      #if((col.configJSON.inputType=='time')&&(#if(col.configJSON.dateQuery??false)))#(col.col)QueryTimeMenu:false #end
+      #if((col.configJSON.inputType=='date')&&((col.configJSON.addShow??false)||(col.configJSON.updateShow??false)))#(col.col)DateMenu:false #end
+      #if((col.configJSON.inputType=='time')&&((col.configJSON.addShow??false)||(col.configJSON.updateShow??false)))#(col.col)TimeMenu:false #end
+      #if((col.configJSON.inputType=='date')&&((col.configJSON.dateQuery??false)))#(col.col)QueryDateMenu:false #end
+      #if((col.configJSON.inputType=='time')&&((col.configJSON.dateQuery??false)))#(col.col)QueryTimeMenu:false #end
       #end
 
     };

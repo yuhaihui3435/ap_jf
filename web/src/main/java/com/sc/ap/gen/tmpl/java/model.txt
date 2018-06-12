@@ -28,6 +28,11 @@ public class #(tbl.className) extends Base#(tbl.className)<#(tbl.className)> {
         	this.end#(firstCharToUpperCase(cm.col))=end;
         }
     	#end
+    	#if(cm.configJSON.inputType??''=='select'||cm.configJSON.inputType??''=='checkbox'||cm.configJSON.inputType??''=='radio'||cm.configJSON.inputType??''=='slider'||cm.configJSON.inputType??''=='switch')
+            public String get#(firstCharToUpperCase(cm.col))Str(){
+                    return null;
+            }
+        #end
     #end
 }
 

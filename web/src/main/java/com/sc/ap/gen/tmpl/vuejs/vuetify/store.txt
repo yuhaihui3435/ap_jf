@@ -1,6 +1,10 @@
 const #(tbl.modelName) = {
     state: {
-      #(tbl.modelName): {},
+      #(tbl.modelName): {
+        #for(col:tbl.genCfgColList)
+            #(col.col):'',
+        #end
+      },
       #(tbl.modelName)List:[],
       totalPage:0,
       pageNumber:1,
