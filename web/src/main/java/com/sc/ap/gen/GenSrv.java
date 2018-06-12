@@ -12,6 +12,7 @@ import com.jfinal.plugin.activerecord.tx.Tx;
 import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.template.Engine;
 import com.sc.ap.core.CoreException;
+import com.sc.ap.gen.directive.ColLabelResolve;
 import com.sc.ap.gen.directive.ColNoteResolve;
 import com.sc.ap.kits.DateKit;
 import com.sc.ap.model.GenCfgCol;
@@ -61,6 +62,7 @@ public class GenSrv {
         this.engine.addSharedObject("getterTypeMap", this.getterTypeMap);
         this.engine.addSharedObject("javaKeyword", JavaKeyword.me);
         this.engine.addDirective("genColNoteData", ColNoteResolve.class);
+        this.engine.addDirective("genColLabel", ColLabelResolve.class);
     }
     public GenSrv initDataSource(String url, String user, String pwd) {
         DruidPlugin druidPlugin = new DruidPlugin(url, user, pwd);
