@@ -84,7 +84,7 @@ const #(tbl.modelName) = {
           let vm=this._vm;
         return new Promise(function (resolve, reject) {
           vm.$http.post('/api/#(tbl.modelName)/get', param).then((res) => {
-              commit('set#(tbl.className)',res)
+              resolve(res)
           });
         })
       },

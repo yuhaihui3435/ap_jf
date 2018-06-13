@@ -1,109 +1,118 @@
 package #(basePackage).service.#(tbl.modelName);
 import #(basePackage).core.CoreService;
-import #(basePackage).model.#(tbl.className)
+import #(basePackage).model.#(tbl.className);
+import #(basePackage).query.#(tbl.className)Query;
 import cn.hutool.core.util.StrUtil;
 import com.jfinal.aop.Before;
 import com.jfinal.plugin.activerecord.tx.Tx;
 import com.jfinal.kit.Kv;
 import java.util.*;
+import com.jfinal.plugin.activerecord.Page;
 
 public class #(tbl.className)Service extends CoreService{
 
-    private static #(tbl.className) #(tbl.modelName)dao=#(tbl.className).dao;
+    private static #(tbl.className) #(tbl.modelName)Dao=#(tbl.className).dao;
 
-    public List<#(tbl.className)> findAll(#(tbl.className) #(tbl.modelName)){
+    public List<#(tbl.className)> findAll(#(tbl.className)Query #(tbl.modelName)Query){
          Kv kv= Kv.create();
          #for(col:tbl.genCfgColList)
             #if(col.configJSON.equalQuery??false)
                 #if(col.tpe!='java.lang.String')
-                    if(#(tbl.modelName).get#(firstCharToUpperCase(col.col))()!=null){
-                        kv.put("#(col.orgCol)=",#(tbl.modelName).get#(firstCharToUpperCase(col.col))());
+                    if(#(tbl.modelName)Query.get#(firstCharToUpperCase(col.col))()!=null){
+                        kv.put("#(col.orgCol)=",#(tbl.modelName)Query.get#(firstCharToUpperCase(col.col))());
                     }
                 #else
-                    if(StrUitl.isNotBlank(#(tbl.modelName).get#(firstCharToUpperCase(col.col))())){
-                         kv.put("#(col.orgCol)=",#(tbl.modelName).get#(firstCharToUpperCase(col.col))());
+                    if(StrUtil.isNotBlank(#(tbl.modelName)Query.get#(firstCharToUpperCase(col.col))())){
+                         kv.put("#(col.orgCol)=",#(tbl.modelName)Query.get#(firstCharToUpperCase(col.col))());
                     }
                 #end
             #else if(col.configJSON.likeQuery??false)
                 #if(col.tpe!='java.lang.String')
-                    if(#(tbl.modelName).get#(firstCharToUpperCase(col.col))()!=null){
-                        kv.put("#(col.orgCol) like","%"+#(tbl.modelName).get#(firstCharToUpperCase(col.col))()+"%");
+                    if(#(tbl.modelName)Query.get#(firstCharToUpperCase(col.col))()!=null){
+                        kv.put("#(col.orgCol) like","%"+#(tbl.modelName)Query.get#(firstCharToUpperCase(col.col))()+"%");
                     }
                 #else
-                    if(StrUitl.isNotBlank(#(tbl.modelName).get#(firstCharToUpperCase(col.col))())){
-                        kv.put("#(col.orgCol) like","%"+#(tbl.modelName).get#(firstCharToUpperCase(col.col))()+"%");
+                    if(StrUtil.isNotBlank(#(tbl.modelName)Query.get#(firstCharToUpperCase(col.col))())){
+                        kv.put("#(col.orgCol) like","%"+#(tbl.modelName)Query.get#(firstCharToUpperCase(col.col))()+"%");
                     }
                 #end
             #else if(col.configJSON.dateQuery??false)
-                    if(StrUitl.isNotBlank(#(tbl.modelName).getBegin#(firstCharToUpperCase(col.col))())){
-                          kv.put("#(col.orgCol) >=",#(tbl.modelName).getBegin#(firstCharToUpperCase(col.col))());
+                    if(StrUtil.isNotBlank(#(tbl.modelName)Query.getBegin#(firstCharToUpperCase(col.col))())){
+                          kv.put("#(col.orgCol) >=",#(tbl.modelName)Query.getBegin#(firstCharToUpperCase(col.col))());
                     }
-                    if(StrUitl.isNotBlank(#(tbl.modelName).getEnd#(firstCharToUpperCase(col.col))())){
-                          kv.put("#(col.orgCol) <=",#(tbl.modelName).getEnd#(firstCharToUpperCase(col.col))());
+                    if(StrUtil.isNotBlank(#(tbl.modelName)Query.getEnd#(firstCharToUpperCase(col.col))())){
+                          kv.put("#(col.orgCol) <=",#(tbl.modelName)Query.getEnd#(firstCharToUpperCase(col.col))());
                     }
             #end
          #end
+         kv.put("dAt","");
+         if(StrUtil.isNotBlank(#(tbl.modelName)Query.getOrderBy())) {
+             kv.put("orderBy", #(tbl.modelName)Query.getOrderBy());
+         }
          kv=#(tbl.className).buildParamMap(#(tbl.className).class,kv);
-         return #(tbl.modelName)dao.findFirstByAndCond(kv);
+         return #(tbl.modelName)Dao.findByAndCond(kv);
     }
 
 
-    public Page<#(tbl.className)> findPage(#(tbl.className) #(tbl.modelName),int pn,int ps){
+    public Page<#(tbl.className)> findPage(#(tbl.className)Query #(tbl.modelName)Query){
         Kv kv= Kv.create();
              #for(col:tbl.genCfgColList)
                 #if(col.configJSON.equalQuery??false)
                     #if(col.tpe!='java.lang.String')
-                        if(#(tbl.modelName).get#(firstCharToUpperCase(col.col))()!=null){
-                            kv.put("#(col.orgCol)=",#(tbl.modelName).get#(firstCharToUpperCase(col.col))());
+                        if(#(tbl.modelName)Query.get#(firstCharToUpperCase(col.col))()!=null){
+                            kv.put("#(col.orgCol)=",#(tbl.modelName)Query.get#(firstCharToUpperCase(col.col))());
                         }
                     #else
-                        if(StrUitl.isNotBlank(#(tbl.modelName).get#(firstCharToUpperCase(col.col))())){
-                             kv.put("#(col.orgCol)=",#(tbl.modelName).get#(firstCharToUpperCase(col.col))());
+                        if(StrUtil.isNotBlank(#(tbl.modelName)Query.get#(firstCharToUpperCase(col.col))())){
+                             kv.put("#(col.orgCol)=",#(tbl.modelName)Query.get#(firstCharToUpperCase(col.col))());
                         }
                     #end
                 #else if(col.configJSON.likeQuery??false)
                     #if(col.tpe!='java.lang.String')
-                        if(#(tbl.modelName).get#(firstCharToUpperCase(col.col))()!=null){
-                            kv.put("#(col.orgCol) like","%"+#(tbl.modelName).get#(firstCharToUpperCase(col.col))()+"%");
+                        if(#(tbl.modelName)Query.get#(firstCharToUpperCase(col.col))()!=null){
+                            kv.put("#(col.orgCol) like","%"+#(tbl.modelName)Query.get#(firstCharToUpperCase(col.col))()+"%");
                         }
                     #else
-                        if(StrUitl.isNotBlank(#(tbl.modelName).get#(firstCharToUpperCase(col.col))())){
-                            kv.put("#(col.orgCol) like","%"+#(tbl.modelName).get#(firstCharToUpperCase(col.col))()+"%");
+                        if(StrUtil.isNotBlank(#(tbl.modelName)Query.get#(firstCharToUpperCase(col.col))())){
+                            kv.put("#(col.orgCol) like","%"+#(tbl.modelName)Query.get#(firstCharToUpperCase(col.col))()+"%");
                         }
                     #end
                 #else if(col.configJSON.dateQuery??false)
-                      if(StrUitl.isNotBlank(#(tbl.modelName).getBegin#(firstCharToUpperCase(col.col))())){
-                            kv.put("#(col.orgCol) >=",#(tbl.modelName).getBegin#(firstCharToUpperCase(col.col))());
+                      if(StrUtil.isNotBlank(#(tbl.modelName)Query.getBegin#(firstCharToUpperCase(col.col))())){
+                            kv.put("#(col.orgCol) >=",#(tbl.modelName)Query.getBegin#(firstCharToUpperCase(col.col))());
                       }
-                      if(StrUitl.isNotBlank(#(tbl.modelName).getEnd#(firstCharToUpperCase(col.col))())){
-                            kv.put("#(col.orgCol) <=",#(tbl.modelName).getEnd#(firstCharToUpperCase(col.col))());
+                      if(StrUtil.isNotBlank(#(tbl.modelName)Query.getEnd#(firstCharToUpperCase(col.col))())){
+                            kv.put("#(col.orgCol) <=",#(tbl.modelName)Query.getEnd#(firstCharToUpperCase(col.col))());
                       }
                 #end
              #end
+             kv.put("dAt","");
+             if(StrUtil.isNotBlank(#(tbl.modelName)Query.getOrderBy())) {
+                kv.put("orderBy", #(tbl.modelName)Query.getOrderBy());
+             }
              kv=#(tbl.className).buildParamMap(#(tbl.className).class,kv);
-             return #(tbl.modelName)dao.pageByAndCond(kv,pn,ps);
+             return #(tbl.modelName)Dao.pageByAndCond(kv,#(tbl.modelName)Query.getPn(),#(tbl.modelName)Query.getPs());
     }
 
     public #(tbl.className) findOne(Integer id){
-           return #(tbl.modelName)dao.findById(id);
+           return #(tbl.modelName)Dao.findById(id);
     }
-
+    @Before({Tx.class})
     public void save(#(tbl.className) #(tbl.modelName)){
         #(tbl.modelName).save();
     }
-
+    @Before({Tx.class})
     public void update(#(tbl.className) #(tbl.modelName)){
             #(tbl.modelName).update();
     }
-
-
+    @Before({Tx.class})
     public void logicDel(Integer id,Integer opId){
             #(tbl.className) #(tbl.modelName)=findOne(id);
 
             #for(col:tbl.genCfgColList)
                 #if(col.col=='opId'||col.col=='oper'||col.col=='operId')
                 if(opId!=null){
-                    #(tbl.modelName).set#(firstCharToUpperCase(col.col))(opId)
+                    #(tbl.modelName).set#(firstCharToUpperCase(col.col))(opId);
                 }
                 #end
             #end
@@ -111,29 +120,27 @@ public class #(tbl.className)Service extends CoreService{
             #(tbl.modelName).apDel();
 
     }
-
+    @Before({Tx.class})
     public void del(Integer id){
             #(tbl.className) #(tbl.modelName)=findOne(id);
-            #(tbl.modelName).del();
+            #(tbl.modelName).delete();
     }
     @Before({Tx.class})
     public void batchLogicDel(Integer[] ids,Integer opId){
             if(ids!=null){
                 for(Integer id:ids){
-                    logicDel(id,opId)
+                    logicDel(id,opId);
                 }
             }
     }
-
     @Before({Tx.class})
     public void batchDel(Integer[] ids){
            if(ids!=null){
                 for(Integer id:ids){
-                    del(id)
+                    del(id);
                 }
            }
     }
-
 }
 
 

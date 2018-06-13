@@ -4,6 +4,8 @@ package com.sc.ap.model;
 import com.sc.ap.model.base.BaseUser;
 import java.util.ArrayList;
 import java.util.List;
+import cn.hutool.core.util.StrUtil;
+import com.sc.ap.kits.DateKit;
 
 
 /**
@@ -13,10 +15,6 @@ import java.util.List;
 public class User extends BaseUser<User> {
 
 	public static final User dao = new User().dao();
-
-	public String getStatusTxt(){
-		return super.getStatusTxt(getStatus());
-	}
 
 	public User findByNickname(String nickname){
 		String sql="select * from s_user where nickname=?";
@@ -37,4 +35,28 @@ public class User extends BaseUser<User> {
 		}
 		return list;
 	}
+
+	public String getStatusStr(){
+		return super.getStatusStr(getStatus());
+	}
+	//cAt比较的开始时间
+	private String beginCAt;
+	//cAt比较的结束时间
+	private String endCAt;
+	public String getBeginCAt(){
+		return StrUtil.isNotBlank(this.beginCAt)?DateKit.getDateTimeBegin(this.beginCAt):null;
+	}
+	public void setBeginCAt(String begin){
+		this.beginCAt=begin;
+	}
+
+	public String getEndCAt(){
+		return StrUtil.isNotBlank(this.endCAt)?DateKit.getDateTimeEnd(this.endCAt):null;
+	}
+	public void setEndCAt(String end){
+		this.endCAt=end;
+	}
+
+
+
 }

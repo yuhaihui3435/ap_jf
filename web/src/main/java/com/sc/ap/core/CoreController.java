@@ -1,15 +1,22 @@
 package com.sc.ap.core;
 
-import com.alibaba.druid.util.StringUtils;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.ValueFilter;
 import com.jfinal.core.Controller;
-import com.jfinal.plugin.activerecord.Model;
 import com.sc.ap.Consts;
 import com.sc.ap.model.Role;
 import com.sc.ap.model.User;
 
+import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by 于海慧（125227112@qq.com） on 2016/12/1.
@@ -17,7 +24,8 @@ import java.util.List;
 public class CoreController extends Controller {
     public static final String PAGENUMBER = "pn";
     public static final String PAGESIZE = "ps";
-    public static final String ORDER="order";
+    public static final String ORDER="descending";
+    public static final String SORTBY="sortBy";
     public static final String ERROR_MSG="_err_msg";
     public static final String SUCCESS_MSG="_suc_msg";
 
@@ -47,16 +55,15 @@ public class CoreController extends Controller {
         return getParaToInt(PAGESIZE, 15);
     }
 
-    /**
-     * @param
-     * @return void
-     * @throws
-     * @author: 于海慧  2016/12/4
-     * @Description:获取表单的排序
-     **/
-    public String getOrder(){
-        String order=getPara("order");
-        return (StringUtils.isEmpty(order))?"asc":"desc";
+    public String orderBy(){
+
+        String order=isParaBlank(ORDER)?null:getPara(ORDER);
+        String sortBy=isParaBlank(SORTBY)?null:getPara(SORTBY);
+
+        if(StrUtil.isNotBlank(order)&&StrUtil.isNotBlank(sortBy))
+            return sortBy+" "+(("true".equals(order))?"desc":"asc");
+        else
+            return null;
     }
 
     /**
@@ -130,6 +137,50 @@ public class CoreController extends Controller {
 
     protected <T> T getApModel(Class clz){
         return (T)getModel(clz,"",true);
+    }
+    protected Object getQueryModel(Class clz) {
+        Object bean= null;
+        try {
+            bean = clz.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        Field[] fields=ReflectUtil.getFieldsDirectly(clz,true);
+        Map paraMap=getParaMap();
+        Iterator it=paraMap.entrySet().iterator();
+        String name;
+        Object val;
+        String[] vals;
+        A:while (it.hasNext()){
+            Map.Entry entry=(Map.Entry)it.next();
+            name=(String) entry.getKey();
+            vals=(String[])entry.getValue();
+            if(vals.length==1)val=vals[0];
+            else val=ArrayUtil.join(vals,StrUtil.COMMA);
+            for(Field f:fields){
+                if(f.getName().equals(name)){
+                    String typeName=f.getType().getName();
+                    if(typeName.equals("java.lang.Long")||typeName.equals("long")){
+                        val=Long.parseLong((String)val);
+                    }else if(typeName.equals("java.lang.Integer")||typeName.equals("int")){
+                        val=Integer.parseInt((String)val);
+                    }else if(typeName.equals("java.lang.String")){
+                        val=(String)val;
+                    }else if(typeName.equals("java.util.Date")){
+                        val= DateUtil.parse((String)val);
+                    }else if(typeName.equals("java.lang.Double")){
+                        val= Double.parseDouble((String)val);
+                    }else if(typeName.equals("java.math.BigDecimal")){
+                        val= new BigDecimal((String)val);
+                    }
+                    ReflectUtil.setFieldValue(bean,f,val);
+                    continue A;
+                }
+            }
+        }
+        return bean;
     }
 
 }

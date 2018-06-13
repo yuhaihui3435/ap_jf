@@ -1,47 +1,51 @@
 package #(basePackage).controller.#(tbl.modelName);
+import #(basePackage).model.#(tbl.className);
+import #(basePackage).query.#(tbl.className)Query;
+import #(basePackage).validator.#(tbl.modelName).#(tbl.className)Validator;
+import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.aop.Before;
 import #(basePackage).core.CoreController;
 import #(basePackage).service.#(tbl.modelName).#(tbl.className)Service;
-import com.jfinal.kit.LogKit;
 import com.jfinal.aop.Duang;
 import java.util.*;
 
 
-pubilc class #(tbl.className)Controller extends CoreController{
+public class #(tbl.className)Controller extends CoreController{
 
-    private #(tbl.className)Service #(tbl.modelName)Service=Duang.duang(#(tbl.className).class.getSimpleName(),#(tbl.className).class);
+    private #(tbl.className)Service #(tbl.modelName)Service=Duang.duang(#(tbl.className)Service.class.getSimpleName(),#(tbl.className)Service.class);
 
     public void list(){
-        #(tbl.className) #(tbl.modelName)=getApModel(#(tbl.className).class);
-        List<#(tbl.className)> ret=#(tbl.modelName)Service.findAll(#(tbl.modelName));
-        returnJson(ret)
+        #(tbl.className)Query #(tbl.modelName)Query=(#(tbl.className)Query)getQueryModel(#(tbl.className)Query.class);
+        List<#(tbl.className)> ret=#(tbl.modelName)Service.findAll(#(tbl.modelName)Query);
+        renderJson(ret);
     }
 
     public void page(){
-        #(tbl.className) #(tbl.modelName)=getApModel(#(tbl.className).class);
-        Page<#(tbl.className)> ret=#(tbl.modelName)Service.findPage(#(tbl.modelName),getPN(),getPS());
-        renderJson(ret)
+        #(tbl.className)Query #(tbl.modelName)Query=(#(tbl.className)Query)getQueryModel(#(tbl.className)Query.class);
+        Page<#(tbl.className)> ret=#(tbl.modelName)Service.findPage(#(tbl.modelName)Query);
+        renderJson(ret);
     }
     @Before({#(tbl.className)Validator.class})
     public void save(){
         #(tbl.className) #(tbl.modelName)=getApModel(#(tbl.className).class);
         #for(col:tbl.genCfgColList)
             #if(col.col=='opId'||col.col=='oper'||col.col=='operId')
-                if(currUser()!=null){#(tbl.modelName).set#(firstCharToUpperCase(col.col))(currUser().getId())}
+                if(currUser()!=null){#(tbl.modelName).set#(firstCharToUpperCase(col.col))(currUser().getId());}
             #end
         #end
         #(tbl.modelName)Service.save(#(tbl.modelName));
-        renderSuccessJSON("新增成功");
+        renderSuccessJSON("#(tbl.note)新增成功");
     }
     @Before({#(tbl.className)Validator.class})
     public void update(){
         #(tbl.className) #(tbl.modelName)=getApModel(#(tbl.className).class);
         #for(col:tbl.genCfgColList)
                     #if(col.col=='opId'||col.col=='oper'||col.col=='operId')
-                        if(currUser()!=null){#(tbl.modelName).set#(firstCharToUpperCase(col.col))(currUser().getId())}
+                        if(currUser()!=null){#(tbl.modelName).set#(firstCharToUpperCase(col.col))(currUser().getId());}
                     #end
                 #end
         #(tbl.modelName)Service.update(#(tbl.modelName));
-        renderSuccessJSON("修改成功");
+        renderSuccessJSON("#(tbl.note)修改成功");
     }
 
     //逻辑删除
@@ -49,7 +53,7 @@ pubilc class #(tbl.className)Controller extends CoreController{
     public void logicDel(){
         Integer[] ids=getParaValuesToInt("ids");
         #(tbl.modelName)Service.batchLogicDel(ids,currUser()==null?null:currUser().getId());
-        renderSuccessJSON("删除成功");
+        renderSuccessJSON("#(tbl.note)删除成功");
     }
 
     //真实删除
@@ -57,7 +61,7 @@ pubilc class #(tbl.className)Controller extends CoreController{
     public void del(){
         Integer[] ids=getParaValuesToInt("ids");
         #(tbl.modelName)Service.batchDel(ids);
-        renderSuccessJSON("删除成功");
+        renderSuccessJSON("#(tbl.note)删除成功");
     }
     public void get(){
         Integer id=getParaToInt("id");

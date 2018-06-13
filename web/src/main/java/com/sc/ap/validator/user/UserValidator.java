@@ -1,4 +1,4 @@
-package com.sc.ap.sm.user;
+package com.sc.ap.validator.user;
 
 import cn.hutool.core.util.StrUtil;
 import com.jfinal.core.Controller;
@@ -7,13 +7,14 @@ import com.sc.ap.core.CoreValidator;
 import com.sc.ap.model.User;
 import java.util.List;
 
+
 public class UserValidator extends CoreValidator {
     @Override
     protected void validate(Controller controller) {
         User user = controller.getModel(User.class, "", true);
         String ak = getActionKey();
         List<User> list = null;
-        if (ak.equals("save") || ak.equals("update")) {
+        if (ak.contains("user/save") || ak.contains("user/update")) {
 
             if (StrUtil.isBlank(user.getLoginname())) {
                 addError(Consts.REQ_JSON_CODE.fail.name(), "登录账号值不能为空");
@@ -82,14 +83,14 @@ public class UserValidator extends CoreValidator {
             }
 
 
-        } else if (ak.equals("del") || ak.equals("logicDel")) {
+        } else if (ak.contains("user/del") || ak.contains("user/logicDel")) {
             String ids = controller.getPara("ids");
             if (StrUtil.isBlank(ids)) {
                 addError(Consts.REQ_JSON_CODE.fail.name(), "缺少删除数据的关键数据");
                 return;
             }
         }
-        if (ak.equals("save")) {
+        if (ak.contains("user/save")) {
             list = User.dao.findByPropEQWithDat("loginname", user.getLoginname());
             if (!list.isEmpty()) {
                 addError(Consts.REQ_JSON_CODE.fail.name(), "登录账号值重复");
@@ -112,7 +113,7 @@ public class UserValidator extends CoreValidator {
                     return;
                 }
             }
-        } else if (ak.equals("update")) {
+        } else if (ak.contains("user/update")) {
 
             list = User.dao.findByPropEQAndIdNEQWithDat("loginname", user.getLoginname(), user.getId());
             if (!list.isEmpty()) {

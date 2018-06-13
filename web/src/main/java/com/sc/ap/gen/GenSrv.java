@@ -39,9 +39,8 @@ public class GenSrv {
     protected String srvtemplate = "/com/sc/ap/gen/tmpl/java/srv.txt";
     protected String ctrtemplate = "/com/sc/ap/gen/tmpl/java/ctr.txt";
     protected String validatortemplate = "/com/sc/ap/gen/tmpl/java/validator.txt";
-    protected String vueMaintemplate = "/com/sc/ap/gen/tmpl/vuejs/vuetify/main.txt";
-    protected String vueRoutertemplate = "/com/sc/ap/gen/tmpl/vuejs/vuetify/router.txt";
-    protected String vueStoretemplate = "/com/sc/ap/gen/tmpl/vuejs/vuetify/store.txt";
+    protected String queryModeltemplate = "/com/sc/ap/gen/tmpl/java/queryModel.txt";
+
     public GenSrv() {
         this.getterTypeMap = new HashMap<String, String>() {
             {
@@ -195,11 +194,13 @@ public class GenSrv {
         String service_java=className+"Service"+JAVA_FILE_SUFFIX;
         String controller_java=className+"Controller"+JAVA_FILE_SUFFIX;
         String validator_java=className+"Validator"+JAVA_FILE_SUFFIX;
+        String query_java=className+"Query"+JAVA_FILE_SUFFIX;
         String model_txt=className+TXT_FILE_SUFFIX;
         String baseModel_txt="Base"+className+TXT_FILE_SUFFIX;
         String service_txt=className+"Service"+TXT_FILE_SUFFIX;
         String controller_txt=className+"Controller"+TXT_FILE_SUFFIX;
         String validator_txt=className+"Validator"+TXT_FILE_SUFFIX;
+        String query_txt=className+"Query"+TXT_FILE_SUFFIX;
         File file= FileUtil.file(outDir);
         if(!file.exists())file.mkdirs();
         File[] files=file.listFiles();
@@ -218,6 +219,8 @@ public class GenSrv {
         engine.getTemplate(ctrtemplate).render(data,new File(outDir+"/"+controller_txt));
         engine.getTemplate(validatortemplate).render(data,new File(outDir+"/"+validator_java));
         engine.getTemplate(validatortemplate).render(data,new File(outDir+"/"+validator_txt));
+        engine.getTemplate(queryModeltemplate).render(data,new File(outDir+"/"+query_java));
+            engine.getTemplate(queryModeltemplate).render(data,new File(outDir+"/"+query_txt));
         File zipFile=new File(outDir+"javaCode.zip");
         files=file.listFiles();
         List<File> javaFiles=new ArrayList<>();

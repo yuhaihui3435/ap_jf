@@ -10,33 +10,25 @@
                 <v-container grid-list-md>
                   <v-layout wrap>
                       #for(col:tbl.genCfgColList)
-                        #if((col.configJSON.inputType=='text'))
-                           <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt='add'||#end#if(col.configJSON.updateShow??false)opt='update'#end">
-                              <v-text-field v-model="param.#(col.col)"  label="#(col.note)"
+                        #if((col.configJSON.inputType??''=='text'&&(col.configJSON.addShow??false||col.configJSON.editShow??false)))
+                           <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt=='add'#end#if(col.configJSON.addShow??false&&col.configJSON.editShow??false)||#end#if(col.configJSON.editShow??false)opt=='edit'#end">
+                              <v-text-field v-model="#(tbl.modelName).#(col.col)"  label="#(col.note)" #if(col.configJSON.isRequired??false)required#end box
                                   :rules="[
                                   #if(col.configJSON.isRequired??false)rules.required,#end
-                                  #if(col.configJSON.isEmail??false)rules.email,#end
-                                  #if(col.configJSON.isPhone??false)rules.phone,#end
-                                  #if(col.configJSON.isNum??false)rules.digital,#end
-                                  #if(col.configJSON.isChart??false)rules.chart,#end
-                                  #if(col.configJSON.isChinese??false)rules.chinese,#end
-                                  #if(notBlank(col.configJSON.max??null))#if(col.configJSON.isRequired??false)(v) => !!v#else(v)=>!!!v#end&&v.length <= #(col.configJSON.max) || '最多 #(col.configJSON.max) 字符',#end
-                                  #if(notBlank(col.configJSON.min??null))#if(col.configJSON.isRequired??false)(v) => !!v#else(v)=>!!!v#end&&v.length >= #(col.configJSON.min) || '最少 #(col.configJSON.min) 字符',#end
+                                  #if(notBlank(col.configJSON.rule))rules.#(col.configJSON.rule),#end
+                                  #if(notBlank(col.configJSON.max??null))#if(col.configJSON.isRequired??false)(v) => !!v#else(v)=>!!!v#end||(v!=undefined&&v.length <= #(col.configJSON.max)) || '最多 #(col.configJSON.max) 字符',#end
+                                  #if(notBlank(col.configJSON.min??null))#if(col.configJSON.isRequired??false)(v) => !!v#else(v)=>!!!v#end||(v!=undefined&&v.length >= #(col.configJSON.min))|| '最少 #(col.configJSON.min) 字符',#end
                                   ]"
                                   #if(notBlank(col.configJSON.max??null)):counter="#(col.configJSON.max)"#end>
                               </v-text-field>
                            </v-flex>
                         #end
-                        #if((col.configJSON.inputType=='textArea'))
-                            <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt='add'||#end#if(col.configJSON.updateShow??false)opt='update'#end">
-                                                      <v-text-field v-model="param.#(col.col)"  label="#(col.note)" textarea
+                        #if((col.configJSON.inputType??''=='textArea')&&(col.configJSON.addShow??false||col.configJSON.editShow??false))
+                            <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt=='add'#end#if(col.configJSON.addShow??false&&col.configJSON.editShow??false)||#end#if(col.configJSON.editShow??false)opt=='edit'#end">
+                                                      <v-text-field v-model="#(tbl.modelName).#(col.col)"  label="#(col.note)" textarea #if(col.configJSON.isRequired??false)required#end box
                                                           :rules="[
                                                           #if(col.configJSON.isRequired??false)rules.required,#end
-                                                          #if(col.configJSON.isEmail??false)rules.email,#end
-                                                          #if(col.configJSON.isPhone??false)rules.phone,#end
-                                                          #if(col.configJSON.isNum??false)rules.digital,#end
-                                                          #if(col.configJSON.isChart??false)rules.chart,#end
-                                                          #if(col.configJSON.isChinese??false)rules.chinese,#end
+                                                          #if(notBlank(col.configJSON.rule))rules.#(col.configJSON.rule),#end
                                                           #if(notBlank(col.configJSON.max??null))#if(col.configJSON.isRequired??false)(v) => !!v#else(v)=>!!!v#end&&v.length <= #(col.configJSON.max) || '最多 #(col.configJSON.max) 字符',#end
                                                           #if(notBlank(col.configJSON.min??null))#if(col.configJSON.isRequired??false)(v) => !!v#else(v)=>!!!v#end&&v.length >= #(col.configJSON.min) || '最少 #(col.configJSON.min) 字符',#end
                                                           ]"
@@ -44,8 +36,8 @@
                                                       </v-text-field>
                             </v-flex>
                         #end
-                        #if((col.configJSON.inputType=='date'))
-                           <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt='add'||#end#if(col.configJSON.updateShow??false)opt='update'#end">
+                        #if((col.configJSON.inputType??''=='date')&&(col.configJSON.addShow??false||col.configJSON.editShow??false))
+                           <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt=='add'#end#if(col.configJSON.addShow??false&&col.configJSON.editShow??false)||#end#if(col.configJSON.editShow??false)opt=='edit'#end">
                               <v-menu
                                         ref="#(col.col)DateMenu"
                                         :close-on-content-click="false"
@@ -71,8 +63,8 @@
                                       </v-menu>
                            </v-flex>
                         #end
-                        #if((col.configJSON.inputType=='time'))
-                             <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt='add'||#end#if(col.configJSON.updateShow??false)opt='update'#end">
+                        #if((col.configJSON.inputType??''=='time')&&(col.configJSON.addShow??false||col.configJSON.editShow??false))
+                             <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt=='add'#end#if(col.configJSON.addShow??false&&col.configJSON.editShow??false)||#end#if(col.configJSON.editShow??false)opt=='edit'#end">
                                                       <v-menu
                                                                 ref="#(col.col)TimeMenu"
                                                                 :close-on-content-click="false"
@@ -99,28 +91,28 @@
                              </v-flex>
                         #end
 
-                        #if((col.configJSON.inputType=='select'))
-                           <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt='add'||#end#if(col.configJSON.updateShow??false)opt='update'#end">
-                                <v-select :items="#(tbl.modelName)SelectData" v-model="#(tbl.modelName).#(col.col)" label="#(tbl.note)" class="input-group--focused" item-value="value" item-text="text"></v-select>
+                        #if((col.configJSON.inputType??''=='select')&&(col.configJSON.addShow??false||col.configJSON.editShow??false))
+                           <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt=='add'#end#if(col.configJSON.addShow??false&&col.configJSON.editShow??false)||#end#if(col.configJSON.editShow??false)opt=='edit'#end">
+                                <v-select :items="#(tbl.modelName)SelectData" v-model="#(tbl.modelName).#(col.col)" label="#genColLabel(col.note)"  item-value="value" item-text="text"></v-select>
                            </v-flex>
                         #end
-                        #if((col.configJSON.inputType=='radio'))
-                           <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt='add'||#end#if(col.configJSON.updateShow??false)opt='update'#end">
-                                #(col.note)<v-radio-group v-model="#(tbl.modelName).#(col.col)" row> <v-radio v-for="n in #(tbl.modelName)RadioData" :key="n.value" :label="n.text" :value="n.value" ></v-radio></v-radio-group>
+                        #if((col.configJSON.inputType??''=='radio')&&(col.configJSON.addShow??false||col.configJSON.editShow??false))
+                           <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt=='add'#end#if(col.configJSON.addShow??false&&col.configJSON.editShow??false)||#end#if(col.configJSON.editShow??false)opt=='edit'#end">
+                                #genColLabel(col.note)<v-radio-group v-model="#(tbl.modelName).#(col.col)" row> <v-radio v-for="n in #(tbl.modelName)RadioData" :key="n.value" :label="n.text" :value="n.value" ></v-radio></v-radio-group>
                            </v-flex>
                         #end
-                        #if((col.configJSON.inputType=='checkbox'))
-                           <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt='add'||#end#if(col.configJSON.updateShow??false)opt='update'#end">
-                                #(col.note)<v-checkbox v-model="#(tbl.modelName).#(col.col)" v-for="n in #(tbl.modelName)CheckboxData" :label="n.text" :value="n.value"></v-checkbox>
+                        #if((col.configJSON.inputType??''=='checkbox')&&(col.configJSON.addShow??false||col.configJSON.editShow??false))
+                           <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt=='add'#end#if(col.configJSON.addShow??false&&col.configJSON.editShow??false)||#end#if(col.configJSON.editShow??false)opt=='edit'#end">
+                                #genColLabel(col.note)<v-checkbox v-model="#(tbl.modelName).#(col.col)" v-for="n in #(tbl.modelName)CheckboxData" :label="n.text" :value="n.value"></v-checkbox>
                            </v-flex>
                         #end
-                        #if((col.configJSON.inputType=='switch'))
-                           <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt='add'||#end#if(col.configJSON.updateShow??false)opt='update'#end">
-                                #(col.note)<v-switch :label="#(col.note)" v-model="#(tbl.modelName).#(col.col)"></v-switch>
+                        #if((col.configJSON.inputType??''=='switch')&&(col.configJSON.addShow??false||col.configJSON.editShow??false))
+                           <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt=='add'#end#if(col.configJSON.addShow??false&&col.configJSON.editShow??false)||#end#if(col.configJSON.editShow??false)opt=='edit'#end">
+                                #genColLabel(col.note)<v-switch :label="#(col.note)" v-model="#(tbl.modelName).#(col.col)"></v-switch>
                            </v-flex>
                         #end
-                        #if((col.configJSON.inputType=='slider'))
-                           <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt='add'||#end#if(col.configJSON.updateShow??false)opt='update'#end">
+                        #if((col.configJSON.inputType??''=='slider')&&(col.configJSON.addShow??false||col.configJSON.editShow??false))
+                           <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt=='add'#end   #if(col.configJSON.addShow??false&&col.configJSON.editShow??false)||#end  #if(col.configJSON.editShow??false)opt=='edit'#end">
                                 #(col.note)<v-slider v-model="#(tbl.modelName).#(col.col)" thumb-label step="1" ticks></v-slider>
                            </v-flex>
                         #end
@@ -133,30 +125,33 @@
           <v-spacer></v-spacer>
           <v-btn color="error darken-1" flat @click.native="dialog = false">关闭</v-btn>
           <v-btn color="success darken-1" flat @click.native="save" :loading="loading" v-show="opt=='add'" :disabled="loading||!fValid">保存</v-btn>
-          <v-btn color="success darken-1" flat @click.native="update" v-show="opt=='update'" :loading="loading" :disabled="loading||!fValid">保存</v-btn>
+          <v-btn color="success darken-1" flat @click.native="update" v-show="opt=='edit'" :loading="loading" :disabled="loading||!fValid">保存</v-btn>
         </v-card-actions>
       </v-card>
   </v-dialog>
-  <v-dialog v-model="viewDialog" persistent max-width="500px">
+  <v-dialog v-model="viewDialog" persistent max-width="300px">
         <v-card >
           <v-card-title>
             <span class="headline">查看详细</span>
           </v-card-title>
-          <v-card-text>
-              <v-form v-model="fValid" ref="form" lazy-validation>
-                  <v-container grid-list-md>
-                    <v-layout wrap>
+            <v-divider></v-divider>
+                  <v-list dense>
                         #for(col:tbl.genCfgColList)
                           #if(col.configJSON.viewShow??false)
-                             <v-flex xs12 sm6 md4>
-                                #(tbl.modelName)View.#(col.col)
-                             </v-flex>
+                              <v-list-tile>
+                              #if(col.configJSON.inputType??''=='select'||col.configJSON.inputType??''=='checkbox'||col.configJSON.inputType??''=='radio'||col.configJSON.inputType??''=='slider'||col.configJSON.inputType??''=='switch')
+                                    <v-list-tile-content>#genColLabel(col.note):</v-list-tile-content><v-list-tile-content class="align-end">{{#(tbl.modelName)View.#(col.col)Str}}</v-list-tile-content>
+                              #else if(col.configJSON.inputType??''=='date')
+                                    <v-list-tile-content>#(col.note):</v-list-tile-content><v-list-tile-content class="align-end">{{#(tbl.modelName)View.#(col.col) | formatDate}}</v-list-tile-content>
+                              #else
+                                    <v-list-tile-content>#(col.note):</v-list-tile-content><v-list-tile-content class="align-end">{{#(tbl.modelName)View.#(col.col)}}</v-list-tile-content>
+                              #end
+                             </v-list-tile>
                           #end
                         #end
-                    </v-layout>
-                  </v-container>
-              </v-form>
-          </v-card-text>
+
+                  </v-list>
+
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="error darken-1" flat @click.native="viewDialog = false">关闭</v-btn>
@@ -165,68 +160,95 @@
     </v-dialog>
   <v-layout row wrap>
         <v-flex xs12 sm12 md12 >
-          <v-btn slot="activator" color="blue" dark class="mb-2" @click.native="add()">新增</v-btn>
+          <v-btn slot="activator" color="blue" dark class="mb-2" @click.native="add()">新增<v-icon>add</v-icon></v-btn>
           <v-card >
-            <v-toolbar color="blue" dark>
-              <v-toolbar-title>#(tbl.note)列表</v-toolbar-title>
+
+              <v-card-title>#(tbl.note)列表
               <v-spacer></v-spacer>
               <v-container grid-list-md>
                       <v-layout row wrap>
               #for(col:tbl.genCfgColList)
-                   #if((col.configJSON.inputType=='text'&&(col.configJSON.equalQuery??false||col.configJSON.likeQuery??false)))
-                         <v-flex xs12 sm4 md4>
+                   #if((col.configJSON.inputType??''=='text'&&(col.configJSON.equalQuery??false||col.configJSON.likeQuery??false)))
+                         <v-flex xs12 sm3 md3>
                             <v-text-field v-model="#(tbl.modelName)Query.#(col.col)"  label="#(col.note)" single-line hide-details ></v-text-field>
                          </v-flex>
                    #end
-                   #if((col.configJSON.inputType=='date')&&(col.configJSON.dateQuery??false))
-                              <v-flex xs12 sm6 md4 >
-                              <v-menu ref="#(col.col)QueryMenu" :close-on-content-click="false" v-model="#(col.col)QueryDateMenu" :return-value.sync="#(tbl.modelName)Query.#(col.col)"
+                   #if((col.configJSON.inputType??''=='date')&&(col.configJSON.dateQuery??false))
+                         <v-flex xs12 sm3 md3 >
+                              <v-menu ref="#(col.col)QueryBeginDateMenu" :close-on-content-click="false" v-model="#(col.col)QueryBeginDateMenu" :return-value.sync="#(tbl.modelName)Query.begin#(firstCharToUpperCase(col.col))"
                                    :nudge-right="40" lazy transition="scale-transition" offset-y full-width max-width="290px" min-width="290px" >
-                                   <v-text-field slot="activator" v-model="#(tbl.modelName).#(col.col)" label="#(col.note)" prepend-icon="event" readonly ></v-text-field>
-                                   <v-date-picker v-model="#(tbl.modelName).#(col.col)" locale="zh-cn"  @input="$refs.#(col.col)Menu.save(#(tbl.modelName).#(col.col))"></v-date-picker>
+                                   <v-text-field slot="activator" v-model="#(tbl.modelName)Query.begin#(firstCharToUpperCase(col.col))" label="#(col.note)查询开始日期" prepend-icon="event" readonly ></v-text-field>
+                                   <v-date-picker v-model="#(tbl.modelName)Query.begin#(firstCharToUpperCase(col.col))" locale="zh-cn"  @input="$refs.#(col.col)QueryBeginDateMenu.save(#(tbl.modelName)Query.begin#(firstCharToUpperCase(col.col)))"></v-date-picker>
                              </v-menu>
                          </v-flex>
+                         <v-flex xs12 sm3 md3 >
+                              <v-menu ref="#(col.col)QueryEndDateMenu" :close-on-content-click="false" v-model="#(col.col)QueryEndDateMenu" :return-value.sync="#(tbl.modelName)Query.end#(firstCharToUpperCase(col.col))"
+                                    :nudge-right="40" lazy transition="scale-transition" offset-y full-width max-width="290px" min-width="290px" >
+                                    <v-text-field slot="activator" v-model="#(tbl.modelName)Query.end#(firstCharToUpperCase(col.col))" label="#(col.note)查询截至日期" prepend-icon="event" readonly ></v-text-field>
+                                    <v-date-picker v-model="#(tbl.modelName)Query.end#(firstCharToUpperCase(col.col))" locale="zh-cn"  @input="$refs.#(col.col)QueryEndDateMenu.save(#(tbl.modelName)Query.end#(firstCharToUpperCase(col.col)))"></v-date-picker>
+                              </v-menu>
+                         </v-flex>
                    #end
-                   #if((col.configJSON.inputType=='time')&&(col.configJSON.dateQuery??false))
-                        <v-flex xs12 sm4 md4>
-                            <v-menu ref="#(col.col)QueryMenu" :close-on-content-click="false" v-model="#(col.col)QueryTimeMenu" :return-value.sync="#(tbl.modelName)Query.#(col.col)"
+                   #if((col.configJSON.inputType??''=='time')&&(col.configJSON.dateQuery??false))
+                        <v-flex xs12 sm3 md3>
+                            <v-menu ref="#(col.col)QueryBeginTimeMenu" :close-on-content-click="false" v-model="#(col.col)QueryBeginTimeMenu" :return-value.sync="#(tbl.modelName)Query.begin#(firstCharToUpperCase(col.col))"
                                                            :nudge-right="40" lazy transition="scale-transition" offset-y full-width max-width="290px" min-width="290px" >
-                                <v-text-field slot="activator" v-model="#(tbl.modelName).#(col.col)" label="#(col.note)" prepend-icon="event" readonly ></v-text-field>
-                                <v-time-picker v-model="#(tbl.modelName).#(col.col)" locale="zh-cn"  @input="$refs.#(col.col)Menu.save(#(tbl.modelName).#(col.col))"></v-date-picker>
+                                <v-text-field slot="activator" v-model="#(tbl.modelName)Query.begin#(firstCharToUpperCase(col.col))" label="#(col.note)查询开始时间" prepend-icon="event" readonly ></v-text-field>
+                                <v-time-picker v-model="#(tbl.modelName)Query.begin#(firstCharToUpperCase(col.col))" locale="zh-cn"  @input="$refs.#(col.col)QueryBeginTimeMenu.save(#(tbl.modelName)Query.begin#(firstCharToUpperCase(col.col)))"></v-time-picker>
+                            </v-menu>
+                        </v-flex>
+
+                        <v-flex xs12 sm3 md3>
+                            <v-menu ref="#(col.col)QueryEndTimeMenu" :close-on-content-click="false" v-model="#(col.col)QueryEndTimeMenu" :return-value.sync="#(tbl.modelName)Query.end#(firstCharToUpperCase(col.col))"
+                                                                                  :nudge-right="40" lazy transition="scale-transition" offset-y full-width max-width="290px" min-width="290px" >
+                                 <v-text-field slot="activator" v-model="#(tbl.modelName)Query.end#(firstCharToUpperCase(col.col))" label="#(col.note)查询截至时间" prepend-icon="event" readonly ></v-text-field>
+                                 <v-time-picker v-model="#(tbl.modelName)Query.end#(firstCharToUpperCase(col.col))" locale="zh-cn"  @input="$refs.#(col.col)QueryBeginTimeMenu.save(#(tbl.modelName)Query.end#(firstCharToUpperCase(col.col)))"></v-time-picker>
                             </v-menu>
                         </v-flex>
                    #end
-                   #if((col.configJSON.inputType=='select')&&(col.configJSON.equalQuery??false||col.configJSON.likeQuery??false))
-                    <v-flex xs12 sm4 md4>
-                        <v-select :items="#(tbl.modelName)SelectData" v-model="#(tbl.modelName)Query.#(col.col)" label="#(tbl.note)" class="input-group--focused" item-value="value" item-text="text"></v-select>
+                   #if((col.configJSON.inputType??''=='select')&&(col.configJSON.equalQuery??false||col.configJSON.likeQuery??false))
+                    <v-flex xs12 sm3 md3>
+                        <v-select :items="#(tbl.modelName)SelectData" v-model="#(tbl.modelName)Query.#(col.col)" label="#genColLabel(col.note)"  item-value="value" item-text="text"></v-select>
                     </v-flex>
                    #end
-                   #if((col.configJSON.inputType=='radio')&&(col.configJSON.equalQuery??false||col.configJSON.likeQuery??false))
-                        #(col.note)<v-radio-group v-model="#(tbl.modelName)Query.#(col.col)" row> <v-radio v-for="n in #(tbl.modelName)RadioData" :key="n.value" :label="n.text" :value="n.value" ></v-radio></v-radio-group>
+                   #if((col.configJSON.inputType??''=='radio')&&(col.configJSON.equalQuery??false||col.configJSON.likeQuery??false))
+                        #genColLabel(col.note)<v-radio-group v-model="#(tbl.modelName)Query.#(col.col)" row> <v-radio v-for="n in #(tbl.modelName)RadioData" :key="n.value" :label="n.text" :value="n.value" ></v-radio></v-radio-group>
                    #end
-                   #if((col.configJSON.inputType=='checkbox')&&(col.configJSON.equalQuery??false||col.configJSON.likeQuery??false))
-                        #(col.note)<v-checkbox v-model="#(tbl.modelName)Query.#(col.col)" v-for="n in #(tbl.modelName)CheckboxData" :label="n.text" :value="n.value"></v-checkbox>
+                   #if((col.configJSON.inputType??''=='checkbox')&&(col.configJSON.equalQuery??false||col.configJSON.likeQuery??false))
+                        #genColLabel(col.note)<v-checkbox v-model="#(tbl.modelName)Query.#(col.col)" v-for="n in #(tbl.modelName)CheckboxData" :label="n.text" :value="n.value"></v-checkbox>
                    #end
-                   #if((col.configJSON.inputType=='switch')&&(col.configJSON.equalQuery??false||col.configJSON.likeQuery??false))
-                        #(col.note)<v-switch :label="#(col.note)" v-model="#(tbl.modelName)Query.#(col.col)"></v-switch>
+                   #if((col.configJSON.inputType??''=='switch')&&(col.configJSON.equalQuery??false||col.configJSON.likeQuery??false))
+                        #genColLabel(col.note)<v-switch :label="#(col.note)" v-model="#(tbl.modelName)Query.#(col.col)"></v-switch>
                    #end
-                   #if((col.configJSON.inputType=='slider')&&(col.configJSON.equalQuery??false||col.configJSON.likeQuery??false))
+                   #if((col.configJSON.inputType??''=='slider')&&(col.configJSON.equalQuery??false||col.configJSON.likeQuery??false))
                         #(col.note)<v-slider v-model="#(tbl.modelName)Query.#(col.col)" thumb-label step="1" ticks></v-slider>
                    #end
               #end
-                        <v-flex xs12 sm4 md4>
-                             <v-btn icon @click="search()">
-                                 <v-icon>search</v-icon>搜索
+                        <v-flex xs12 sm3 md3>
+                             <v-btn color="info" class="white--text" @click="search()">
+                                 搜索<v-icon>search</v-icon>
+                             </v-btn>
+                             <v-btn color="info" class="white--text" @click="clearQueryParam()">
+                                 清空<v-icon>clear</v-icon>
                              </v-btn>
                         </v-flex>
                       </v-layout>
               </v-container>
-            </v-toolbar>
-            <v-data-table :headers="#(tbl.modelName)Headers" :items="#(tbl.modelName)Page.list" hide-actions :pagination.sync="#(tbl.modelName)Query"  class="elevation-1" no-data-text="数据为空" no-results-text="没有筛选到正确的数据">
+              </v-card-title>
+
+            <v-data-table :headers="#(tbl.modelName)Headers" :total-items="totalRow" :items="#(tbl.modelName)List" hide-actions :pagination.sync="#(tbl.modelName)Query"  class="elevation-1" no-data-text="数据为空" no-results-text="没有筛选到正确的数据">
               <template slot="items" slot-scope="props">
                  #for(col:tbl.genCfgColList)
-                 #if(col.tableShow??false)
-                    <td>{{ props.item.#(col.col) }}</td>
+                 #if(col.configJSON.tableShow??false)
+                    <td>
+                    #if(col.configJSON.inputType??''=='select'||col.configJSON.inputType??''=='checkbox'||col.configJSON.inputType??''=='radio'||col.configJSON.inputType??''=='slider'||col.configJSON.inputType??''=='switch')
+                               {{props.item.#(col.col)Str}}
+                    #else if(col.configJSON.inputType??''=='date')
+                               {{props.item.#(col.col) | formatDate}}
+                    #else
+                               {{props.item.#(col.col)}}
+                    #end
+                    </td>
                  #end
                  #end
                 <td class=" layout px-0">
@@ -242,8 +264,8 @@
                 </td>
               </template>
           </v-data-table>
-          <div class="text-xs-center pt-2">
-                <v-pagination v-model="#(tbl.modelName)Query.pn" :length="#(tbl.modelName)Page.totalRow"></v-pagination>
+          <div class="text-xs-center pt-2" v-if="totalPage>0">
+                <v-pagination v-model="#(tbl.modelName)Query.pn" :length="totalPage"></v-pagination>
           </div>
           </v-card>
         </v-flex>
@@ -253,24 +275,37 @@
 <script>
 import { mapState } from "vuex";
 import Kit from "../../../libs/kit.js";
+#for(col:tbl.genCfgColList)
+    #if(col.configJSON.inputType??''=='date')
+        var moment = require('moment');
+    #end
+#end
 export default {
   data() {
     return {
       fValid: true,
       valid: true,
-      #(tbl.modelName)Query:{},//列表查询参数数据对象
+      #(tbl.modelName)Query:{pn:1,rowsPerPage:15,sortBy:'',descending:''},//列表查询参数数据对象
       #(tbl.modelName)View:{},//查询详细数据对象
       loading: false,
       title: "新增#(tbl.note)",
       rules: Kit.inputRules,
       #(tbl.modelName)Headers: [
         #for(col:tbl.genCfgColList)
-        #if(col.tableShow??false)
+        #if(col.configJSON.tableShow??false)
+        #if(col.configJSON.inputType??''=='select'||col.configJSON.inputType??''=='checkbox'||col.configJSON.inputType??''=='radio'||col.configJSON.inputType??''=='switch')
         {
-          text: "#(col.note)",
-          #if(col.isSort??false)sortable: true,#else sortable: false, #end
+          text: "#genColLabel(col.note)",
+          #if(col.configJSON.isSort??false)sortable: true,#else sortable: false, #end
           value: "#(col.col)"
         },
+        #else
+        {
+           text: "#(col.note)",
+           #if(col.configJSON.isSort??false)sortable: true,#else sortable: false, #end
+           value: "#(col.col)"
+        },
+        #end
         #end
         #end
         { text: "操作", sortable: false }
@@ -279,13 +314,15 @@ export default {
       viewDialog:false,
       opt: "",
       #for(col:tbl.genCfgColList)
-      #if((col.configJSON.inputType=='select'))#(tbl.modelName)SelectData:[],#end
-      #if((col.configJSON.inputType=='radio'))#(tbl.modelName)RadioData:[],#end
-      #if((col.configJSON.inputType=='checkbox'))#(tbl.modelName)CheckboxData:[],#end
-      #if((col.configJSON.inputType=='date')&&((col.configJSON.addShow??false)||(col.configJSON.updateShow??false)))#(col.col)DateMenu:false #end
-      #if((col.configJSON.inputType=='time')&&((col.configJSON.addShow??false)||(col.configJSON.updateShow??false)))#(col.col)TimeMenu:false #end
-      #if((col.configJSON.inputType=='date')&&((col.configJSON.dateQuery??false)))#(col.col)QueryDateMenu:false #end
-      #if((col.configJSON.inputType=='time')&&((col.configJSON.dateQuery??false)))#(col.col)QueryTimeMenu:false #end
+          #if((col.configJSON.inputType??''=='select'))#(tbl.modelName)SelectData:[#genColNoteData(col.note)],#end
+          #if((col.configJSON.inputType??''=='radio'))#(tbl.modelName)RadioData:[#genColNoteData(col.note)],#end
+          #if((col.configJSON.inputType??''=='checkbox'))#(tbl.modelName)CheckboxData:[#genColNoteData(col.note)],#end
+          #if((col.configJSON.inputType??''=='date')&&((col.configJSON.addShow??false)||(col.configJSON.editShow??false)))#(col.col)DateMenu:false, #end
+          #if((col.configJSON.inputType??''=='time')&&((col.configJSON.addShow??false)||(col.configJSON.editShow??false)))#(col.col)TimeMenu:false, #end
+          #if((col.configJSON.inputType??''=='date')&&((col.configJSON.dateQuery??false)))#(col.col)QueryBeginDateMenu:false,
+          #(col.col)QueryEndDateMenu:false,#end
+          #if((col.configJSON.inputType??''=='time')&&((col.configJSON.dateQuery??false)))#(col.col)QueryBeginTimeMenu:false,
+          #(col.col)QueryEndTimeMenu:false,#end
       #end
 
     };
@@ -293,18 +330,22 @@ export default {
   computed: {
     ...mapState({
       #(tbl.modelName): state => state.#(tbl.modelName).#(tbl.modelName),
-      #(tbl.modelName)Page: state => state.#(tbl.modelName).#(tbl.modelName)Page,
+      #(tbl.modelName)List: state => state.#(tbl.modelName).#(tbl.modelName)List,
+      totalRow:state =>state.#(tbl.modelName).totalRow,
+      pageNumber:state =>state.#(tbl.modelName).pageNumber,
+      pageSize:state =>state.#(tbl.modelName).pageSize,
+      totalPage:state =>state.#(tbl.modelName).totalPage,
     })
   },
   mounted() {
     this.search();
   },
-
   methods: {
     search() {
       this.$store.dispatch("page_#(tbl.modelName)",this.#(tbl.modelName)Query);
     },
     add() {
+          this.loading=false;
           this.$refs.form.reset();
           this.opt = "add";
           this.$store.commit("set#(tbl.className)", {});
@@ -312,9 +353,10 @@ export default {
           this.dialog = true;
     },
     edit(#(tbl.modelName)) {
+          this.loading=false;
           this.$refs.form.reset();
-          this.opt = "update";
-          this.$store.commit("set#(tbl.className)", dd);
+          this.opt = "edit";
+          this.$store.commit("set#(tbl.className)", #(tbl.modelName));
           this.dialog = true;
           this.title = "修改#(tbl.note)" ;
     },
@@ -360,7 +402,7 @@ export default {
       let vm = this;
       this.$APDialog.confirm(function(ret) {
         if (ret) {
-          vm.$store.dispatch("del_#(tbl.modelName)", { id: #(tbl.modelName).id }).then(res => {
+          vm.$store.dispatch("del_#(tbl.modelName)", { ids: #(tbl.modelName).id }).then(res => {
             if (res.resCode == "success") {
                 vm.search();
             }
@@ -375,8 +417,38 @@ export default {
         vm.$store.dispatch("get_#(tbl.modelName)", { id: #(tbl.modelName).id }).then(res=>{
             vm.#(tbl.modelName)View=res;
         })
+    },
+    clearQueryParam(){
+    #for(col:tbl.genCfgColList)
+      #if(col.configJSON.equalQuery??false||col.configJSON.likeQuery??false)
+        this.#(tbl.modelName)Query['#(col.col)']='';
+      #else if(col.configJSON.dateQuery??false)
+        this.#(tbl.modelName)Query['begin#(firstCharToUpperCase(col.col))']='';
+        this.#(tbl.modelName)Query['end#(firstCharToUpperCase(col.col))']='';
+      #end
+    #end
     }
-  }
+  },
+  #for(col:tbl.genCfgColList)
+      #if(col.configJSON.inputType??''=='date')
+  filters: {
+          formatDate(time) {
+              if(!!!time)return ''
+              var date = new Date(time);
+              return moment(date).format("YYYY-MM-DD hh:mm:ss");
+          }
+      },
+  #end#end
+    watch: {
+        #(tbl.modelName)Query: {
+          handler () {
+          if (this.#(tbl.modelName)Query.sortBy != "") {
+            this.search()
+          }
+          },
+          deep: true
+        }
+      },
 };
 </script>
 <style>

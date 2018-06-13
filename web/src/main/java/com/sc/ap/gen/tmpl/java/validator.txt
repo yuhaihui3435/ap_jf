@@ -14,7 +14,7 @@ public class #(tbl.className)Validator extends CoreValidator {
         #(tbl.className) #(tbl.modelName)=controller.getModel(#(tbl.className).class,"",true);
         String ak=getActionKey();
         List<#(tbl.className)> list=null;
-        if(ak.equals("save")||ak.equals("update")){
+        if(ak.contains("#(tbl.modelName)/save")||ak.contains("#(tbl.modelName)/update")){
             #for(col:tbl.genCfgColList)
                 #if(col.configJSON.isRequired??false&&(col.configJSON.inputType=='text'||col.configJSON.inputType=='textArea'))
                     if(StrUtil.isBlank(#(tbl.modelName).get#(firstCharToUpperCase(col.col))())){
@@ -31,7 +31,7 @@ public class #(tbl.className)Validator extends CoreValidator {
                 #if(notBlank((col.configJSON.min??null))&&(col.configJSON.inputType=='text'||col.configJSON.inputType=='textArea'))
 
                                              if (StrUtil.isNotBlank(#(tbl.modelName).get#(firstCharToUpperCase(col.col))())) {
-                                                   int len=StrUtil.totalLength(#(tbl.modelName).get#(firstCharToUpperCase(col.col))())
+                                                   int len=StrUtil.totalLength(#(tbl.modelName).get#(firstCharToUpperCase(col.col))());
                                                    if(len<#(col.configJSON.min)){
                                                         addError(Consts.REQ_JSON_CODE.fail.name(), "#(col.note)长度不能小于#(col.configJSON.min)");
                                                         return;
@@ -41,7 +41,7 @@ public class #(tbl.className)Validator extends CoreValidator {
                 #if(notBlank((col.configJSON.max??null))&&(col.configJSON.inputType=='text'||col.configJSON.inputType=='textArea'))
 
                                              if (StrUtil.isNotBlank(#(tbl.modelName).get#(firstCharToUpperCase(col.col))())) {
-                                                   int len=StrUtil.totalLength(#(tbl.modelName).get#(firstCharToUpperCase(col.col))())
+                                                   int len=StrUtil.totalLength(#(tbl.modelName).get#(firstCharToUpperCase(col.col))());
                                                    if(len>#(col.configJSON.max)){
                                                         addError(Consts.REQ_JSON_CODE.fail.name(), "#(col.note)长度不能大于#(col.configJSON.max)");
                                                         return;
@@ -49,31 +49,44 @@ public class #(tbl.className)Validator extends CoreValidator {
                                              }
                 #end
             #end
-        }else if(ak.equals("del")||ak.equals("logicDel")){
-            String ids =getPara("ids");
+        }else if(ak.contains("#(tbl.modelName)/del")||ak.contains("#(tbl.modelName)/logicDel")){
+            String ids =controller.getPara("ids");
             if(StrUtil.isBlank(ids)){
                 addError(Consts.REQ_JSON_CODE.fail.name(), "缺少删除数据的关键数据");
                 return;
             }
         }
-        if(ak.equals("save")){
+        if(ak.contains("#(tbl.modelName)/save")){
              #for(col:tbl.genCfgColList)
                    #if(col.configJSON.onlyOne??false)
+                       #if(!(col.configJSON.isRequired??false))
+                           if(StrUtil.isNotBlank(#(tbl.modelName).get#(firstCharToUpperCase(col.col))())){
+                       #end
                        list=#(tbl.className).dao.findByPropEQWithDat("#(col.orgCol)",#(tbl.modelName).get#(firstCharToUpperCase(col.col))());
                        if (!list.isEmpty()) {
                              addError(Consts.REQ_JSON_CODE.fail.name(), "#(col.note)值重复");
                              return;
                        }
+                       #if(!(col.configJSON.isRequired??false))
+                          }
+                       #end
                    #end
              #end
-        }else if(ak.equals("update")){
+        }else if(ak.contains("#(tbl.modelName)/update")){
             #for(col:tbl.genCfgColList)
                                #if(col.configJSON.onlyOne??false)
-                                   list=#(tbl.className).dao.findByPropEQAndIdNEQWithDat("#(col.orgCol)",#(tbl.modelName).get#(firstCharToUpperCase(col.col))());
+
+                                   #if(!(col.configJSON.isRequired??false))
+                                   if(StrUtil.isNotBlank(#(tbl.modelName).get#(firstCharToUpperCase(col.col))())){
+                                   #end
+                                   list=#(tbl.className).dao.findByPropEQAndIdNEQWithDat("#(col.orgCol)",#(tbl.modelName).get#(firstCharToUpperCase(col.col))(),#(tbl.modelName).getId());
                                    if (!list.isEmpty()) {
                                          addError(Consts.REQ_JSON_CODE.fail.name(), "#(col.note)值重复");
                                          return;
                                    }
+                                   #if(!(col.configJSON.isRequired??false))
+                                   }
+                                   #end
                                #end
                          #end
         }

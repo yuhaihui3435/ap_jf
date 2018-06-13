@@ -2,13 +2,16 @@ package com.sc.ap.core;
 
 import cn.hutool.core.util.ArrayUtil;
 import com.jfinal.kit.Kv;
+import com.jfinal.kit.LogKit;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.*;
 import com.sc.ap.Consts;
 import com.sc.ap.kits.DateKit;
 import org.jsoup.Jsoup;
 
+import java.lang.reflect.Field;
 import java.util.*;
+import java.util.concurrent.Executors;
 
 /**
  * Created by 于海慧（125227112@qq.com） on 2016/11/30.
@@ -31,11 +34,11 @@ public abstract class CoreModel<M extends CoreModel<M>> extends Model<M> {
 	}
 	@Override
 	public boolean save() {
-
-		String[] ans=_getAttrNames();
-		if(ArrayUtil.contains(ans,"cAt")){
-			set("cAt",new Date());
-		}
+		try {
+            set("cAt", new Date());
+        }catch (Exception e){
+            LogKit.error("缺少cAt字段");
+        }
 		return super.save();
 	}
 
@@ -54,27 +57,29 @@ public abstract class CoreModel<M extends CoreModel<M>> extends Model<M> {
 	@Override
 	public boolean update() {
 
-		String[] ans=_getAttrNames();
-		if(ArrayUtil.contains(ans,"lAt")){
+		try {
 			set("lAt",new Date());
-		}
+		}catch (Exception e){
+		    LogKit.error("缺少lAt字段");
+        }
 		return super.update();
 	}
 
 	public boolean apDel(){
-		String[] ans=_getAttrNames();
-		if(ArrayUtil.contains(ans,"dAt")){
-			set("dAt",new Date());
-		}
+		try {
+            set("dAt", new Date());
+        }catch (Exception e){
+            LogKit.error("缺少dAt字段");
+        }
 		return super.update();
 	}
 
 
-	public String getYOrNTxt(boolean val) {
+	public String getYOrNStr(boolean val) {
 		return (val) ? Consts.YORN.yes.getLabel() : Consts.YORN.no.getLabel();
 	}
 
-	public String getStatusTxt(String val) {
+	public String getStatusStr(String val) {
 		if (val == null)
 			return "";
 		return (val.equals(Consts.STATUS.enable.getVal()) ? Consts.STATUS.enable.getValTxt()
@@ -129,7 +134,6 @@ public abstract class CoreModel<M extends CoreModel<M>> extends Model<M> {
 		kv.put("cond",cond);
 		return kv;
 	}
-
 
 	public String getLAtStr(){
 		String[] ans=_getAttrNames();

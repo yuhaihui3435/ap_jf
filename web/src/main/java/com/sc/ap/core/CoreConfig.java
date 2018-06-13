@@ -1,6 +1,7 @@
 package com.sc.ap.core;
 
 
+import com.sc.ap.controller.user.UserController;
 import com.sc.ap.gen.GenCtr;
 import com.sc.ap.gen.GenSourceCtr;
 import com.sc.ap.gen.directive.ColNoteResolve;
@@ -97,6 +98,13 @@ public class CoreConfig extends JFinalConfig {
 			@Override
 			public void config() {
 				add("/", IndexCtr.class);
+			}
+		});
+
+		routes.add(new Routes() {
+			@Override
+			public void config() {
+				add("/api/user", UserController.class);
 			}
 		});
 	}
