@@ -240,10 +240,10 @@ public class GenSrv {
         GenCfgTbl genCfgTbl=(GenCfgTbl)data.get("tbl");
         String modelName=genCfgTbl.getModelName();
         String outDir=(String)data.get("outDir")+"/js/"+modelName+"/";
-        String main="main"+VUE_FILE_SUFFIX;
-        String store="store"+JS_FILE_SUFFIX;
-        String main_txt="main"+TXT_FILE_SUFFIX;
-        String store_txt="store"+TXT_FILE_SUFFIX;
+        String main=modelName+VUE_FILE_SUFFIX;
+        String store=modelName+JS_FILE_SUFFIX;
+        String main_txt=modelName+TXT_FILE_SUFFIX;
+        String store_txt=modelName+TXT_FILE_SUFFIX;
         File file= FileUtil.file(outDir);
         if(!file.exists())file.mkdirs();
         File[] files=file.listFiles();

@@ -46,8 +46,8 @@ public abstract class CoreQuery {
     }
 
     public String getOrderBy(){
-        String order=StrUtil.isNotBlank(descending)?null:descending;
-        String sortField=StrUtil.isNotBlank(sortBy)?null:sortBy;
+        String order=StrUtil.isBlank(descending)?null:descending;
+        String sortField=StrUtil.isBlank(sortBy)?null:sortBy;
         if(StrUtil.isNotBlank(order)&&StrUtil.isNotBlank(sortField))
             return sortBy+" "+(("true".equals(order))?"desc":"asc");
         else

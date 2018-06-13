@@ -24,6 +24,7 @@ public class _MappingKit {
 
 		arp.addMapping("s_param", "id", Param.class);
 		arp.addMapping("s_res", "id", Res.class);
+		arp.addMapping("s_ser", "id", Ser.class);
 		arp.addMapping("s_role", "id", Role.class);
 		arp.addMapping("s_role_res", "id", RoleRes.class);
 

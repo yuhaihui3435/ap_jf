@@ -1,5 +1,5 @@
 <template>
-<v-container fluid grid-list-md >
+<div >
   <v-dialog v-model="dialog" persistent max-width="500px">
       <v-card >
         <v-card-title>
@@ -12,7 +12,7 @@
                       #for(col:tbl.genCfgColList)
                         #if((col.configJSON.inputType??''=='text'&&(col.configJSON.addShow??false||col.configJSON.editShow??false)))
                            <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt=='add'#end#if(col.configJSON.addShow??false&&col.configJSON.editShow??false)||#end#if(col.configJSON.editShow??false)opt=='edit'#end">
-                              <v-text-field v-model="#(tbl.modelName).#(col.col)"  label="#(col.note)" #if(col.configJSON.isRequired??false)required#end box
+                              <v-text-field v-model="#(tbl.modelName).#(col.col)"  label="#(col.note)" #if(col.configJSON.isRequired??false)required#end
                                   :rules="[
                                   #if(col.configJSON.isRequired??false)rules.required,#end
                                   #if(notBlank(col.configJSON.rule))rules.#(col.configJSON.rule),#end
@@ -25,7 +25,7 @@
                         #end
                         #if((col.configJSON.inputType??''=='textArea')&&(col.configJSON.addShow??false||col.configJSON.editShow??false))
                             <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt=='add'#end#if(col.configJSON.addShow??false&&col.configJSON.editShow??false)||#end#if(col.configJSON.editShow??false)opt=='edit'#end">
-                                                      <v-text-field v-model="#(tbl.modelName).#(col.col)"  label="#(col.note)" textarea #if(col.configJSON.isRequired??false)required#end box
+                                                      <v-text-field v-model="#(tbl.modelName).#(col.col)"  label="#(col.note)" textarea #if(col.configJSON.isRequired??false)required#end
                                                           :rules="[
                                                           #if(col.configJSON.isRequired??false)rules.required,#end
                                                           #if(notBlank(col.configJSON.rule))rules.#(col.configJSON.rule),#end
@@ -55,9 +55,10 @@
                                           slot="activator"
                                           v-model="#(tbl.modelName).#(col.col)"
                                           label="#(col.note)"
+                                          #if(col.configJSON.isRequired??false)required#end
                                           prepend-icon="event"
                                           readonly
-                                          :rules="[#if(col.configJSON.isRequired??false)rules.required,#end]"
+                                          :rules="[#if(col.configJSON.isRequired??false)rules.required#end]"
                                         ></v-text-field>
                                         <v-date-picker v-model="#(tbl.modelName).#(col.col)" locale="zh-cn"  @input="$refs.#(col.col)Menu.save(#(tbl.modelName).#(col.col))"></v-date-picker>
                                       </v-menu>
@@ -83,8 +84,9 @@
                                                                   v-model="#(tbl.modelName).#(col.col)"
                                                                   label="#(col.note)"
                                                                   prepend-icon="access_time"
+                                                                  #if(col.configJSON.isRequired??false)required#end
                                                                   readonly
-                                                                  :rules="[#if(col.configJSON.isRequired??false)rules.required,#end]"
+                                                                  :rules="[#if(col.configJSON.isRequired??false)rules.required#end]"
                                                                 ></v-text-field>
                                                                 <v-time-picker v-model="#(tbl.modelName).#(col.col)" locale="zh-cn"  @input="$refs.#(col.col)Menu.save(#(tbl.modelName).#(col.col))"></v-time-picker>
                                                               </v-menu>
@@ -93,27 +95,27 @@
 
                         #if((col.configJSON.inputType??''=='select')&&(col.configJSON.addShow??false||col.configJSON.editShow??false))
                            <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt=='add'#end#if(col.configJSON.addShow??false&&col.configJSON.editShow??false)||#end#if(col.configJSON.editShow??false)opt=='edit'#end">
-                                <v-select :items="#(tbl.modelName)SelectData" v-model="#(tbl.modelName).#(col.col)" label="#genColLabel(col.note)"  item-value="value" item-text="text"></v-select>
+                                <v-select :items="#(tbl.modelName)SelectData" v-model="#(tbl.modelName).#(col.col)" :rules="[#if(col.configJSON.isRequired??false)rules.required#end]" label="#genColLabel(col.note)" #if(col.configJSON.isRequired??false)required#end  item-value="value" item-text="text"></v-select>
                            </v-flex>
                         #end
                         #if((col.configJSON.inputType??''=='radio')&&(col.configJSON.addShow??false||col.configJSON.editShow??false))
                            <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt=='add'#end#if(col.configJSON.addShow??false&&col.configJSON.editShow??false)||#end#if(col.configJSON.editShow??false)opt=='edit'#end">
-                                #genColLabel(col.note)<v-radio-group v-model="#(tbl.modelName).#(col.col)" row> <v-radio v-for="n in #(tbl.modelName)RadioData" :key="n.value" :label="n.text" :value="n.value" ></v-radio></v-radio-group>
+                                #genColLabel(col.note)<v-radio-group v-model="#(tbl.modelName).#(col.col)" row :rules="[#if(col.configJSON.isRequired??false)rules.required#end]" #if(col.configJSON.isRequired??false)required#end> <v-radio v-for="n in #(tbl.modelName)RadioData"  :key="n.value" :label="n.text" :value="n.value" ></v-radio></v-radio-group>
                            </v-flex>
                         #end
                         #if((col.configJSON.inputType??''=='checkbox')&&(col.configJSON.addShow??false||col.configJSON.editShow??false))
                            <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt=='add'#end#if(col.configJSON.addShow??false&&col.configJSON.editShow??false)||#end#if(col.configJSON.editShow??false)opt=='edit'#end">
-                                #genColLabel(col.note)<v-checkbox v-model="#(tbl.modelName).#(col.col)" v-for="n in #(tbl.modelName)CheckboxData" :label="n.text" :value="n.value"></v-checkbox>
+                                #genColLabel(col.note)<v-checkbox v-model="#(tbl.modelName).#(col.col)" :rules="[#if(col.configJSON.isRequired??false)rules.required#end]" v-for="n in #(tbl.modelName)CheckboxData" #if(col.configJSON.isRequired??false)required#end :label="n.text" :value="n.value"></v-checkbox>
                            </v-flex>
                         #end
                         #if((col.configJSON.inputType??''=='switch')&&(col.configJSON.addShow??false||col.configJSON.editShow??false))
                            <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt=='add'#end#if(col.configJSON.addShow??false&&col.configJSON.editShow??false)||#end#if(col.configJSON.editShow??false)opt=='edit'#end">
-                                #genColLabel(col.note)<v-switch :label="#(col.note)" v-model="#(tbl.modelName).#(col.col)"></v-switch>
+                                <v-switch label="#genColLabel(col.note)" v-model="#(tbl.modelName).#(col.col)"  #if(col.configJSON.isRequired??false)required#end></v-switch>
                            </v-flex>
                         #end
                         #if((col.configJSON.inputType??''=='slider')&&(col.configJSON.addShow??false||col.configJSON.editShow??false))
-                           <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt=='add'#end   #if(col.configJSON.addShow??false&&col.configJSON.editShow??false)||#end  #if(col.configJSON.editShow??false)opt=='edit'#end">
-                                #(col.note)<v-slider v-model="#(tbl.modelName).#(col.col)" thumb-label step="1" ticks></v-slider>
+                           <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt=='add'#end  #if(col.configJSON.addShow??false&&col.configJSON.editShow??false)||#end  #if(col.configJSON.editShow??false)opt=='edit'#end">
+                                #(col.note)<v-slider v-model="#(tbl.modelName).#(col.col)" thumb-label step="1" #if(col.configJSON.isRequired??false)required#end ticks></v-slider>
                            </v-flex>
                         #end
                       #end
@@ -139,7 +141,7 @@
                         #for(col:tbl.genCfgColList)
                           #if(col.configJSON.viewShow??false)
                               <v-list-tile>
-                              #if(col.configJSON.inputType??''=='select'||col.configJSON.inputType??''=='checkbox'||col.configJSON.inputType??''=='radio'||col.configJSON.inputType??''=='slider'||col.configJSON.inputType??''=='switch')
+                              #if(col.configJSON.inputType??''=='select'||col.configJSON.inputType??''=='checkbox'||col.configJSON.inputType??''=='radio')
                                     <v-list-tile-content>#genColLabel(col.note):</v-list-tile-content><v-list-tile-content class="align-end">{{#(tbl.modelName)View.#(col.col)Str}}</v-list-tile-content>
                               #else if(col.configJSON.inputType??''=='date')
                                     <v-list-tile-content>#(col.note):</v-list-tile-content><v-list-tile-content class="align-end">{{#(tbl.modelName)View.#(col.col) | formatDate}}</v-list-tile-content>
@@ -158,13 +160,9 @@
           </v-card-actions>
         </v-card>
     </v-dialog>
-  <v-layout row wrap>
-        <v-flex xs12 sm12 md12 >
-          <v-btn slot="activator" color="blue" dark class="mb-2" @click.native="add()">新增<v-icon>add</v-icon></v-btn>
-          <v-card >
-
-              <v-card-title>#(tbl.note)列表
-              <v-spacer></v-spacer>
+    <v-btn slot="activator" color="blue" dark class="mb-2" @click.native="add()">新增<v-icon>add</v-icon></v-btn>
+      <v-card >
+              <v-card-title>#(tbl.note)列表</v-card-title>
               <v-container grid-list-md>
                       <v-layout row wrap>
               #for(col:tbl.genCfgColList)
@@ -212,16 +210,24 @@
                     </v-flex>
                    #end
                    #if((col.configJSON.inputType??''=='radio')&&(col.configJSON.equalQuery??false||col.configJSON.likeQuery??false))
+                        <v-flex xs12 sm3 md3>
                         #genColLabel(col.note)<v-radio-group v-model="#(tbl.modelName)Query.#(col.col)" row> <v-radio v-for="n in #(tbl.modelName)RadioData" :key="n.value" :label="n.text" :value="n.value" ></v-radio></v-radio-group>
+
                    #end
                    #if((col.configJSON.inputType??''=='checkbox')&&(col.configJSON.equalQuery??false||col.configJSON.likeQuery??false))
+                        <v-flex xs12 sm3 md3>
                         #genColLabel(col.note)<v-checkbox v-model="#(tbl.modelName)Query.#(col.col)" v-for="n in #(tbl.modelName)CheckboxData" :label="n.text" :value="n.value"></v-checkbox>
+                        </v-flex>
                    #end
                    #if((col.configJSON.inputType??''=='switch')&&(col.configJSON.equalQuery??false||col.configJSON.likeQuery??false))
-                        #genColLabel(col.note)<v-switch :label="#(col.note)" v-model="#(tbl.modelName)Query.#(col.col)"></v-switch>
+                        <v-flex xs12 sm3 md3>
+                        <v-switch label="#genColLabel(col.note)" v-model="#(tbl.modelName)Query.#(col.col)"></v-switch>
+                        </v-flex>
                    #end
                    #if((col.configJSON.inputType??''=='slider')&&(col.configJSON.equalQuery??false||col.configJSON.likeQuery??false))
+                       <v-flex xs12 sm3 md3>
                         #(col.note)<v-slider v-model="#(tbl.modelName)Query.#(col.col)" thumb-label step="1" ticks></v-slider>
+                       </v-flex>
                    #end
               #end
                         <v-flex xs12 sm3 md3>
@@ -234,9 +240,9 @@
                         </v-flex>
                       </v-layout>
               </v-container>
-              </v-card-title>
 
-            <v-data-table :headers="#(tbl.modelName)Headers" :total-items="totalRow" :items="#(tbl.modelName)List" hide-actions :pagination.sync="#(tbl.modelName)Query"  class="elevation-1" no-data-text="数据为空" no-results-text="没有筛选到正确的数据">
+
+            <v-data-table :headers="#(tbl.modelName)Headers" :total-items="totalRow" :items="#(tbl.modelName)List" :rows-per-page-items="rowsPerPageItems" :pagination.sync="#(tbl.modelName)Query"  class="elevation-1" no-data-text="数据为空" no-results-text="没有筛选到正确的数据">
               <template slot="items" slot-scope="props">
                  #for(col:tbl.genCfgColList)
                  #if(col.configJSON.tableShow??false)
@@ -264,13 +270,8 @@
                 </td>
               </template>
           </v-data-table>
-          <div class="text-xs-center pt-2" v-if="totalPage>0">
-                <v-pagination v-model="#(tbl.modelName)Query.pn" :length="totalPage"></v-pagination>
-          </div>
-          </v-card>
-        </v-flex>
-  </v-layout>
-</v-container>
+      </v-card>
+</div>
 </template>
 <script>
 import { mapState } from "vuex";
@@ -285,7 +286,8 @@ export default {
     return {
       fValid: true,
       valid: true,
-      #(tbl.modelName)Query:{pn:1,rowsPerPage:15,sortBy:'',descending:''},//列表查询参数数据对象
+      rowsPerPageItems: [15],
+      #(tbl.modelName)Query:{pn:1,sortBy:'',descending:''},//列表查询参数数据对象
       #(tbl.modelName)View:{},//查询详细数据对象
       loading: false,
       title: "新增#(tbl.note)",
@@ -338,6 +340,7 @@ export default {
     })
   },
   mounted() {
+    this.#(tbl.modelName)Query["pn"] = this.serQuery.page;
     this.search();
   },
   methods: {
@@ -441,8 +444,8 @@ export default {
   #end#end
     watch: {
         #(tbl.modelName)Query: {
-          handler () {
-          if (this.#(tbl.modelName)Query.sortBy != "") {
+          handler (val,oldVal) {
+          if (this.#(tbl.modelName)Query.sortBy != ""||val.page!=oldVal.page) {
             this.search()
           }
           },

@@ -1,6 +1,9 @@
 package com.sc.ap.core;
 
 
+import com.sc.ap.controller.res.ResController;
+import com.sc.ap.controller.role.RoleController;
+import com.sc.ap.controller.ser.SerController;
 import com.sc.ap.controller.user.UserController;
 import com.sc.ap.gen.GenCtr;
 import com.sc.ap.gen.GenSourceCtr;
@@ -105,8 +108,12 @@ public class CoreConfig extends JFinalConfig {
 			@Override
 			public void config() {
 				add("/api/user", UserController.class);
+				add("/api/role", RoleController.class);
+				add("/api/res", ResController.class);
+				add("/api/ser", SerController.class);
 			}
-		});
+		}
+		);
 	}
 
 	@Override

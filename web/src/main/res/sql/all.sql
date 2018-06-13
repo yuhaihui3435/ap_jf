@@ -27,7 +27,7 @@
           and #(x.key)   #para(x.value)
         #end
     #end
-    #(dAt) #if(isNotBlank(orderby))#(orderby)#else order by id desc#end limit 1
+    #(dAt) #if(isNotBlank(orderby))#(orderby)#else order by id desc  #end limit 1
 #end
 
 #sql("queryColumnComment")

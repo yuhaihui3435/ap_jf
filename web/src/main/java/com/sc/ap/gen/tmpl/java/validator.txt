@@ -23,7 +23,11 @@ public class #(tbl.className)Validator extends CoreValidator {
                     }
                 #else if(col.configJSON.isRequired??false&&!(col.configJSON.inputType=='text'||col.configJSON.inputType=='textArea'))
                     if(#(tbl.modelName).get#(firstCharToUpperCase(col.col))()==null){
-                        addError(Consts.REQ_JSON_CODE.fail.name(), "#(col.note)值不能为空");
+                        #if(col.configJSON.inputType??''=='select'||col.configJSON.inputType??''=='checkbox'||col.configJSON.inputType??''=='radio')
+                            addError(Consts.REQ_JSON_CODE.fail.name(), "#genColLabel(col.note)值不能为空");
+                        #else
+                            addError(Consts.REQ_JSON_CODE.fail.name(), "#(col.note)值不能为空");
+                        #end
                         return;
                     }
                 #end

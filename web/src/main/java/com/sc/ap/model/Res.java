@@ -1,5 +1,6 @@
 package com.sc.ap.model;
 
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jfinal.kit.LogKit;
@@ -154,4 +155,10 @@ public class Res extends BaseRes<Res> {
 	}
 
 
+	public String getLoggedStr(){
+		return StrUtil.isBlank(getLogged())?"":(getLogged().equals(Consts.YORN_STR.no.getVal())?Consts.YORN_STR.no.getLabel():Consts.YORN_STR.yes.getLabel());
+	}
+	public String getEnabledStr(){
+		return StrUtil.isBlank(getLogged())?"":(getLogged().equals(Consts.YORN_STR.no.getVal())?Consts.YORN_STR.no.getLabel():Consts.YORN_STR.yes.getLabel());
+	}
 }
