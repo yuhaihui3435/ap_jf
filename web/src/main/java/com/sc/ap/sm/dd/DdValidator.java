@@ -29,7 +29,7 @@ public class DdValidator extends CoreValidator {
         Dd dd=controller.getModel(Dd.class,"",true);
         String ak=getActionKey();
         List<Dd> list=null;
-        if(dd.getPId()!=0&&StrUtil.isBlank(dd.getVal())){
+        if(StrUtil.isBlank(dd.getVal())&&dd.getPId()!=0){
             addError(Consts.REQ_JSON_CODE.fail.name(), "值不能为空");
             return;
         }

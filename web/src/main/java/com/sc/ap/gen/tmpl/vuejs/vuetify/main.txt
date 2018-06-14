@@ -12,7 +12,7 @@
                       #for(col:tbl.genCfgColList)
                         #if((col.configJSON.inputType??''=='text'&&(col.configJSON.addShow??false||col.configJSON.editShow??false)))
                            <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt=='add'#end#if(col.configJSON.addShow??false&&col.configJSON.editShow??false)||#end#if(col.configJSON.editShow??false)opt=='edit'#end">
-                              <v-text-field v-model="#(tbl.modelName).#(col.col)"  label="#(col.note)" #if(col.configJSON.isRequired??false)required#end
+                              <v-text-field v-model="vo.#(col.col)"  label="#(col.note)" #if(col.configJSON.isRequired??false)required#end
                                   :rules="[
                                   #if(col.configJSON.isRequired??false)rules.required,#end
                                   #if(notBlank(col.configJSON.rule))rules.#(col.configJSON.rule),#end
@@ -25,7 +25,7 @@
                         #end
                         #if((col.configJSON.inputType??''=='textArea')&&(col.configJSON.addShow??false||col.configJSON.editShow??false))
                             <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt=='add'#end#if(col.configJSON.addShow??false&&col.configJSON.editShow??false)||#end#if(col.configJSON.editShow??false)opt=='edit'#end">
-                                                      <v-text-field v-model="#(tbl.modelName).#(col.col)"  label="#(col.note)" textarea #if(col.configJSON.isRequired??false)required#end
+                                                      <v-text-field v-model="vo.#(col.col)"  label="#(col.note)" textarea #if(col.configJSON.isRequired??false)required#end
                                                           :rules="[
                                                           #if(col.configJSON.isRequired??false)rules.required,#end
                                                           #if(notBlank(col.configJSON.rule))rules.#(col.configJSON.rule),#end
@@ -53,7 +53,7 @@
                                       >
                                         <v-text-field
                                           slot="activator"
-                                          v-model="#(tbl.modelName).#(col.col)"
+                                          v-model="vo.#(col.col)"
                                           label="#(col.note)"
                                           #if(col.configJSON.isRequired??false)required#end
                                           prepend-icon="event"
@@ -81,7 +81,7 @@
                                                               >
                                                                 <v-text-field
                                                                   slot="activator"
-                                                                  v-model="#(tbl.modelName).#(col.col)"
+                                                                  v-model="vo.#(col.col)"
                                                                   label="#(col.note)"
                                                                   prepend-icon="access_time"
                                                                   #if(col.configJSON.isRequired??false)required#end
@@ -95,27 +95,27 @@
 
                         #if((col.configJSON.inputType??''=='select')&&(col.configJSON.addShow??false||col.configJSON.editShow??false))
                            <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt=='add'#end#if(col.configJSON.addShow??false&&col.configJSON.editShow??false)||#end#if(col.configJSON.editShow??false)opt=='edit'#end">
-                                <v-select :items="#(tbl.modelName)SelectData" v-model="#(tbl.modelName).#(col.col)" :rules="[#if(col.configJSON.isRequired??false)rules.required#end]" label="#genColLabel(col.note)" #if(col.configJSON.isRequired??false)required#end  item-value="value" item-text="text"></v-select>
+                                <v-select :items="#(tbl.modelName)SelectData" v-model="vo.#(col.col)" :rules="[#if(col.configJSON.isRequired??false)rules.required#end]" label="#genColLabel(col.note)" #if(col.configJSON.isRequired??false)required#end  item-value="value" item-text="text"></v-select>
                            </v-flex>
                         #end
                         #if((col.configJSON.inputType??''=='radio')&&(col.configJSON.addShow??false||col.configJSON.editShow??false))
                            <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt=='add'#end#if(col.configJSON.addShow??false&&col.configJSON.editShow??false)||#end#if(col.configJSON.editShow??false)opt=='edit'#end">
-                                #genColLabel(col.note)<v-radio-group v-model="#(tbl.modelName).#(col.col)" row :rules="[#if(col.configJSON.isRequired??false)rules.required#end]" #if(col.configJSON.isRequired??false)required#end> <v-radio v-for="n in #(tbl.modelName)RadioData"  :key="n.value" :label="n.text" :value="n.value" ></v-radio></v-radio-group>
+                                #genColLabel(col.note)<v-radio-group v-model="vo.#(col.col)" row :rules="[#if(col.configJSON.isRequired??false)rules.required#end]" #if(col.configJSON.isRequired??false)required#end> <v-radio v-for="n in #(tbl.modelName)RadioData"  :key="n.value" :label="n.text" :value="n.value" ></v-radio></v-radio-group>
                            </v-flex>
                         #end
                         #if((col.configJSON.inputType??''=='checkbox')&&(col.configJSON.addShow??false||col.configJSON.editShow??false))
                            <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt=='add'#end#if(col.configJSON.addShow??false&&col.configJSON.editShow??false)||#end#if(col.configJSON.editShow??false)opt=='edit'#end">
-                                #genColLabel(col.note)<v-checkbox v-model="#(tbl.modelName).#(col.col)" :rules="[#if(col.configJSON.isRequired??false)rules.required#end]" v-for="n in #(tbl.modelName)CheckboxData" #if(col.configJSON.isRequired??false)required#end :label="n.text" :value="n.value"></v-checkbox>
+                                #genColLabel(col.note)<v-checkbox v-model="vo.#(col.col)" :rules="[#if(col.configJSON.isRequired??false)rules.required#end]" v-for="n in #(tbl.modelName)CheckboxData" #if(col.configJSON.isRequired??false)required#end :label="n.text" :value="n.value"></v-checkbox>
                            </v-flex>
                         #end
                         #if((col.configJSON.inputType??''=='switch')&&(col.configJSON.addShow??false||col.configJSON.editShow??false))
                            <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt=='add'#end#if(col.configJSON.addShow??false&&col.configJSON.editShow??false)||#end#if(col.configJSON.editShow??false)opt=='edit'#end">
-                                <v-switch label="#genColLabel(col.note)" v-model="#(tbl.modelName).#(col.col)"  #if(col.configJSON.isRequired??false)required#end></v-switch>
+                                <v-switch label="#genColLabel(col.note)" v-model="vo.#(col.col)"  #if(col.configJSON.isRequired??false)required#end></v-switch>
                            </v-flex>
                         #end
                         #if((col.configJSON.inputType??''=='slider')&&(col.configJSON.addShow??false||col.configJSON.editShow??false))
                            <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt=='add'#end  #if(col.configJSON.addShow??false&&col.configJSON.editShow??false)||#end  #if(col.configJSON.editShow??false)opt=='edit'#end">
-                                #(col.note)<v-slider v-model="#(tbl.modelName).#(col.col)" thumb-label step="1" #if(col.configJSON.isRequired??false)required#end ticks></v-slider>
+                                #(col.note)<v-slider v-model="vo.#(col.col)" thumb-label step="1" #if(col.configJSON.isRequired??false)required#end ticks></v-slider>
                            </v-flex>
                         #end
                       #end
@@ -286,6 +286,7 @@ export default {
     return {
       fValid: true,
       valid: true,
+      vo:{},
       rowsPerPageItems: [15],
       #(tbl.modelName)Query:{pn:1,sortBy:'',descending:''},//列表查询参数数据对象
       #(tbl.modelName)View:{},//查询详细数据对象
@@ -351,24 +352,22 @@ export default {
           this.loading=false;
           this.$refs.form.reset();
           this.opt = "add";
-          this.$store.commit("set#(tbl.className)", {});
           this.title = "新增#(tbl.note)";
           this.dialog = true;
     },
     edit(#(tbl.modelName)) {
           this.loading=false;
-          this.$refs.form.reset();
           this.opt = "edit";
-          this.$store.commit("set#(tbl.className)", #(tbl.modelName));
+          this.vo=Object.assign({},#(tbl.modelName))
           this.dialog = true;
           this.title = "修改#(tbl.note)" ;
     },
     save() {
       let vm = this;
-      this.loading = true;
       if (this.$refs.form.validate()) {
+        this.loading = true;
         this.$store
-          .dispatch("save_#(tbl.modelName)")
+          .dispatch("save_#(tbl.modelName)",this.vo)
           .then(res => {
             vm.loading = false;
             if (res.resCode == "success") {
@@ -384,10 +383,11 @@ export default {
     },
     update(#(tbl.modelName)) {
       let vm = this;
-      this.loading = true;
+
       if (this.$refs.form.validate()) {
+        this.loading = true;
         this.$store
-          .dispatch("update_#(tbl.modelName)")
+          .dispatch("update_#(tbl.modelName)",this.vo)
           .then(res => {
             vm.loading = false;
             if (res.resCode == "success") {
