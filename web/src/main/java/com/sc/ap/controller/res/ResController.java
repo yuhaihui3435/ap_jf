@@ -1,5 +1,7 @@
 package com.sc.ap.controller.res;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.jfinal.aop.Before;
 import com.jfinal.aop.Duang;
 import com.jfinal.plugin.activerecord.Page;
@@ -68,4 +70,13 @@ public class ResController extends CoreController {
         Integer id = getParaToInt("id");
         renderJson(resService.findOne(id));
     }
+
+    public void getTreeJson(){
+        Integer pId=getParaToInt("pId",0);
+        ResQuery resQuery=new ResQuery();
+        resQuery.setPId(pId);
+        List<Res> resList=resService.findAll(resQuery);
+        renderJson(JSON.toJSONString(resList, SerializerFeature.DisableCircularReferenceDetect));
+    }
+
 }

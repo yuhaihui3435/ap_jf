@@ -43,7 +43,7 @@ public class ResCtr extends CoreController {
     @Clear(AdminAAuthInterceptor.class)
     public void listTree() {
         int id = getParaToInt("id",0);
-        renderJson(Res.dao.listTree(null));
+//        renderJson(Res.dao.listTree(null));
     }
 
     @Before({ResValidator.class,Tx.class})

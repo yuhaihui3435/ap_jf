@@ -23,6 +23,9 @@ public class ResService extends CoreService {
         if (StrUtil.isNotBlank(resQuery.getEnabled())) {
             kv.put("enabled=", resQuery.getEnabled());
         }
+        if (resQuery.getPId()!=null) {
+            kv.put("pId=", resQuery.getPId());
+        }
         if (StrUtil.isNotBlank(resQuery.getCode())) {
             kv.put("code like", "%" + resQuery.getCode() + "%");
         }
@@ -42,6 +45,9 @@ public class ResService extends CoreService {
         }
         if (StrUtil.isNotBlank(resQuery.getEnabled())) {
             kv.put("enabled=", resQuery.getEnabled());
+        }
+        if (resQuery.getPId()!=null) {
+            kv.put("pId=", resQuery.getPId());
         }
         if (StrUtil.isNotBlank(resQuery.getCode())) {
             kv.put("code like", "%" + resQuery.getCode() + "%");
