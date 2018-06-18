@@ -18,5 +18,10 @@ public class Role extends BaseRole<Role> {
 				"select r.* from s_role r left join s_user_role ur on r.id=ur.rid where ur.uid=?", userId);
 	}
 
+	public List<Role> findRolesByLoginname(String loginname){
+		String sql="select r.* from s_role r left join s_user_role ur on r.code=ur.roleCode where r.dAt is null and ur.loginname=?";
+		return Role.dao.find(sql,loginname);
+	}
+
 
 }

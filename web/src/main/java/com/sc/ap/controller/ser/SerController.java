@@ -1,4 +1,6 @@
 package com.sc.ap.controller.ser;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.sc.ap.model.Ser;
 import com.sc.ap.query.SerQuery;
 import com.sc.ap.validator.ser.SerValidator;
@@ -58,5 +60,13 @@ public class SerController extends CoreController{
     public void get(){
         Integer id=getParaToInt("id");
         renderJson(serService.findOne(id));
+    }
+
+    public void getTreeJson(){
+        Integer pId=getParaToInt("pId",0);
+        SerQuery serQuery=new SerQuery();
+        serQuery.setpId(pId);
+        List<Ser> resList=serService.findAll(serQuery);
+        renderJson(JSON.toJSONString(resList, SerializerFeature.DisableCircularReferenceDetect));
     }
 }

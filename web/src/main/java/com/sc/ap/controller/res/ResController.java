@@ -37,7 +37,7 @@ public class ResController extends CoreController {
             res.setOpId(currUser().getId());
         }
         resService.save(res);
-        renderSuccessJSON("资源表，保存可访问资源数据新增成功");
+        renderSuccessJSON("菜单数据新增成功");
     }
 
     @Before({ResValidator.class})
@@ -47,7 +47,7 @@ public class ResController extends CoreController {
             res.setOpId(currUser().getId());
         }
         resService.update(res);
-        renderSuccessJSON("资源表，保存可访问资源数据修改成功");
+        renderSuccessJSON("菜单数据修改成功");
     }
 
     //逻辑删除
@@ -55,7 +55,7 @@ public class ResController extends CoreController {
     public void logicDel() {
         Integer[] ids = getParaValuesToInt("ids");
         resService.batchLogicDel(ids, currUser() == null ? null : currUser().getId());
-        renderSuccessJSON("资源表，保存可访问资源数据删除成功");
+        renderSuccessJSON("菜单数据删除成功");
     }
 
     //真实删除
@@ -63,7 +63,7 @@ public class ResController extends CoreController {
     public void del() {
         Integer[] ids = getParaValuesToInt("ids");
         resService.batchDel(ids);
-        renderSuccessJSON("资源表，保存可访问资源数据删除成功");
+        renderSuccessJSON("菜单数据删除成功");
     }
 
     public void get() {

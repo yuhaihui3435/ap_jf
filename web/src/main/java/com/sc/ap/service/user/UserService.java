@@ -1,6 +1,7 @@
 package com.sc.ap.service.user;
 import com.sc.ap.core.CoreService;
 import com.sc.ap.model.User;
+import com.sc.ap.model.UserRole;
 import com.sc.ap.query.UserQuery;
 import cn.hutool.core.util.StrUtil;
 import com.jfinal.aop.Before;
@@ -118,6 +119,28 @@ public class UserService extends CoreService{
                 del(id);
             }
         }
+    }
+    @Before({Tx.class})
+    /**
+     *
+     * 建立用户角色关系
+     *
+     */
+    public void saveUserRoles(String loginname,String[] resCodes){
+        List<UserRole> userRoles=UserRole.dao.find("select * from s_user_role where loginname=?",loginname);
+        for(UserRole userRole:userRoles){
+            userRole.delete();
+        }
+        UserRole userRole=null;
+        if(resCodes!=null) {
+            for (String resCode : resCodes) {
+                userRole = new UserRole();
+                userRole.setLoginname(loginname);
+                userRole.setRoleCode(resCode);
+                userRole.save();
+            }
+        }
+
     }
 }
 

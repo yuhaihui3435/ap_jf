@@ -66,4 +66,16 @@ public class UserController extends CoreController{
         Integer id=getParaToInt("id");
         renderJson(userService.findOne(id));
     }
+
+    /**
+     * 设置角色
+     */
+    public void saveUserRoles(){
+        String loginname=getPara("loginname");
+        String userRoleCodes=getPara("userRoleCodes");
+        String[] userRoleCodesArray=null;
+        if(StrUtil.isNotBlank(userRoleCodes))userRoleCodesArray=userRoleCodes.split(",");
+        userService.saveUserRoles(loginname,userRoleCodesArray);
+        renderSuccessJSON("设置角色成功");
+    }
 }

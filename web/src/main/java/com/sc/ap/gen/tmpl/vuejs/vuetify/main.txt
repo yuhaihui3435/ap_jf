@@ -246,7 +246,7 @@
               </v-container>
 
 
-            <v-data-table :headers="#(tbl.modelName)Headers" :total-items="totalRow" :items="#(tbl.modelName)List" :rows-per-page-items="rowsPerPageItems" :pagination.sync="#(tbl.modelName)Query"  class="elevation-1" no-data-text="数据为空" no-results-text="没有筛选到正确的数据">
+            <v-data-table :headers="#(tbl.modelName)Headers" :total-items="totalRow" :hide-actions="totalRow==0" :items="#(tbl.modelName)List" :rows-per-page-items="rowsPerPageItems" :pagination.sync="#(tbl.modelName)Query"  class="elevation-1" no-data-text="数据为空" no-results-text="没有筛选到正确的数据">
               <template slot="items" slot-scope="props">
                  #for(col:tbl.genCfgColList)
                  #if(col.configJSON.tableShow??false)
@@ -369,9 +369,9 @@ export default {
     save() {
       let vm = this;
       if (this.$refs.form.validate()) {
-        this.loading = true;
+        vm.loading = true;
         this.$store
-          .dispatch("save_#(tbl.modelName)",this.vo)
+          .dispatch("save_#(tbl.modelName)",vm.vo)
           .then(res => {
             vm.loading = false;
             if (res.resCode == "success") {
@@ -389,9 +389,9 @@ export default {
       let vm = this;
 
       if (this.$refs.form.validate()) {
-        this.loading = true;
+        vm.loading = true;
         this.$store
-          .dispatch("update_#(tbl.modelName)",this.vo)
+          .dispatch("update_#(tbl.modelName)",vm.vo)
           .then(res => {
             vm.loading = false;
             if (res.resCode == "success") {

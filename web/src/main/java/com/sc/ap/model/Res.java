@@ -22,15 +22,16 @@ public class Res extends BaseRes<Res> {
 	public static final Res dao = new Res().dao();
 
 	public String getLoggedStr(){
-		return StrUtil.isBlank(getLogged())?"":(getLogged().equals(Consts.YORN_STR.no.getVal())?Consts.YORN_STR.no.getLabel():Consts.YORN_STR.yes.getLabel());
+		return StrUtil.isBlank(getLogged())?Consts.NON_SET:(getLogged().equals(Consts.YORN_STR.no.getVal())?Consts.YORN_STR.no.getLabel():Consts.YORN_STR.yes.getLabel());
 	}
 	public String getEnabledStr(){
-		return StrUtil.isBlank(getLogged())?"":(getLogged().equals(Consts.YORN_STR.no.getVal())?Consts.YORN_STR.no.getLabel():Consts.YORN_STR.yes.getLabel());
+		return StrUtil.isBlank(getEnabled())?Consts.NON_SET:(getEnabled().equals(Consts.YORN_STR.no.getVal())?Consts.YORN_STR.no.getLabel():Consts.YORN_STR.yes.getLabel());
 	}
 
 	public List<Res> getChildren(){
 		String sql="select * from s_res where pId=? and dAt is null";
-		return dao.find(sql,getId());
+		List<Res> resList=dao.find(sql,getId());
+		return (resList!=null&&resList.isEmpty())?null:resList;
 	}
 
 	public String getLabel(){

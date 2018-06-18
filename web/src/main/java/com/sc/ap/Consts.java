@@ -38,6 +38,8 @@ public interface Consts {
 
     BigDecimal ZERO = new BigDecimal(0);
 
+    String NON_SET="未设置";
+
     enum YORN {
         yes(true), no(false);
         boolean val;

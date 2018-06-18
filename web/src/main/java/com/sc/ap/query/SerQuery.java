@@ -22,6 +22,13 @@ public class SerQuery extends CoreQuery {
         public String getName(){
             return this.name;
         }
+        private Integer pId;
 
+        public Integer getpId() {
+                return pId;
+        }
 
+        public void setpId(Integer pId) {
+                this.pId = pId;
+        }
 }
