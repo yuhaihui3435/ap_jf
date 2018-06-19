@@ -3,13 +3,15 @@ package com.sc.ap.service.role;
 import cn.hutool.core.util.StrUtil;
 import com.jfinal.aop.Before;
 import com.jfinal.kit.Kv;
+import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.tx.Tx;
+import com.mysql.jdbc.ResultSetRow;
 import com.sc.ap.core.CoreService;
-import com.sc.ap.model.Role;
+import com.sc.ap.model.*;
 import com.sc.ap.query.RoleQuery;
 
-import java.util.List;
+import java.util.*;
 
 public class RoleService extends CoreService {
 
@@ -96,6 +98,122 @@ public class RoleService extends CoreService {
                 del(id);
             }
         }
+    }
+
+    /**
+     *
+     * 保存角色菜单关系
+     *
+     * @param roleCode
+     * @param reses
+     */
+    @Before({Tx.class})
+    public void saveRoleReses(String roleCode,String[] reses){
+        RoleRes.dao.delByRoleCode(roleCode);
+        RoleRes roleRes=null;
+        Set<String> resSet=new HashSet<>();
+        List<RoleRes> roleResList=new ArrayList<>();
+        for (String res:reses){
+            dealRoleResParentAndChildren(resSet,res);
+        }
+        Iterator<String> it=resSet.iterator();
+        while(it.hasNext()){
+            String resCode=it.next();
+            roleRes =new RoleRes();
+            roleRes.setResCode(resCode);
+            roleRes.setRoleCode(roleCode);
+            roleResList.add(roleRes);
+        }
+        Db.batchSave(roleResList,15);
+    }
+
+    /**
+     * 递归获取菜单孩子节点，获取父亲节点
+     * @param resCodes
+     * @param resCode
+     */
+    private void dealRoleResParentAndChildren(Set<String> resCodes,String resCode){
+        List<Res> resList=Res.dao.findByPropEQWithDat("code",resCode);
+        List<Res> _children=null;
+        if(!resList.isEmpty()) {
+            Res res = resList.get(0);
+//            if(res.getPId()>0) {
+//                Res pRes = Res.dao.findById(res.getPId());
+//                resCodes.add(pRes.getCode());
+//            }
+            _children=res.getChildren();
+            if(_children!=null) {
+                for (Res r : _children) {
+                    resCodes.add(r.getCode());
+                    dealRoleResParentAndChildren(resCodes, r.getCode());
+                }
+            }else{
+                resCodes.add(resCode);
+            }
+        }
+    }
+
+    /**
+     *
+     * 保存角色服务关系
+     *
+     * @param roleCode
+     * @param sers
+     */
+    @Before({Tx.class})
+    public void saveRoleSers(String roleCode,String[] sers){
+        RoleSer.dao.delByRoleCode(roleCode);
+        RoleSer roleSer=null;
+        Set<String> serSet=new HashSet<>();
+        List<RoleSer> roleSerList=new ArrayList<>();
+        for (String ser:sers){
+            dealRoleSerParentAndChildren(serSet,ser);
+        }
+        Iterator<String> it=serSet.iterator();
+        while(it.hasNext()){
+            String serCode=it.next();
+            roleSer =new RoleSer();
+            roleSer.setRoleCode(roleCode);
+            roleSer.setSerCode(serCode);
+            roleSerList.add(roleSer);
+        }
+        Db.batchSave(roleSerList,15);
+    }
+
+    /**
+     * 递归获取服务孩子节点，获取父亲节点
+     * @param serCodes
+     * @param serCode
+     */
+    private void dealRoleSerParentAndChildren(Set<String> serCodes,String serCode){
+        List<Ser> serList= Ser.dao.findByPropEQWithDat("code",serCode);
+        List<Ser> _children=null;
+        if(!serList.isEmpty()) {
+            Ser ser = serList.get(0);
+            _children=ser.getChildren();
+            if(_children!=null) {
+                for (Ser r : _children) {
+                    if(r.getChildren()==null||r.getChildren().isEmpty()){
+                        serCodes.add(r.getCode());
+                    }
+                    dealRoleSerParentAndChildren(serCodes, r.getCode());
+                }
+            }else{
+                serCodes.add(serCode);
+            }
+        }
+    }
+
+    public List<Res> findOwnResesByRoleCode(String roleCode){
+        String sql="select res.* from  s_role_res rr  left join s_role r on r.code=rr.roleCode left join s_res res on rr.resCode=res.code" +
+                " where r.code=? and r.dAt is null and res.dAt is null ";
+        return Res.dao.find(sql,roleCode);
+    }
+
+    public List<Ser> findOwnSersByRoleCode(String roleCode){
+        String sql="select ser.* from  s_role_ser rs  left join  s_role r on r.code=rs.roleCode left join s_ser ser on rs.serCode=ser.code" +
+                " where r.code=? and r.dAt is null and ser.dAt is null ";
+        return Ser.dao.find(sql,roleCode);
     }
 }
 

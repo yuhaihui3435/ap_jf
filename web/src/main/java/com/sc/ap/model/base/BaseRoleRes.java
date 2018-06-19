@@ -10,20 +10,20 @@ import com.sc.ap.core.CoreModel;
 @SuppressWarnings("serial")
 public abstract class BaseRoleRes<M extends BaseRoleRes<M>> extends CoreModel<M> implements IBean {
 
-	public void setRoleId(Integer roleId) {
-		set("roleId", roleId);
+	public void setRoleCode(String roleCode) {
+		set("roleCode", roleCode);
 	}
 	
-	public Integer getRoleId() {
-		return getInt("roleId");
+	public String getRoleCode() {
+		return getStr("roleCode");
 	}
 
-	public void setResId(Integer resId) {
-		set("resId", resId);
+	public void setResCode(String resCode) {
+		set("resCode", resCode);
 	}
 	
-	public Integer getResId() {
-		return getInt("resId");
+	public String getResCode() {
+		return getStr("resCode");
 	}
 
 	public void setId(Integer id) {

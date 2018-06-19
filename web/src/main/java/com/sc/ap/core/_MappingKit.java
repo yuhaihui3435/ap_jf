@@ -27,9 +27,11 @@ public class _MappingKit {
 		arp.addMapping("s_ser", "id", Ser.class);
 		arp.addMapping("s_role", "id", Role.class);
 		arp.addMapping("s_role_res", "id", RoleRes.class);
+		arp.addMapping("s_role_ser", "id", RoleSer.class);
 
 		arp.addMapping("s_user", "id", User.class);
 		arp.addMapping("s_user_role", "id", UserRole.class);
+
 		arp.addMapping("s_dd","id",Dd.class);
 		arp.addMapping("s_gen_cfg_tbl","id",GenCfgTbl.class);
 		arp.addMapping("s_gen_cfg_col","id",GenCfgCol.class);

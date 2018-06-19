@@ -26,4 +26,14 @@ public class RoleRes extends BaseRoleRes<RoleRes> {
 //	}
 
 
+	public List<RoleRes> findByRoleCode(String roleCode){
+		return dao.find("select * from s_role_res where roleCode=?",roleCode);
+	}
+
+	public void delByRoleCode(String roleCode){
+		List<RoleRes> roleResList=findByRoleCode(roleCode);
+		for(RoleRes roleRes:roleResList){
+			roleRes.delete();
+		}
+	}
 }

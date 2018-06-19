@@ -22,6 +22,9 @@ public class Ser extends BaseSer<Ser> {
 
     public List<Ser> getChildren(){
         String sql="select * from s_ser where pId=? and dAt is null";
-        return dao.find(sql,getId());
+        List<Ser> serList=dao.find(sql,getId());
+        return serList.isEmpty()?null:serList;
     }
+
+
 }

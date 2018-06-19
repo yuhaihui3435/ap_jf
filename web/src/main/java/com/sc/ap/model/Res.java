@@ -3,6 +3,7 @@ package com.sc.ap.model;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.jfinal.kit.Kv;
 import com.jfinal.kit.LogKit;
 import com.sc.ap.Consts;
 import com.sc.ap.model.base.BaseRes;
@@ -37,4 +38,6 @@ public class Res extends BaseRes<Res> {
 	public String getLabel(){
 		return getName();
 	}
+
+
 }
