@@ -1,14 +1,23 @@
 package com.sc.ap.interceptors;
 
+import com.jfinal.aop.Duang;
 import com.jfinal.aop.Interceptor;
 import com.jfinal.aop.Invocation;
 import com.sc.ap.Consts;
+import com.sc.ap.kits.CookieKit;
+import com.sc.ap.model.Role;
+import com.sc.ap.model.RoleSer;
 import com.sc.ap.model.User;
 import com.sc.ap.core.CoreController;
 import com.sc.ap.core.CoreException;
 import com.sc.ap.kits.ReqKit;
 import com.sc.ap.kits.ResKit;
+import com.sc.ap.service.role.RoleService;
+import com.sc.ap.service.ser.SerService;
+import com.sc.ap.service.user.UserService;
+
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -17,7 +26,9 @@ import java.util.Set;
  *
  */
 public class AdminAAuthInterceptor implements Interceptor{
-
+    private RoleService roleService= Duang.duang(RoleService.class.getSimpleName(),RoleService.class);
+    private SerService serService= Duang.duang(SerService.class.getSimpleName(),SerService.class);
+    private UserService userService= Duang.duang(UserService.class.getSimpleName(),UserService.class);
 
     @Override
     public void intercept(Invocation invocation) {
@@ -25,11 +36,13 @@ public class AdminAAuthInterceptor implements Interceptor{
         String ak=invocation.getActionKey();
         HttpServletRequest request=controller.getRequest();
         boolean flag=false;
-        Set<String> resStrs=controller.getAttr(Consts.CURR_USER_RESES);
-        if(resStrs!=null&&resStrs.contains(ak)){
+        String userId = CookieKit.get(controller, Consts.USER_ACCESS_TOKEN);
+        User user = userService.findCacheById(new Integer(userId));
+        String[] roleCodes=roleService.findCodesCacheByLoginname(user.getLoginname());
+        Set<String> serSet=serService.findUrlByRoleCodes(roleCodes);
+        if(serSet!=null&&serSet.contains(ak)){
             flag=true;
         }
-
         //是否需要用户身份认证,方便测试
         if(!ResKit.getConfigBoolean("userAuth"))
             flag=true;

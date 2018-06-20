@@ -1,4 +1,5 @@
 package com.sc.ap.service.user;
+import com.sc.ap.Consts;
 import com.sc.ap.core.CoreService;
 import com.sc.ap.model.User;
 import com.sc.ap.model.UserRole;
@@ -140,7 +141,10 @@ public class UserService extends CoreService{
                 userRole.save();
             }
         }
+    }
 
+    public User findCacheById(Integer userId){
+        return User.dao.findFirstByCache(Consts.CACHE_NAMES.user.name(), "id_"+userId, "select * from s_user where status='0' and id=? ", userId);
     }
 }
 

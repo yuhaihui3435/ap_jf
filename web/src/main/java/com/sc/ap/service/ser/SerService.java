@@ -1,15 +1,22 @@
 package com.sc.ap.service.ser;
 
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import com.jfinal.aop.Before;
 import com.jfinal.kit.Kv;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.tx.Tx;
+import com.jfinal.plugin.ehcache.CacheKit;
+import com.sc.ap.Consts;
 import com.sc.ap.core.CoreService;
+import com.sc.ap.model.Role;
 import com.sc.ap.model.Ser;
 import com.sc.ap.query.SerQuery;
 
+import java.lang.reflect.Array;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class SerService extends CoreService {
 
@@ -101,6 +108,27 @@ public class SerService extends CoreService {
             for (Integer id : ids) {
                 del(id);
             }
+        }
+    }
+
+    public List<Ser> findSersByRoleCodes(String[] roleCodes){
+        String str=ArrayUtil.join(roleCodes,",");
+        String sql="select s.* from s_role_ser rs left join s_ser s on rs.serCode=s.code where s.dAt is null and rs.roleCode in (?)";
+        return Ser.dao.findByCache(Consts.CACHE_NAMES.userSers.name(),"findSersByRoleCodes_"+str,sql,str);
+    }
+
+    public Set<String> findUrlByRoleCodes(String[] roleCodes){
+        String s= ArrayUtil.join(roleCodes,",");
+        Object o= CacheKit.get(Consts.CACHE_NAMES.userSers.name(),"findUrlByRoleCodes_"+s);
+        if(o==null) {
+            Set<String> ret = new HashSet<>();
+            List<Ser> serList = findSersByRoleCodes(roleCodes);
+            for (Ser ser : serList) {
+                ret.add(ser.getUrl());
+            }
+            return ret;
+        }else{
+            return (Set<String>)o;
         }
     }
 }

@@ -44,7 +44,21 @@
            diskPersistent="true"
            memoryStoreEvictionPolicy="FIFO"
     />
+    <cache name="userSers"
+           maxEntriesLocalHeap="5000"
+           eternal="true"
+           overflowToDisk="true"
+           diskPersistent="true"
+           memoryStoreEvictionPolicy="FIFO"
+    />
     <cache name="currUserReses"
+           maxEntriesLocalHeap="50000"
+           eternal="true"
+           overflowToDisk="true"
+           diskPersistent="true"
+           memoryStoreEvictionPolicy="FIFO"
+    />
+    <cache name="currUserSers"
            maxEntriesLocalHeap="50000"
            eternal="true"
            overflowToDisk="true"

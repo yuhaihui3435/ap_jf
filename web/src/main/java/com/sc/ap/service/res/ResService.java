@@ -1,5 +1,6 @@
 package com.sc.ap.service.res;
 
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import com.jfinal.aop.Before;
 import com.jfinal.kit.Kv;
@@ -9,7 +10,9 @@ import com.sc.ap.core.CoreService;
 import com.sc.ap.model.Res;
 import com.sc.ap.query.ResQuery;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ResService extends CoreService {
 
@@ -109,5 +112,24 @@ public class ResService extends CoreService {
             }
         }
     }
+
+    public List<Res> findByRoleCodes(String[] roleCodes){
+        String s= ArrayUtil.join(roleCodes,",");
+        String sql="select r.* from s_role_res rr left join s_res r on rr.roleCode=r.code where r.enabled='0' and dAt is null and rr.roleCode in (?)";
+        return Res.dao.find(sql,s);
+    }
+
+    public Set<String> findUrlByRoleCodes(String[] roleCodes){
+        Set<String> ret=new HashSet<>();
+        List<Res> resList=findByRoleCodes(roleCodes);
+        for (Res res:resList){
+            ret.add(res.getUrl());
+        }
+        return ret;
+    }
+
+
+
+
 }
 

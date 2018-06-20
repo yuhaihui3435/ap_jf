@@ -6,7 +6,9 @@ import com.jfinal.kit.Kv;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.tx.Tx;
+import com.jfinal.plugin.ehcache.CacheKit;
 import com.mysql.jdbc.ResultSetRow;
+import com.sc.ap.Consts;
 import com.sc.ap.core.CoreService;
 import com.sc.ap.model.*;
 import com.sc.ap.query.RoleQuery;
@@ -214,6 +216,31 @@ public class RoleService extends CoreService {
         String sql="select ser.* from  s_role_ser rs  left join  s_role r on r.code=rs.roleCode left join s_ser ser on rs.serCode=ser.code" +
                 " where r.code=? and r.dAt is null and ser.dAt is null ";
         return Ser.dao.find(sql,roleCode);
+    }
+
+    public List<Role> findByLoginname(String loginname){
+        return Role.dao.findRolesByLoginname(loginname);
+    }
+
+    public List<Role> findCacheByLoginname(String loginname){
+        String sql="select r.* from s_role r left join s_user_role ur on r.code=ur.roleCode where r.dAt is null and ur.loginname=?";
+        return Role.dao.findByCache(Consts.CACHE_NAMES.userRoles.name(),"findCacheByLoginname"+loginname,sql,loginname);
+    }
+
+    public String[] findCodesCacheByLoginname(String loginname){
+
+        Object o=CacheKit.get(Consts.CACHE_NAMES.userRoles.name(),"findStrCacheByLoginname_"+loginname);
+        if(o==null) {
+            List<Role> roleList = findCacheByLoginname(loginname);
+            String[] roleCodes = new String[roleList.size()];
+            for (int i = 0; i < roleList.size(); i++) {
+                roleCodes[i] = roleList.get(i).getCode();
+            }
+            CacheKit.put(Consts.CACHE_NAMES.userRoles.name(),"findStrCacheByLoginname_"+loginname,roleCodes);
+            return roleCodes;
+        }else{
+            return (String[])o;
+        }
     }
 }
 

@@ -21,21 +21,6 @@ public class User extends BaseUser<User> {
 		return dao.findFirst(sql,nickname);
 	}
 
-	public List<String> getRolesName(){
-		List<String> list=new ArrayList<>();
-		for (Role role:Role.dao.findRolesByUserId(getId())){
-			list.add(role.getName());
-		}
-		return list;
-	}
-	public List<String> getRoleIds(){
-		List<String> list=new ArrayList<>();
-		for (Role role:Role.dao.findRolesByUserId(getId())){
-			list.add(role.getId().toString());
-		}
-		return list;
-	}
-
 	public String getStatusStr(){
 		return super.getStatusStr(getStatus());
 	}
@@ -57,22 +42,5 @@ public class User extends BaseUser<User> {
 		this.endCAt=end;
 	}
 
-	public List<String> getUserRoleCodes(){
-		List<Role> roles=Role.dao.findRolesByLoginname(getLoginname());
-		List<String> roleCodes=new ArrayList<>();
-		for (Role role:roles){
-			roleCodes.add(role.getCode());
-		}
-		return roleCodes;
-	}
-
-	public List<String> getUserRoleNames(){
-		List<Role> roles=Role.dao.findRolesByLoginname(getLoginname());
-		List<String> roleNames=new ArrayList<>();
-		for (Role role:roles){
-			roleNames.add(role.getName());
-		}
-		return roleNames;
-	}
 
 }

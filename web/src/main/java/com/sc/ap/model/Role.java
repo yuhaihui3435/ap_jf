@@ -18,15 +18,13 @@ public class Role extends BaseRole<Role> {
 	public static final Role dao = new Role().dao();
 	private List<Res> ownReses=null;
 	private List<Ser> ownSers=null;
-	public List<Role> findRolesByUserId(Integer userId) {
-		return dao.findByCache(Consts.CACHE_NAMES.userRoles.name(), "rolesByUserId_"+userId,
-				"select r.* from s_role r left join s_user_role ur on r.id=ur.rid where ur.uid=?", userId);
-	}
 
 	public List<Role> findRolesByLoginname(String loginname){
 		String sql="select r.* from s_role r left join s_user_role ur on r.code=ur.roleCode where r.dAt is null and ur.loginname=?";
 		return Role.dao.find(sql,loginname);
 	}
+
+
 
 	public List<Res> getOwnReses() {
 		return ownReses;

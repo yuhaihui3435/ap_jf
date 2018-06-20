@@ -1,6 +1,7 @@
 package com.sc.ap.interceptors;
 
 import cn.hutool.core.util.StrUtil;
+import com.jfinal.aop.Duang;
 import com.jfinal.aop.Interceptor;
 import com.jfinal.aop.Invocation;
 import com.sc.ap.Consts;
@@ -10,6 +11,7 @@ import com.sc.ap.core.CoreException;
 import com.sc.ap.kits.CookieKit;
 import com.sc.ap.kits.ReqKit;
 import com.sc.ap.kits.ResKit;
+import com.sc.ap.service.user.UserService;
 
 import java.math.BigInteger;
 
@@ -20,6 +22,9 @@ import java.math.BigInteger;
  *
  */
 public class AdminIAuthInterceptor implements Interceptor {
+
+	private UserService userService= Duang.duang(UserService.class.getSimpleName(),UserService.class);
+
 	public void intercept(Invocation inv) {
 		CoreController controller = (CoreController) inv.getController();
 		String userId = CookieKit.get(controller, Consts.USER_ACCESS_TOKEN);
@@ -27,8 +32,7 @@ public class AdminIAuthInterceptor implements Interceptor {
 		User user = null;
 		if (StrUtil.isNotEmpty(userId)) {
 			flag = true;
-			user = User.dao.findFirstByCache(Consts.CACHE_NAMES.user.name(), new BigInteger(userId),
-					"select * from s_user where status='0' and id=? ", new BigInteger(userId));
+			user = userService.findCacheById(new Integer(userId));
 			if (user == null) {
 				if (ReqKit.isAjaxRequest(controller.getRequest())) {
 					controller.renderUnauthenticationJSON("sm");
@@ -43,6 +47,8 @@ public class AdminIAuthInterceptor implements Interceptor {
 			flag = true;
 
 		if (flag) {
+
+
 			inv.invoke();
 		} else {
 			CookieKit.remove(controller, Consts.USER_ACCESS_TOKEN);

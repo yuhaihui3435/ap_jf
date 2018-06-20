@@ -1,13 +1,13 @@
 package com.sc.ap.core;
 
 
+import com.sc.ap.LoginCtr;
 import com.sc.ap.controller.res.ResController;
 import com.sc.ap.controller.role.RoleController;
 import com.sc.ap.controller.ser.SerController;
 import com.sc.ap.controller.user.UserController;
 import com.sc.ap.gen.GenCtr;
 import com.sc.ap.gen.GenSourceCtr;
-import com.sc.ap.gen.directive.ColNoteResolve;
 import com.sc.ap.interceptors.UserInterceptor;
 import com.sc.ap.sm.dd.DdCtr;
 import com.sc.ap.sm.param.ParamCtr;
@@ -36,7 +36,7 @@ import com.jfplugin.mail.MailPlugin;
 import com.sc.ap.CMNCtr;
 import com.sc.ap.Consts;
 import com.sc.ap.IndexCtr;
-import com.sc.ap.sm.HomeCtr;
+import com.sc.ap.HomeCtr;
 import com.sc.ap.interceptors.AdminAAuthInterceptor;
 import com.sc.ap.interceptors.AdminIAuthInterceptor;
 import com.sc.ap.interceptors.ExceptionInterceptor;
@@ -77,43 +77,20 @@ public class CoreConfig extends JFinalConfig {
 		routes.add(new Routes() {
 			@Override
 			public void config() {
-				addInterceptor(new AdminAAuthInterceptor());
 				add("/api/param", ParamCtr.class);
 				add("/api/dd", DdCtr.class);
 				add("/api/gen", GenCtr.class);
 				add("/api/genSource", GenSourceCtr.class);
-
-			}
-		});
-		routes.add(new Routes() {
-			@Override
-			public void config() {
-				add("/home", HomeCtr.class);
-			}
-		});
-		routes.add(new Routes() {
-			@Override
-			public void config() {
-				add("/cmn", CMNCtr.class);
-			}
-		});
-		routes.add(new Routes() {
-			@Override
-			public void config() {
-				add("/", IndexCtr.class);
-			}
-		});
-
-		routes.add(new Routes() {
-			@Override
-			public void config() {
 				add("/api/user", UserController.class);
 				add("/api/role", RoleController.class);
 				add("/api/res", ResController.class);
 				add("/api/ser", SerController.class);
+				add("/home", HomeCtr.class);
+				add("/cmn", CMNCtr.class);
+				add("/", IndexCtr.class);
+				add("/login", LoginCtr.class);
 			}
-		}
-		);
+		});
 	}
 
 	@Override
@@ -178,7 +155,8 @@ public class CoreConfig extends JFinalConfig {
 	public void configInterceptor(Interceptors interceptors) {
 		interceptors.add(new ExceptionInterceptor());
 		interceptors.add(new AdminIAuthInterceptor());
-		interceptors.add(new UserInterceptor());
+		interceptors.add(new AdminAAuthInterceptor());
+//		interceptors.add(new UserInterceptor());
 	}
 
 	@Override
@@ -192,6 +170,6 @@ public class CoreConfig extends JFinalConfig {
 		CoreData.loadAllCache();
 		// 设置请求以json格式返回的时候，排除掉请求中用户身份信息相关的数据。
 		JsonRender.addExcludedAttrs(Consts.CURR_USER, Consts.CURR_USER_MER, Consts.CURR_USER_RESES,
-				Consts.CURR_USER_ROLES);
+				Consts.CURR_USER_ROLES,Consts.CURR_USER_SERS);
 	}
 }

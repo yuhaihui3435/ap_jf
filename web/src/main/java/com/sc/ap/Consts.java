@@ -12,9 +12,9 @@ public interface Consts {
 
     Whitelist basicWithImages = Whitelist.basicWithImages();
 
-    String ENCRYPT_KEY = "mbpc-never-late";
+    String ENCRYPT_KEY = "ap-never-late";
 
-    String USER_ACCESS_TOKEN = "userId-ap";
+    String USER_ACCESS_TOKEN = "uic-ap";
 
     int COOKIE_TIMEOUT = 4 * 60 * 60;
 
@@ -27,6 +27,8 @@ public interface Consts {
     String CURR_USER_ROLES = "currUserRoles";
 
     String CURR_USER_RESES = "currUserReses";
+
+    String CURR_USER_SERS = "currUserSers";
 
     String T_CATALOG_CK = "catalog";
 
@@ -127,7 +129,7 @@ public interface Consts {
     }
 
     enum CACHE_NAMES {
-        paramCache, ssq, userRoles, user, userReses, dd, carouselsetting, login
+        paramCache, userRoles, user, userReses, dd, login,userSers
     }
 
 }
