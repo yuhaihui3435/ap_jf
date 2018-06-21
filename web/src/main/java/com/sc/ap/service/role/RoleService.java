@@ -59,11 +59,14 @@ public class RoleService extends CoreService {
     @Before({Tx.class})
     public void save(Role role) {
         role.save();
+        CacheKit.removeAll(Consts.CACHE_NAMES.userRoles.name());
     }
 
     @Before({Tx.class})
     public void update(Role role) {
         role.update();
+        CacheKit.removeAll(Consts.CACHE_NAMES.userRoles.name());
+
     }
 
     @Before({Tx.class})
@@ -75,13 +78,14 @@ public class RoleService extends CoreService {
         }
 
         role.apDel();
-
+        CacheKit.removeAll(Consts.CACHE_NAMES.userRoles.name());
     }
 
     @Before({Tx.class})
     public void del(Integer id) {
         Role role = findOne(id);
         role.delete();
+        CacheKit.removeAll(Consts.CACHE_NAMES.userRoles.name());
     }
 
     @Before({Tx.class})
@@ -91,6 +95,7 @@ public class RoleService extends CoreService {
                 logicDel(id, opId);
             }
         }
+        CacheKit.removeAll(Consts.CACHE_NAMES.userRoles.name());
     }
 
     @Before({Tx.class})
@@ -100,6 +105,7 @@ public class RoleService extends CoreService {
                 del(id);
             }
         }
+        CacheKit.removeAll(Consts.CACHE_NAMES.userRoles.name());
     }
 
     /**
@@ -127,6 +133,7 @@ public class RoleService extends CoreService {
             roleResList.add(roleRes);
         }
         Db.batchSave(roleResList,15);
+        CacheKit.removeAll(Consts.CACHE_NAMES.userReses.name());
     }
 
     /**
@@ -180,6 +187,7 @@ public class RoleService extends CoreService {
             roleSerList.add(roleSer);
         }
         Db.batchSave(roleSerList,15);
+        CacheKit.removeAll(Consts.CACHE_NAMES.userSers.name());
     }
 
     /**
@@ -218,25 +226,20 @@ public class RoleService extends CoreService {
         return Ser.dao.find(sql,roleCode);
     }
 
-    public List<Role> findByLoginname(String loginname){
+    public List<Role> findByLoginnameInCache(String loginname){
         return Role.dao.findRolesByLoginname(loginname);
     }
 
-    public List<Role> findCacheByLoginname(String loginname){
-        String sql="select r.* from s_role r left join s_user_role ur on r.code=ur.roleCode where r.dAt is null and ur.loginname=?";
-        return Role.dao.findByCache(Consts.CACHE_NAMES.userRoles.name(),"findCacheByLoginname"+loginname,sql,loginname);
-    }
+    public String[] findCodesByLoginnameInCache(String loginname){
 
-    public String[] findCodesCacheByLoginname(String loginname){
-
-        Object o=CacheKit.get(Consts.CACHE_NAMES.userRoles.name(),"findStrCacheByLoginname_"+loginname);
+        Object o=CacheKit.get(Consts.CACHE_NAMES.userRoles.name(),"findCodesByLoginnameInCache_"+loginname);
         if(o==null) {
-            List<Role> roleList = findCacheByLoginname(loginname);
+            List<Role> roleList = findByLoginnameInCache(loginname);
             String[] roleCodes = new String[roleList.size()];
             for (int i = 0; i < roleList.size(); i++) {
                 roleCodes[i] = roleList.get(i).getCode();
             }
-            CacheKit.put(Consts.CACHE_NAMES.userRoles.name(),"findStrCacheByLoginname_"+loginname,roleCodes);
+            CacheKit.put(Consts.CACHE_NAMES.userRoles.name(),"findCodesByLoginnameInCache_"+loginname,roleCodes);
             return roleCodes;
         }else{
             return (String[])o;

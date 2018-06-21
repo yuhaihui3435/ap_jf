@@ -1,6 +1,12 @@
 #namespace("genSql")
   #include("gen.sql")
 #end
+#namespace("resSql")
+  #include("res.sql")
+#end
+#namespace("serSql")
+  #include("ser.sql")
+#end
 
 #sql("queryByAndCond")
   select * from #(table) where 1=1

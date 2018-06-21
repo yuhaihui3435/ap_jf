@@ -156,7 +156,7 @@ public class CoreConfig extends JFinalConfig {
 		interceptors.add(new ExceptionInterceptor());
 		interceptors.add(new AdminIAuthInterceptor());
 		interceptors.add(new AdminAAuthInterceptor());
-//		interceptors.add(new UserInterceptor());
+		interceptors.add(new UserInterceptor());
 	}
 
 	@Override

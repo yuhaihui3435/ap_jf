@@ -32,7 +32,7 @@ public class AdminIAuthInterceptor implements Interceptor {
 		User user = null;
 		if (StrUtil.isNotEmpty(userId)) {
 			flag = true;
-			user = userService.findCacheById(new Integer(userId));
+			user = userService.findByIdInCache(new Integer(userId));
 			if (user == null) {
 				if (ReqKit.isAjaxRequest(controller.getRequest())) {
 					controller.renderUnauthenticationJSON("sm");

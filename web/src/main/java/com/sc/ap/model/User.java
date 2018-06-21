@@ -43,4 +43,23 @@ public class User extends BaseUser<User> {
 	}
 
 
+	public String[] getUserRoleCodes(){
+		List<Role> roles=Role.dao.findRolesByLoginname(getLoginname());
+		List<String> roleCodes=new ArrayList<>();
+		for (Role role:roles){
+			roleCodes.add(role.getCode());
+		}
+		return roleCodes.toArray(new String[roleCodes.size()]);
+	}
+
+	public List<String> getUserRoleNames(){
+		List<Role> roles=Role.dao.findRolesByLoginname(getLoginname());
+		List<String> roleNames=new ArrayList<>();
+		for (Role role:roles){
+			roleNames.add(role.getName());
+		}
+		return roleNames;
+	}
+
+
 }

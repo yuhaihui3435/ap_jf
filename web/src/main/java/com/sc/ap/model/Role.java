@@ -21,7 +21,7 @@ public class Role extends BaseRole<Role> {
 
 	public List<Role> findRolesByLoginname(String loginname){
 		String sql="select r.* from s_role r left join s_user_role ur on r.code=ur.roleCode where r.dAt is null and ur.loginname=?";
-		return Role.dao.find(sql,loginname);
+		return Role.dao.findByCache(Consts.CACHE_NAMES.userRoles.name(),"findByLoginnameInCache_"+loginname,sql,loginname);
 	}
 
 

@@ -4,8 +4,12 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import com.jfinal.aop.Before;
 import com.jfinal.kit.Kv;
+import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.SqlPara;
 import com.jfinal.plugin.activerecord.tx.Tx;
+import com.jfinal.plugin.ehcache.CacheKit;
+import com.sc.ap.Consts;
 import com.sc.ap.core.CoreService;
 import com.sc.ap.model.Res;
 import com.sc.ap.query.ResQuery;
@@ -70,11 +74,13 @@ public class ResService extends CoreService {
     @Before({Tx.class})
     public void save(Res res) {
         res.save();
+        CacheKit.removeAll(Consts.CACHE_NAMES.userReses.name());
     }
 
     @Before({Tx.class})
     public void update(Res res) {
         res.update();
+        CacheKit.removeAll(Consts.CACHE_NAMES.userReses.name());
     }
 
     @Before({Tx.class})
@@ -86,13 +92,14 @@ public class ResService extends CoreService {
         }
 
         res.apDel();
-
+        CacheKit.removeAll(Consts.CACHE_NAMES.userReses.name());
     }
 
     @Before({Tx.class})
     public void del(Integer id) {
         Res res = findOne(id);
         res.delete();
+        CacheKit.removeAll(Consts.CACHE_NAMES.userReses.name());
     }
 
     @Before({Tx.class})
@@ -102,6 +109,7 @@ public class ResService extends CoreService {
                 logicDel(id, opId);
             }
         }
+        CacheKit.removeAll(Consts.CACHE_NAMES.userReses.name());
     }
 
     @Before({Tx.class})
@@ -111,21 +119,32 @@ public class ResService extends CoreService {
                 del(id);
             }
         }
+        CacheKit.removeAll(Consts.CACHE_NAMES.userReses.name());
     }
 
-    public List<Res> findByRoleCodes(String[] roleCodes){
+    public List<Res> findByRoleCodesInCache(String[] roleCodes){
         String s= ArrayUtil.join(roleCodes,",");
-        String sql="select r.* from s_role_res rr left join s_res r on rr.roleCode=r.code where r.enabled='0' and dAt is null and rr.roleCode in (?)";
-        return Res.dao.find(sql,s);
+        Kv kv=Kv.by("cond",roleCodes);
+        SqlPara sqlPara=Db.getSqlPara("resSql.findByCodes",kv);
+        return Res.dao.findByCache(Consts.CACHE_NAMES.userReses.name(),"findByRoleCodesInCache_"+s,sqlPara.getSql());
     }
 
-    public Set<String> findUrlByRoleCodes(String[] roleCodes){
-        Set<String> ret=new HashSet<>();
-        List<Res> resList=findByRoleCodes(roleCodes);
-        for (Res res:resList){
-            ret.add(res.getUrl());
+    public Set<String> findUrlByRoleCodesInCache(String[] roleCodes){
+        String s= ArrayUtil.join(roleCodes,",");
+        Object o= CacheKit.get(Consts.CACHE_NAMES.userReses.name(),"findUrlByRoleCodesInCache_"+s);
+        if(o==null) {
+
+            Set<String> ret = new HashSet<>();
+            List<Res> resList = findByRoleCodesInCache(roleCodes);
+            for (Res res : resList) {
+                ret.add(res.getUrl());
+            }
+            if(!ret.isEmpty())CacheKit.put(Consts.CACHE_NAMES.userReses.name(),"findUrlByRoleCodesInCache_"+s,ret);
+
+            return ret;
+        }else{
+            return (Set<String>)o;
         }
-        return ret;
     }
 
 

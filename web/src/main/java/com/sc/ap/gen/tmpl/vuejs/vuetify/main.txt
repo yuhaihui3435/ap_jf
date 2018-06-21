@@ -321,7 +321,7 @@ export default {
       viewDialog:false,
       opt: "",
       #for(col:tbl.genCfgColList)
-          #if((col.configJSON.inputType??''=='select'))#(tbl.modelName)SelectData:[#genColNoteData(col.note)],#end
+          #if((col.configJSON.inputType??''=='select'))#(col.col)SelectData:[#genColNoteData(col.note)],#end
           #if((col.configJSON.inputType??''=='radio'))#(tbl.modelName)RadioData:[#genColNoteData(col.note)],#end
           #if((col.configJSON.inputType??''=='checkbox'))#(tbl.modelName)CheckboxData:[#genColNoteData(col.note)],#end
           #if((col.configJSON.inputType??''=='date')&&((col.configJSON.addShow??false)||(col.configJSON.editShow??false)))#(col.col)DateMenu:false, #end
@@ -350,7 +350,7 @@ export default {
   },
   methods: {
     search() {
-      this.$store.dispatch("page_#(tbl.modelName)",this.#(tbl.modelName)Query);
+      this.$store.dispatch("page_#(tbl.modelName)",this.#(tbl.modelName)Query).catch(res=>{});
     },
     add() {
           this.loading=false;
@@ -379,9 +379,8 @@ export default {
               vm.search();
             }
           })
-          .catch(() => {
+          .catch((res) => {
             vm.loading = false;
-            vm.dialog = false;
           });
       }
     },
@@ -399,9 +398,8 @@ export default {
               vm.search();
             }
           })
-          .catch(() => {
+          .catch((res) => {
             vm.loading = false;
-            vm.dialog = false;
           });
       }
     },
@@ -409,11 +407,14 @@ export default {
       let vm = this;
       this.$APDialog.confirm(function(ret) {
         if (ret) {
+        vm.loading=true
           vm.$store.dispatch("del_#(tbl.modelName)", { ids: #(tbl.modelName).id }).then(res => {
             if (res.resCode == "success") {
                 vm.search();
             }
-          });
+          }).catch((res) => {
+                        vm.loading = false;
+                      });
         } else {
         }
       });
@@ -423,7 +424,9 @@ export default {
         vm.viewDialog=true;
         vm.$store.dispatch("get_#(tbl.modelName)", { id: #(tbl.modelName).id }).then(res=>{
             vm.#(tbl.modelName)View=res;
-        })
+        }).catch((res) => {
+                      vm.loading = false;
+                    });
     },
     clearQueryParam(){
     #for(col:tbl.genCfgColList)

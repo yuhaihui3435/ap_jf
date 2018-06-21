@@ -3,6 +3,7 @@ package com.sc.ap.interceptors;
 import com.jfinal.aop.Duang;
 import com.jfinal.aop.Interceptor;
 import com.jfinal.aop.Invocation;
+import com.jfinal.plugin.ehcache.CacheKit;
 import com.sc.ap.Consts;
 import com.sc.ap.kits.CookieKit;
 import com.sc.ap.model.Role;
@@ -37,9 +38,17 @@ public class AdminAAuthInterceptor implements Interceptor{
         HttpServletRequest request=controller.getRequest();
         boolean flag=false;
         String userId = CookieKit.get(controller, Consts.USER_ACCESS_TOKEN);
-        User user = userService.findCacheById(new Integer(userId));
-        String[] roleCodes=roleService.findCodesCacheByLoginname(user.getLoginname());
-        Set<String> serSet=serService.findUrlByRoleCodes(roleCodes);
+        User user = userService.findByIdInCache(new Integer(userId));
+        String[] roleCodes=roleService.findCodesByLoginnameInCache(user.getLoginname());
+        Set<String> serSet=serService.findUrlByRoleCodesInCache(roleCodes);
+
+        Set<String> allSer= CacheKit.get(Consts.CACHE_NAMES.allSer.name(),"allSer");
+
+        if(!allSer.contains(ak)) {
+            invocation.invoke();//如果服务未配置 直接放行
+            return;
+        }
+
         if(serSet!=null&&serSet.contains(ak)){
             flag=true;
         }

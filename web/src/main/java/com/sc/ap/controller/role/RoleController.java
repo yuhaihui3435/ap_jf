@@ -4,9 +4,11 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.jfinal.aop.Before;
+import com.jfinal.aop.Clear;
 import com.jfinal.aop.Duang;
 import com.jfinal.plugin.activerecord.Page;
 import com.sc.ap.core.CoreController;
+import com.sc.ap.interceptors.AdminAAuthInterceptor;
 import com.sc.ap.model.Res;
 import com.sc.ap.model.Role;
 import com.sc.ap.model.Ser;
@@ -68,7 +70,7 @@ public class RoleController extends CoreController {
         roleService.batchDel(ids);
         renderSuccessJSON("角色表删除成功");
     }
-
+    @Clear(AdminAAuthInterceptor.class)
     public void get() {
         Integer id = getParaToInt("id");
         Role role=roleService.findOne(id);

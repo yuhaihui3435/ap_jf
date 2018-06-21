@@ -133,7 +133,7 @@ public class CoreController extends Controller {
         return (User)getAttr(Consts.CURR_USER);
     }
 
-    protected List<Role> currUserRoles(){return getAttr(Consts.CURR_USER_ROLES);}
+//    protected List<Role> currUserRoles(){return getAttr(Consts.CURR_USER_ROLES);}
 
     protected <T> T getApModel(Class clz){
         return (T)getModel(clz,"",true);

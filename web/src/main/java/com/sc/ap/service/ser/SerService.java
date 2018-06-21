@@ -4,10 +4,13 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import com.jfinal.aop.Before;
 import com.jfinal.kit.Kv;
+import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.SqlPara;
 import com.jfinal.plugin.activerecord.tx.Tx;
 import com.jfinal.plugin.ehcache.CacheKit;
 import com.sc.ap.Consts;
+import com.sc.ap.core.CoreData;
 import com.sc.ap.core.CoreService;
 import com.sc.ap.model.Role;
 import com.sc.ap.model.Ser;
@@ -68,11 +71,14 @@ public class SerService extends CoreService {
     @Before({Tx.class})
     public void save(Ser ser) {
         ser.save();
+        CoreData.loadAllSer();//刷新全部服务的缓存
     }
 
     @Before({Tx.class})
     public void update(Ser ser) {
         ser.update();
+        CoreData.loadAllSer();//刷新全部服务的缓存
+        CacheKit.removeAll(Consts.CACHE_NAMES.userSers.name());
     }
 
     @Before({Tx.class})
@@ -84,13 +90,16 @@ public class SerService extends CoreService {
         }
 
         ser.apDel();
-
+        CoreData.loadAllSer();//刷新全部服务的缓存
+        CacheKit.removeAll(Consts.CACHE_NAMES.userSers.name());
     }
 
     @Before({Tx.class})
     public void del(Integer id) {
         Ser ser = findOne(id);
         ser.delete();
+        CoreData.loadAllSer();//刷新全部服务的缓存
+        CacheKit.removeAll(Consts.CACHE_NAMES.userSers.name());
     }
 
     @Before({Tx.class})
@@ -100,6 +109,8 @@ public class SerService extends CoreService {
                 logicDel(id, opId);
             }
         }
+        CoreData.loadAllSer();//刷新全部服务的缓存
+        CacheKit.removeAll(Consts.CACHE_NAMES.userSers.name());
     }
 
     @Before({Tx.class})
@@ -109,23 +120,27 @@ public class SerService extends CoreService {
                 del(id);
             }
         }
+        CoreData.loadAllSer();//刷新全部服务的缓存
+        CacheKit.removeAll(Consts.CACHE_NAMES.userSers.name());
     }
 
-    public List<Ser> findSersByRoleCodes(String[] roleCodes){
+    public List<Ser> findSersByRoleCodesInCache(String[] roleCodes){
         String str=ArrayUtil.join(roleCodes,",");
-        String sql="select s.* from s_role_ser rs left join s_ser s on rs.serCode=s.code where s.dAt is null and rs.roleCode in (?)";
-        return Ser.dao.findByCache(Consts.CACHE_NAMES.userSers.name(),"findSersByRoleCodes_"+str,sql,str);
+        Kv kv=Kv.by("cond",roleCodes);
+        SqlPara sqlPara= Db.getSqlPara("serSql.findByCodes",kv);
+        return Ser.dao.findByCache(Consts.CACHE_NAMES.userSers.name(),"findSersByRoleCodesInCache_"+str,sqlPara.getSql());
     }
 
-    public Set<String> findUrlByRoleCodes(String[] roleCodes){
+    public Set<String> findUrlByRoleCodesInCache(String[] roleCodes){
         String s= ArrayUtil.join(roleCodes,",");
-        Object o= CacheKit.get(Consts.CACHE_NAMES.userSers.name(),"findUrlByRoleCodes_"+s);
+        Object o= CacheKit.get(Consts.CACHE_NAMES.userSers.name(),"findUrlByRoleCodesInCache_"+s);
         if(o==null) {
             Set<String> ret = new HashSet<>();
-            List<Ser> serList = findSersByRoleCodes(roleCodes);
+            List<Ser> serList = findSersByRoleCodesInCache(roleCodes);
             for (Ser ser : serList) {
                 ret.add(ser.getUrl());
             }
+            if(!ret.isEmpty())CacheKit.put(Consts.CACHE_NAMES.userSers.name(),"findUrlByRoleCodesInCache_"+s,ret);
             return ret;
         }else{
             return (Set<String>)o;

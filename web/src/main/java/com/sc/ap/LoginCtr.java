@@ -99,16 +99,16 @@ public class LoginCtr extends CoreController {
             CacheKit.remove(Consts.CACHE_NAMES.login.name(), loginname + "LOGIN_RETRY_DATE");
             CacheKit.remove(Consts.CACHE_NAMES.login.name(), loginname + "LOGIN_RETRY_COUNT");
             if (user.getStatus().equals(Consts.STATUS.enable.getVal())) {
-                List<Role> roleList=roleService.findByLoginname(user.getLoginname());
+                List<Role> roleList=roleService.findByLoginnameInCache(user.getLoginname());
                 String[] roleCodes=new String[roleList.size()];
                 for (int i = 0; i < roleList.size(); i++) {
                     roleCodes[i]=roleList.get(i).getCode();
                 }
                 Map<String, Object> data = new HashMap<String, Object>();
                 if(roleCodes!=null&&roleCodes.length>0) {
-                    Set<String> resList = resService.findUrlByRoleCodes(roleCodes);
+                    Set<String> resList = resService.findUrlByRoleCodesInCache(roleCodes);
                     data.put("resList", resList);
-                    Set<String> serList=serService.findUrlByRoleCodes(roleCodes);
+                    Set<String> serList=serService.findUrlByRoleCodesInCache(roleCodes);
                     data.put("serList", serList);
                 }
                 data.put("nickname", user.getNickname());

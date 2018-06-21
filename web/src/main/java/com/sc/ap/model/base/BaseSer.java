@@ -81,6 +81,13 @@ public abstract class BaseSer<M extends BaseSer<M>> extends CoreModel<M> impleme
 		return get("dAt");
 	}
 
+	public void setEnabled(java.lang.String enabled) {
+		set("enabled", enabled);
+	}
+
+	public java.lang.String getEnabled() {
+		return getStr("enabled");
+	}
 
 
 }

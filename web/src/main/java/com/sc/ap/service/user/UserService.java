@@ -1,4 +1,5 @@
 package com.sc.ap.service.user;
+import com.jfinal.plugin.ehcache.CacheKit;
 import com.sc.ap.Consts;
 import com.sc.ap.core.CoreService;
 import com.sc.ap.model.User;
@@ -88,6 +89,9 @@ public class UserService extends CoreService{
     @Before({Tx.class})
     public void update(User user){
         user.update();
+        CacheKit.remove(Consts.CACHE_NAMES.user.name(),"id_"+user.getId());
+        CacheKit.remove(Consts.CACHE_NAMES.userRoles.name(),"findByLoginnameInCache_"+user.getLoginname());
+        CacheKit.remove(Consts.CACHE_NAMES.userRoles.name(),"findCodesByLoginnameInCache_"+user.getLoginname());
     }
     @Before({Tx.class})
     public void logicDel(Integer id,Integer opId){
@@ -98,26 +102,41 @@ public class UserService extends CoreService{
         }
 
         user.apDel();
-
+        CacheKit.remove(Consts.CACHE_NAMES.user.name(),"id_"+user.getId());
+        CacheKit.remove(Consts.CACHE_NAMES.userRoles.name(),"findByLoginnameInCache_"+user.getLoginname());
+        CacheKit.remove(Consts.CACHE_NAMES.userRoles.name(),"findCodesByLoginnameInCache_"+user.getLoginname());
     }
     @Before({Tx.class})
     public void del(Integer id){
         User user=findOne(id);
         user.delete();
+        CacheKit.remove(Consts.CACHE_NAMES.user.name(),"id_"+user.getId());
+        CacheKit.remove(Consts.CACHE_NAMES.userRoles.name(),"findByLoginnameInCache_"+user.getLoginname());
+        CacheKit.remove(Consts.CACHE_NAMES.userRoles.name(),"findCodesByLoginnameInCache_"+user.getLoginname());
     }
     @Before({Tx.class})
     public void batchLogicDel(Integer[] ids,Integer opId){
+        User user=null;
         if(ids!=null){
             for(Integer id:ids){
+                user=User.dao.findById(id);
                 logicDel(id,opId);
+                CacheKit.remove(Consts.CACHE_NAMES.user.name(),"id_"+user.getId());
+                CacheKit.remove(Consts.CACHE_NAMES.userRoles.name(),"findByLoginnameInCache_"+user.getLoginname());
+                CacheKit.remove(Consts.CACHE_NAMES.userRoles.name(),"findCodesByLoginnameInCache_"+user.getLoginname());
             }
         }
     }
     @Before({Tx.class})
     public void batchDel(Integer[] ids){
+        User user=null;
         if(ids!=null){
             for(Integer id:ids){
+                user=User.dao.findById(id);
                 del(id);
+                CacheKit.remove(Consts.CACHE_NAMES.user.name(),"id_"+user.getId());
+                CacheKit.remove(Consts.CACHE_NAMES.userRoles.name(),"findByLoginnameInCache_"+user.getLoginname());
+                CacheKit.remove(Consts.CACHE_NAMES.userRoles.name(),"findCodesByLoginnameInCache_"+user.getLoginname());
             }
         }
     }
@@ -141,10 +160,13 @@ public class UserService extends CoreService{
                 userRole.save();
             }
         }
+        CacheKit.remove(Consts.CACHE_NAMES.userRoles.name(),"findByLoginnameInCache_"+loginname);
+        CacheKit.remove(Consts.CACHE_NAMES.userRoles.name(),"findCodesByLoginnameInCache_"+loginname);
+
     }
 
-    public User findCacheById(Integer userId){
-        return User.dao.findFirstByCache(Consts.CACHE_NAMES.user.name(), "id_"+userId, "select * from s_user where status='0' and id=? ", userId);
+    public User findByIdInCache(Integer userId){
+        return User.dao.findFirstByCache(Consts.CACHE_NAMES.user.name(), "id_"+userId, "select id,loginname,nickname,phone,email,avatar,status,lAt,opId,cAt,dAt,lastLoginTime,lastLoginIp from s_user where status='0' and id=? and dAt is null", userId);
     }
 }
 

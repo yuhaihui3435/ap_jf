@@ -28,13 +28,12 @@ public class UserInterceptor implements Interceptor {
     public void intercept(Invocation inv) {
         CoreController controller = (CoreController)inv.getController();
         String userId= CookieKit.get(controller, Consts.USER_ACCESS_TOKEN);
-
-        User user=userService.findCacheById(new Integer(userId));
-        String[] roleCodes=roleService.findCodesCacheByLoginname(user.getLoginname());
         if(StrUtil.isNotBlank(userId)) {
+            User user=userService.findByIdInCache(new Integer(userId));
             controller.setAttr(Consts.CURR_USER, user);
-            controller.setAttr(Consts.CURR_USER_ROLES, roleService.findCacheByLoginname(user.getLoginname()));
-            controller.setAttr(Consts.CURR_USER_SERS, serService.findSersByRoleCodes(roleCodes));
+            String[] roleCodes=roleService.findCodesByLoginnameInCache(user.getLoginname());
+//            controller.setAttr(Consts.CURR_USER_ROLES, roleService.findByLoginnameInCache(user.getLoginname()));
+//            controller.setAttr(Consts.CURR_USER_SERS, serService.findSersByRoleCodesInCache(roleCodes));
         }
 
         inv.invoke();
