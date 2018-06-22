@@ -52,7 +52,7 @@ public class CMNCtr extends CoreController {
         }
 
         if (StrUtil.isBlank(savePath))
-            savePath = "/cmn/pic/";
+            savePath = "cmn/pic/";
 
         String picServerUrl = CacheKit.get(Consts.CACHE_NAMES.paramCache.name(), "qn_url");
         String picName = DateKit.dateToStr(new Date(), DateKit.yyyyMMdd) + "/" + _StrKit.getUUID() + ".jpg";
@@ -68,7 +68,7 @@ public class CMNCtr extends CoreController {
             renderFailJSON("图片上传失败");
             return;
         } else {
-            if (qnRs.indexOf("200") > -1) {
+            if (qnRs.equals(Consts.YORN_STR.yes.name())) {
                 renderSuccessJSON("图片上传成功", picServerUrl + savePath + picName);
             } else {
                 LogKit.error("base64上传失败:" + qnRs);
@@ -83,10 +83,14 @@ public class CMNCtr extends CoreController {
      */
     public void act01() {
         UploadFile uf = getFile("file");
+        if(uf==null){
+            renderFailJSON("缺少上传的文件");
+            return;
+        }
         File file = uf.getFile();
         String savePath = getPara("sp");
         if (StrUtil.isBlank(savePath))
-            savePath = "/cmn/pic/";
+            savePath = "cmn/pic/";
 
         String picServerUrl = CacheKit.get(Consts.CACHE_NAMES.paramCache.name(), "qn_url");
         String picName = DateKit.dateToStr(new Date(), DateKit.yyyyMMdd) + "/" + _StrKit.getUUID() + ".jpg";

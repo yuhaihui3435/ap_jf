@@ -1,5 +1,6 @@
 package com.sc.ap.kits;
 
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.jfinal.kit.LogKit;
@@ -14,6 +15,7 @@ import com.qiniu.storage.UploadManager;
 import com.qiniu.util.Auth;
 import com.qiniu.util.Base64;
 import com.qiniu.util.UrlSafeBase64;
+import com.sc.ap.core.CoreException;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -21,6 +23,7 @@ import okhttp3.RequestBody;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * 简介
@@ -88,7 +91,7 @@ public class QiNiuKit {
 	}
 
 	public static String put64image(String base64Str, String imgKey) throws IOException {
-		LogKit.info(base64Str);
+
 		String[] array = base64Str.split(",");
 		base64Str = array[1];
 		String url = "http://up-z1.qiniu.com/putb64/-1/key/" + UrlSafeBase64.encodeToString(imgKey);
@@ -108,6 +111,24 @@ public class QiNiuKit {
 		return jsonObject.containsKey("hash") ? Consts.YORN_STR.yes.name() : Consts.YORN_STR.no.name();
 
 	}
+
+	public static String put64imageByProject(String base64Str) throws IOException {
+		String savePath =ResKit.getConfig("projectName");
+		if (StrUtil.isBlank(savePath))
+			savePath = "cmn/pic/";
+		else
+			savePath=savePath+"/img/";
+		String picServerUrl = CacheKit.get(Consts.CACHE_NAMES.paramCache.name(), "qn_url");
+		String picName = DateKit.dateToStr(new Date(), DateKit.yyyyMMdd) + "/" + _StrKit.getUUID() + ".jpg";
+		String qnRs = null;
+		try {
+			qnRs = put64image(base64Str, savePath + picName);
+		} catch (IOException e) {
+			LogKit.error("上传base64图片失败:" + e.getMessage());
+		}
+		return qnRs.equals(Consts.YORN_STR.yes.name())?picServerUrl+savePath+picName:Consts.YORN_STR.no.name();
+	}
+
 
 	public static void main(String[] args) throws IOException {
 

@@ -1,4 +1,5 @@
 package com.sc.ap.controller.user;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.jfinal.aop.Clear;
 import com.jfinal.kit.LogKit;
@@ -21,6 +22,7 @@ import com.sc.ap.service.user.UserService;
 import com.jfinal.aop.Duang;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 @Clear(AdminAAuthInterceptor.class)
@@ -48,32 +50,21 @@ public class UserController extends CoreController{
         user.setSalt(BCrypt.gensalt());
         user.setPassword(BCrypt.hashpw(orgPwd, user.getSalt()));
         userService.save(user);
-        renderSuccessJSON("用户信息表新增成功");
+        renderSuccessJSON("用户信息新增成功");
     }
     @Before({UserValidator.class})
-    public void update(){
-        UploadFile uf = getFile("file");
-        File file = uf.getFile();
-        String avatar=null;
-        if(file!=null) {
-            String savePath = getPara("sp");
-            if (StrUtil.isBlank(savePath))
-                savePath = "/cmn/pic/";
-
-            String picServerUrl = CacheKit.get(Consts.CACHE_NAMES.paramCache.name(), "qn_url");
-            String picName = DateKit.dateToStr(new Date(), DateKit.yyyyMMdd) + "/" + _StrKit.getUUID() + ".jpg";
-            try {
-                QiNiuKit.upload(file, savePath + picName);
-            } catch (QiniuException e) {
-                LogKit.error("七牛上传图片失败>>" + e.getMessage());
-            }
-            avatar=picServerUrl + savePath + picName;
-        }
+    public void update() throws IOException {
         User user=getApModel(User.class);
-        user.setAvatar(avatar );
+        if(StrUtil.isNotBlank(user.getAvatar())){
+            if(!user.getAvatar().startsWith("http")) {
+                String ret = QiNiuKit.put64imageByProject(user.getAvatar());
+                if (!ret.equals(Consts.YORN_STR.no.name()))
+                    user.setAvatar(ret);
+            }
+        }
         if(currUser()!=null){user.setOpId(currUser().getId());}
         userService.update(user);
-        renderSuccessJSON("用户信息表修改成功");
+        renderSuccessJSON("用户信息修改成功");
     }
 
     //逻辑删除
@@ -81,7 +72,7 @@ public class UserController extends CoreController{
     public void logicDel(){
         Integer[] ids=getParaValuesToInt("ids");
         userService.batchLogicDel(ids,currUser()==null?null:currUser().getId());
-        renderSuccessJSON("用户信息表删除成功");
+        renderSuccessJSON("用户信息删除成功");
     }
 
     //真实删除
@@ -89,7 +80,7 @@ public class UserController extends CoreController{
     public void del(){
         Integer[] ids=getParaValuesToInt("ids");
         userService.batchDel(ids);
-        renderSuccessJSON("用户信息表删除成功");
+        renderSuccessJSON("用户信息删除成功");
     }
     public void get(){
         Integer id=getParaToInt("id");
@@ -111,4 +102,42 @@ public class UserController extends CoreController{
     public void getCurrUser(){
         renderJson(currUser());
     }
+
+    public void updatePwd(){
+        String oldPwd=getPara("oldPassword");
+        String newPwd=getPara("newPassword");
+
+
+        if(StrUtil.isBlank(oldPwd)){
+            renderFailJSON("旧密码必填");
+            return;
+        }
+        if(StrUtil.isBlank(newPwd)){
+            renderFailJSON("新密码必填");
+            return;
+        }
+
+        User user=currUser();
+        user=userService.findOne(user.getId());
+        if(BCrypt.checkpw(oldPwd, user.getPassword())){
+            user.setPassword(BCrypt.hashpw(newPwd, user.getSalt()));
+            userService.update(user);
+        }else{
+            renderFailJSON("旧密码不正确");
+            return;
+        }
+
+        renderSuccessJSON("密码修改成功");
+
+    }
+
+    public void resetPwd(){
+        Integer id=getParaToInt("userId");
+        User user=userService.findOne(id);
+        String newPwd=RandomUtil.randomString(6);
+        user.setPassword(BCrypt.hashpw(newPwd,user.getSalt()));
+        userService.update(user);
+        renderSuccessJSON("重置密码成功",newPwd);
+    }
+
 }

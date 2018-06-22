@@ -6,6 +6,7 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.jfinal.aop.Clear;
 import com.jfinal.kit.JsonKit;
@@ -14,6 +15,7 @@ import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.ehcache.CacheKit;
 import com.jfinal.render.JsonRender;
 import com.sc.ap.Consts;
+import com.sc.ap.kits.DateKit;
 import com.sc.ap.kits.ReqKit;
 import com.sc.ap.model.LogOp;
 import com.sc.ap.model.Res;
@@ -111,11 +113,22 @@ public class LoginCtr extends CoreController {
                     Set<String> serList=serService.findUrlByRoleCodesInCache(roleCodes);
                     data.put("serList", serList);
                 }
+                Date now=new Date();
+                if(user.getLoginTime()!=null)
+                    user.setLastLoginTime(user.getLoginTime());
+                else
+                    user.setLastLoginTime(now);
+                if(StrUtil.isNotBlank(user.getLoginIp()))
+                    user.setLastLoginIp(user.getLoginIp());
+                else
+                    user.setLastLoginIp(ReqKit.getRemoteHost(getRequest()));
+                user.setLoginTime(now);
+                user.setLoginIp(ReqKit.getRemoteHost(getRequest()));
+                user.update();
+                data.put("lastLoginTime", DateKit.dateToStr(user.getLastLoginTime(),DateKit.STR_DATEFORMATE));
+                data.put("lastLoginIp",user.getLastLoginIp());
                 data.put("nickname", user.getNickname());
                 data.put("loginname", user.getLoginname());
-                user.setLastLoginTime(new Date());
-                user.setLastLoginIp(ReqKit.getRemoteHost(getRequest()));
-                user.update();
                 if (StrKit.notBlank(rm) && rm.equals("0"))
                     CookieKit.put(this, Consts.USER_ACCESS_TOKEN, user.getId().toString(), 60 * 60 * 24 * 14);
                 else

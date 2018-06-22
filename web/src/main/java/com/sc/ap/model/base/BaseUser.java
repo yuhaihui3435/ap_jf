@@ -131,4 +131,20 @@ public abstract class BaseUser<M extends BaseUser<M>> extends CoreModel<M> imple
 	}
 
 
+	public void setLoginTime(java.util.Date loginTime) {
+		set("loginTime", loginTime);
+	}
+
+	public java.util.Date getLoginTime() {
+		return get("loginTime");
+	}
+
+	public void setLoginIp(java.lang.String loginIp) {
+		set("loginIp", loginIp);
+	}
+
+	public java.lang.String getLoginIp() {
+		return getStr("loginIp");
+	}
+
 }
