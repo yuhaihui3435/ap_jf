@@ -30,17 +30,20 @@ public interface Consts {
 
     String CURR_USER_SERS = "currUserSers";
 
-    String T_CATALOG_CK = "catalog";
-
-    String T_TAG_CK = "tag";
-
     String BLANK = "";
 
     String APP_TOKEN="系统操作";
 
     BigDecimal ZERO = new BigDecimal(0);
 
+    String CURR_USER_COOKIE="currUserCookie";
+
     String NON_SET="未设置";
+
+    String USER_ONLINE_TACTICS_LOGIN_FIRST="loginFirst";
+
+    String USER_ONLINE_TACTICS_AFTER_LOGGING_IN="afterLoggingIn";
+
 
     enum YORN {
         yes(true), no(false);

@@ -1,0 +1,19 @@
+package #(groupId).#(artifactId);
+
+import cn.hutool.core.util.StrUtil;
+import com.jfinal.aop.Clear;
+import com.jfinal.plugin.ehcache.CacheKit;
+import #(groupId).#(artifactId).core.CoreController;
+import #(groupId).#(artifactId).interceptors.AdminAAuthInterceptor;
+import #(groupId).#(artifactId).interceptors.AdminIAuthInterceptor;
+import #(groupId).#(artifactId).kits.ResKit;
+
+@Clear(AdminIAuthInterceptor.class)
+public class IndexCtr extends CoreController{
+    public void index(){
+        String domain= ResKit.getConfig("domain");
+        redirect(domain+"/ad/index.html");
+    }
+
+
+}

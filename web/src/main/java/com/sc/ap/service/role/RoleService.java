@@ -227,7 +227,7 @@ public class RoleService extends CoreService {
     }
 
     public List<Role> findByLoginnameInCache(String loginname){
-        return Role.dao.findRolesByLoginname(loginname);
+        return Role.dao.findByLoginnameInCache(loginname);
     }
 
     public String[] findCodesByLoginnameInCache(String loginname){

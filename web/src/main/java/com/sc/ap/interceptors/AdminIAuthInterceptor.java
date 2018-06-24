@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.jfinal.aop.Duang;
 import com.jfinal.aop.Interceptor;
 import com.jfinal.aop.Invocation;
+import com.jfinal.plugin.ehcache.CacheKit;
 import com.sc.ap.Consts;
 import com.sc.ap.model.User;
 import com.sc.ap.core.CoreController;
@@ -43,13 +44,22 @@ public class AdminIAuthInterceptor implements Interceptor {
 			}
 		}
 		// 是否需要用户身份认证,方便测试
-		if (!ResKit.getConfigBoolean("userAuth"))
-			flag = true;
+//		if (!ResKit.getConfigBoolean("userAuth"))
+//			flag = true;
 
 		if (flag) {
 
-
-			inv.invoke();
+			String reqCookieVal=controller.getCookie(Consts.USER_ACCESS_TOKEN);
+			String currCookieVal=CacheKit.get(Consts.CURR_USER_COOKIE,"user_"+userId);
+			if(reqCookieVal.equals(currCookieVal)){
+				inv.invoke();
+			}else{
+				if (ReqKit.isAjaxRequest(controller.getRequest())) {
+					controller.renderAuth900("sm");
+				} else {
+					throw new CoreException("该账户正在其他地方被登录使用");
+				}
+			}
 		} else {
 			CookieKit.remove(controller, Consts.USER_ACCESS_TOKEN);
 			if (ReqKit.isAjaxRequest(controller.getRequest())) {

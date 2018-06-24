@@ -1,0 +1,4 @@
+package #(groupId).#(artifactId).core;
+
+public class CoreService {
+}

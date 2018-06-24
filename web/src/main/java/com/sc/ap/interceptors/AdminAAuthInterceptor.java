@@ -53,8 +53,8 @@ public class AdminAAuthInterceptor implements Interceptor{
             flag=true;
         }
         //是否需要用户身份认证,方便测试
-        if(!ResKit.getConfigBoolean("userAuth"))
-            flag=true;
+//        if(!ResKit.getConfigBoolean("userAuth"))
+//            flag=true;
 
         if(flag) {
             invocation.invoke();

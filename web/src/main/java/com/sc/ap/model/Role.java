@@ -19,7 +19,7 @@ public class Role extends BaseRole<Role> {
 	private List<Res> ownReses=null;
 	private List<Ser> ownSers=null;
 
-	public List<Role> findRolesByLoginname(String loginname){
+	public List<Role> findByLoginnameInCache(String loginname){
 		String sql="select r.* from s_role r left join s_user_role ur on r.code=ur.roleCode where r.dAt is null and ur.loginname=?";
 		return Role.dao.findByCache(Consts.CACHE_NAMES.userRoles.name(),"findByLoginnameInCache_"+loginname,sql,loginname);
 	}

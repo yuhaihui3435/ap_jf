@@ -120,6 +120,13 @@ public class CoreController extends Controller {
         return;
     }
 
+    public void renderAuth900(String str) {
+        getResponse().setStatus(900);
+        getResponse().setHeader("customData",str);
+        renderFailJSON("您的账户正在其他地方进行登录");
+        return;
+    }
+
 
     private static  ValueFilter filter = new ValueFilter() {
         public Object process(Object obj, String s, Object v) {

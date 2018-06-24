@@ -45,17 +45,15 @@ public class CookieKit {
 		put(ctr, key, value + "");
 	}
 
-	public static void put(Controller ctr, String key, String value, int maxAgeInSeconds) {
+	public static String put(Controller ctr, String key, String value, int maxAgeInSeconds) {
 		String encrypt_key = Consts.ENCRYPT_KEY;
 		String saveTime = System.currentTimeMillis() + "";
 		String encrypt_value = encrypt(encrypt_key, saveTime, maxAgeInSeconds + "", value);
 
 		String cookieValue = encrypt_value + COOKIE_SEPARATOR + saveTime + COOKIE_SEPARATOR + maxAgeInSeconds
 				+ COOKIE_SEPARATOR + value;
-		LogKit.info("put cookie" + cookieValue);
-
 		ctr.setCookie(key, cookieValue, maxAgeInSeconds, null, null, true);
-
+		return cookieValue;
 	}
 
 	private static String encrypt(String encrypt_key, String saveTime, String maxAgeInSeconds, String value) {
@@ -67,10 +65,9 @@ public class CookieKit {
 	}
 
 	public static String get(Controller ctr, String key) {
-
 		String encrypt_key = Consts.ENCRYPT_KEY;
 		String cookieValue = ctr.getCookie(key);
-		LogKit.info("get cookie" + cookieValue);
+
 		return getFromCookieInfo(encrypt_key, cookieValue);
 	}
 

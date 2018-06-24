@@ -1,0 +1,11 @@
+package #(groupId).#(artifactId);
+import cn.hutool.core.util.StrUtil;
+import #(groupId).#(artifactId).core.CoreController;
+import #(groupId).#(artifactId).kits.ext.BCrypt;
+import #(groupId).#(artifactId).model.User;
+
+public class HomeCtr extends CoreController {
+
+
+	
+}

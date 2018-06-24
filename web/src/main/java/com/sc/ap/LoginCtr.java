@@ -129,10 +129,42 @@ public class LoginCtr extends CoreController {
                 data.put("lastLoginIp",user.getLastLoginIp());
                 data.put("nickname", user.getNickname());
                 data.put("loginname", user.getLoginname());
+                data.put("avatar",user.getAvatar());
+                String cookieVal=null;
                 if (StrKit.notBlank(rm) && rm.equals("0"))
-                    CookieKit.put(this, Consts.USER_ACCESS_TOKEN, user.getId().toString(), 60 * 60 * 24 * 14);
+                    cookieVal=CookieKit.put(this, Consts.USER_ACCESS_TOKEN, user.getId().toString(), 60 * 60 * 24 * 14);
                 else
-                    CookieKit.put(this, Consts.USER_ACCESS_TOKEN, user.getId().toString(), Consts.COOKIE_TIMEOUT);
+                    cookieVal=CookieKit.put(this, Consts.USER_ACCESS_TOKEN, user.getId().toString(), Consts.COOKIE_TIMEOUT);
+
+
+                //登录检查统一用户是否在线，根据不同策略进行处理
+                String currUserCookie=(String)CacheKit.get(Consts.CURR_USER_COOKIE,"user_"+user.getId());
+                if(StrUtil.isBlank(currUserCookie)) {
+                    if (cookieVal != null) {
+                        CacheKit.put(Consts.CURR_USER_COOKIE, "user_" + user.getId(), cookieVal);
+                    }
+                }else{
+                    String cookieExpire=CookieKit.getFromCookieInfo(Consts.ENCRYPT_KEY,currUserCookie);
+                    if(cookieExpire==null){
+                        if (cookieVal != null) {
+                            CacheKit.put(Consts.CURR_USER_COOKIE, "user_" + user.getId(), cookieVal);
+                        }
+                    }else{
+                        String userOnlineTactics=CacheKit.get(Consts.CACHE_NAMES.paramCache.name(),"userOnlineTactics");
+                        if(StrUtil.isBlank(userOnlineTactics)){
+                            userOnlineTactics=Consts.USER_ONLINE_TACTICS_LOGIN_FIRST;
+                        }
+                        switch (userOnlineTactics){
+                            case Consts.USER_ONLINE_TACTICS_LOGIN_FIRST:
+                                renderFailJSON("该账户正在被使用，您目前无法再次进行登录");
+                                return;
+                            case Consts.USER_ONLINE_TACTICS_AFTER_LOGGING_IN:
+                                CacheKit.put(Consts.CURR_USER_COOKIE, "user_" + user.getId(), cookieVal);
+                                break;
+                        }
+
+                    }
+                }
                 renderSuccessJSON("登录成功", JSON.toJSONString(data, SerializerFeature.DisableCircularReferenceDetect));
                 return;
             } else {
@@ -176,9 +208,13 @@ public class LoginCtr extends CoreController {
     }
 
     public void logout() {
+        String userId=CookieKit.get(this,Consts.USER_ACCESS_TOKEN);
         CookieKit.remove(this, Consts.USER_ACCESS_TOKEN);
+        CacheKit.remove(Consts.CURR_USER_COOKIE,"user_"+userId);//删除当前在线用户缓存中标识
         renderSuccessJSON("退出系统成功");
     }
+
+
 
     public void createCaptch() {
         renderCaptcha();

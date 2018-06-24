@@ -108,7 +108,7 @@ public class CMNCtr extends CoreController {
     /**
      * 下载根据excel 路径 下载excel
      */
-    @com.jfinal.aop.Clear(AdminIAuthInterceptor.class)
+
     public void act02() {
         String ePath = getPara("ePath");
         File file = FileUtil.file(PathKit.getWebRootPath() + AppKit.getExcelPath() + ePath);
@@ -121,7 +121,7 @@ public class CMNCtr extends CoreController {
     /**
      * 图片上传
      */
-    @com.jfinal.aop.Clear(AdminIAuthInterceptor.class)
+
     public void act03() {
         UploadFile uf = getFile("file");
         File file = uf.getFile();
@@ -131,11 +131,9 @@ public class CMNCtr extends CoreController {
         } else {
             renderSuccessJSON("图片上传成功", fileID);
         }
-
-
     }
 
-    @com.jfinal.aop.Clear(AdminIAuthInterceptor.class)
+
     public void act04() {
         String picid = getPara("picid");
         //读取本地图片输入流

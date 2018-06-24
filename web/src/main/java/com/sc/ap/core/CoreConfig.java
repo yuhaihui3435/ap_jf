@@ -9,8 +9,8 @@ import com.sc.ap.controller.user.UserController;
 import com.sc.ap.gen.GenCtr;
 import com.sc.ap.gen.GenSourceCtr;
 import com.sc.ap.interceptors.UserInterceptor;
-import com.sc.ap.sm.dd.DdCtr;
-import com.sc.ap.sm.param.ParamCtr;
+import com.sc.ap.controller.dd.DdCtr;
+import com.sc.ap.controller.param.ParamCtr;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.druid.filter.stat.StatFilter;
@@ -77,14 +77,14 @@ public class CoreConfig extends JFinalConfig {
 		routes.add(new Routes() {
 			@Override
 			public void config() {
-				add("/api/param", ParamCtr.class);
-				add("/api/dd", DdCtr.class);
-				add("/api/gen", GenCtr.class);
-				add("/api/genSource", GenSourceCtr.class);
-				add("/api/user", UserController.class);
-				add("/api/role", RoleController.class);
-				add("/api/res", ResController.class);
-				add("/api/ser", SerController.class);
+				add("/param", ParamCtr.class);
+				add("/dd", DdCtr.class);
+				add("/gen", GenCtr.class);
+				add("/genSource", GenSourceCtr.class);
+				add("/user", UserController.class);
+				add("/role", RoleController.class);
+				add("/res", ResController.class);
+				add("/ser", SerController.class);
 				add("/home", HomeCtr.class);
 				add("/cmn", CMNCtr.class);
 				add("/", IndexCtr.class);
