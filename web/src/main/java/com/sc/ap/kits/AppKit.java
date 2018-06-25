@@ -21,4 +21,12 @@ public class AppKit {
 
         return ret;
     }
+
+    public static String getGenPath(){
+        String ret= (String)CacheKit.get(Consts.CACHE_NAMES.paramCache.name(),"genPath");
+        if(StrUtil.isBlank(ret))
+            ret="/WEB-INF/gen_tmp/";
+
+        return ret;
+    }
 }

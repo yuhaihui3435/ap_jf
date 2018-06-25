@@ -1,4 +1,4 @@
-package com.sc.ap.gen.tmpl.projectJf.base.web.src.main.java.com.sc.ap.service.ser;
+package #(groupId).#(artifactId).service.ser;
 
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
@@ -9,12 +9,12 @@ import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.SqlPara;
 import com.jfinal.plugin.activerecord.tx.Tx;
 import com.jfinal.plugin.ehcache.CacheKit;
-import com.sc.ap.Consts;
-import com.sc.ap.core.CoreData;
-import com.sc.ap.core.CoreService;
-import com.sc.ap.model.Role;
-import com.sc.ap.model.Ser;
-import com.sc.ap.query.SerQuery;
+import #(groupId).#(artifactId).Consts;
+import #(groupId).#(artifactId).core.CoreData;
+import #(groupId).#(artifactId).core.CoreService;
+import #(groupId).#(artifactId).model.Role;
+import #(groupId).#(artifactId).model.Ser;
+import #(groupId).#(artifactId).query.SerQuery;
 
 import java.lang.reflect.Array;
 import java.util.HashSet;

@@ -13,5 +13,4 @@ public class GenCfgColSrv {
         kv=GenCfgCol.buildParamMap(GenCfgCol.class,kv);
         return GenCfgCol.dao.findFirstByAndCond(kv);
     }
-
 }

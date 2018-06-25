@@ -1,4 +1,4 @@
-package com.sc.ap.gen.tmpl.projectJf.base.web.src.main.java.com.sc.ap.service.role;
+package #(groupId).#(artifactId).service.role;
 
 import cn.hutool.core.util.StrUtil;
 import com.jfinal.aop.Before;
@@ -8,10 +8,10 @@ import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.tx.Tx;
 import com.jfinal.plugin.ehcache.CacheKit;
 import com.mysql.jdbc.ResultSetRow;
-import com.sc.ap.Consts;
-import com.sc.ap.core.CoreService;
-import com.sc.ap.model.*;
-import com.sc.ap.query.RoleQuery;
+import #(groupId).#(artifactId).Consts;
+import #(groupId).#(artifactId).core.CoreService;
+import #(groupId).#(artifactId).model.*;
+import #(groupId).#(artifactId).query.RoleQuery;
 
 import java.util.*;
 

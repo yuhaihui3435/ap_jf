@@ -169,8 +169,24 @@ public class CMNCtr extends CoreController {
 
             renderNull();
         }
+    }
 
+    /**
+     * 下载生成的代码 路径 下载excel
+     */
 
+    public void act05() {
+        String codePath = getPara("codePath");
+        String genPath=AppKit.getGenPath();
+        File file=null;
+        if(codePath.contains(genPath)){
+             file = FileUtil.file(PathKit.getWebRootPath()+ codePath);
+        }else{
+             file = FileUtil.file(PathKit.getWebRootPath() + AppKit.getGenPath() + codePath);
+        }
+        int index = codePath.lastIndexOf("/");
+        String str = codePath.substring(index, codePath.length());
+        renderFile(file, str);
     }
 
 }

@@ -1,8 +1,6 @@
 devMode=true
 projectName=#(projectName)
-
-
-#------\u6570\u636E\u5E93\u8FDE\u63A5\u914D\u7F6E  --------------
+###------数据库配置--------------
 db.default.driver=com.mysql.jdbc.Driver
 db.default.user=yhh
 db.default.password=Zhengwei@617
@@ -21,11 +19,5 @@ mongodb.con=pac
 mongodb.user=mb
 mongodb.pwd=mybank@1555
 
-
-
-#----- \u7AD9\u70B9\u914D\u7F6E --------------------
+###----- 项目访问地址 --------------------
 domain=http://localhost:8080/
-
-
-#------\u7BA1\u7406\u5458 \u90AE\u4EF6\u5730\u5740--------
-admin.email=yuhaihui@mybank.cc

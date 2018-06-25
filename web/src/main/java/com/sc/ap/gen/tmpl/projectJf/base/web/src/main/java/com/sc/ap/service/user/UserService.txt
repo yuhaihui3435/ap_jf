@@ -1,10 +1,10 @@
-package com.sc.ap.gen.tmpl.projectJf.base.web.src.main.java.com.sc.ap.service.user;
+package #(groupId).#(artifactId).service.user;
 import com.jfinal.plugin.ehcache.CacheKit;
-import com.sc.ap.Consts;
-import com.sc.ap.core.CoreService;
-import com.sc.ap.model.User;
-import com.sc.ap.model.UserRole;
-import com.sc.ap.query.UserQuery;
+import #(groupId).#(artifactId).Consts;
+import #(groupId).#(artifactId).core.CoreService;
+import #(groupId).#(artifactId).model.User;
+import #(groupId).#(artifactId).model.UserRole;
+import #(groupId).#(artifactId).query.UserQuery;
 import cn.hutool.core.util.StrUtil;
 import com.jfinal.aop.Before;
 import com.jfinal.plugin.activerecord.tx.Tx;

@@ -1,14 +1,19 @@
 package com.sc.ap.gen;
 
-import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.jfinal.aop.Duang;
 import com.jfinal.plugin.activerecord.generator.ColumnMeta;
 import com.jfinal.plugin.activerecord.generator.TableMeta;
+import com.jfinal.plugin.ehcache.CacheKit;
+import com.sc.ap.Consts;
 import com.sc.ap.core.CoreController;
 import com.sc.ap.model.GenCfgCol;
 import com.sc.ap.model.GenCfgTbl;
 import com.sc.ap.model.GenSource;
 
+import java.io.File;
+import java.lang.reflect.Method;
 import java.util.*;
 
 public class GenCtr extends CoreController {
@@ -71,11 +76,12 @@ public class GenCtr extends CoreController {
         String jsName=getPara("jsName","vuetify");
 
         Map data;
+        List ret=new ArrayList();
         for (Integer tblId:tblIds){
             data=genSrv.getGenData(tblId);
-            genSrv.genCodeFile(action,jsName,data);
+            ret.add(genSrv.genCodeFile(action,jsName,data));
         }
-        renderSuccessJSON("生成代码成功请查看");
+        renderSuccessJSON("生成代码成功请查看",JSON.toJSONString(ret) );
     }
 
     public void list_genCode(){
@@ -86,6 +92,26 @@ public class GenCtr extends CoreController {
         ret.put("javaCodes",javaCodes);
         ret.put("vuejsCodes",vuejsCodes);
         renderJson(ret);
+    }
+
+
+    public void getProjectTemplates(){
+        renderJson(CacheKit.get(Consts.CACHE_NAMES.dd.name(),"projectType".concat("List")));
+    }
+
+    public void genProject(){
+        Method[] methods=GenSrv.class.getDeclaredMethods();
+        String templateName=getPara("templateName");
+        String groupId=getPara("groupId");
+        String artifactId=getPara("artifactId");
+        String projectName=getPara("projectName");
+        Map<String,String> map=new HashMap<>();
+        map.put("templateName",templateName);
+        map.put("groupId",groupId);
+        map.put("artifactId",artifactId);
+        map.put("projectName",projectName);
+        String ret=genSrv.genProject(map);
+        renderSuccessJSON("项目生成成功",ret);
     }
 
 }

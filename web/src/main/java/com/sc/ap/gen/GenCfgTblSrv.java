@@ -14,8 +14,4 @@ public class GenCfgTblSrv {
         kv=GenCfgTbl.buildParamMap(GenCfgTbl.class,kv);
         return GenCfgTbl.dao.findFirstByAndCond(kv);
     }
-
-
-
-
 }

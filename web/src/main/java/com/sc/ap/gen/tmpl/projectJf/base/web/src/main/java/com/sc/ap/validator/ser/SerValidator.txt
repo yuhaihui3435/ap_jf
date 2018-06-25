@@ -1,10 +1,10 @@
-package com.sc.ap.gen.tmpl.projectJf.base.web.src.main.java.com.sc.ap.validator.ser;
+package #(groupId).#(artifactId).validator.ser;
 
 import cn.hutool.core.util.StrUtil;
 import com.jfinal.core.Controller;
-import com.sc.ap.Consts;
-import com.sc.ap.core.CoreValidator;
-import com.sc.ap.model.Ser;
+import #(groupId).#(artifactId).Consts;
+import #(groupId).#(artifactId).core.CoreValidator;
+import #(groupId).#(artifactId).model.Ser;
 
 import java.util.List;
 

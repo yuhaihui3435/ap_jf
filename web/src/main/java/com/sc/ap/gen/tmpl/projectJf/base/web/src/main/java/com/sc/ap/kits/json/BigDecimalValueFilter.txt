@@ -1,4 +1,4 @@
-package #(groupId).#(artifactId).kits.json.filter;
+package #(groupId).#(artifactId).kits.json;
 
 import com.alibaba.fastjson.serializer.ValueFilter;
 
