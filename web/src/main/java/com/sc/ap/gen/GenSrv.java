@@ -278,7 +278,7 @@ public class GenSrv {
         return outDir.substring(outDir.indexOf(AppKit.getGenPath()),outDir.length())+"vuejsCode.zip";
     }
 
-    public String genProject(Map<String,String> param){
+    public String genBackendProject(Map<String,String> param){
         initEngine();
         String templateName=param.get("templateName");
         String templateRoot="/com/sc/ap/gen/tmpl/"+templateName+"/";
@@ -294,7 +294,7 @@ public class GenSrv {
         LogKit.info("创建导出的目录成功");
         
         //创建项目文件夹
-        String projectPath=outDirPath+param.get("projectName")+"/";
+        String projectPath=outDirPath+param.get("projectName")+"_backend/";
         File project=null;
         if(!FileUtil.exist(projectPath)){project=FileUtil.file(projectPath);project.mkdirs();}
         LogKit.info("创建项目文件夹成功");
@@ -489,8 +489,9 @@ public class GenSrv {
         if(templateFiles!=null){
             for (int i = 0; i < templateFiles.length; i++) {
                 tmp=templateFiles[i];
-                FileUtil.file(kitsPath+tmp.getName()+"/").mkdirs();
+
                 if(tmp.isDirectory()){
+                    FileUtil.file(kitsPath+tmp.getName()+"/").mkdirs();
                     files=tmp.listFiles();
                     if(files!=null){
                         for (int j = 0; j < files.length; j++) {
@@ -503,7 +504,7 @@ public class GenSrv {
                     tmp=templateFiles[i];
                     outFileName=tmp.getName();
                     outFileName=outFileName.substring(0,outFileName.indexOf("."));
-                    engine.getTemplate(tPath+tmp.getName()).render(param,new File(kitsPath+outFileName+"JAVA_FILE_SUFFIX"));
+                    engine.getTemplate(tPath+tmp.getName()).render(param,new File(kitsPath+outFileName+JAVA_FILE_SUFFIX));
                 }
             }
         }
@@ -520,8 +521,9 @@ public class GenSrv {
         if(templateFiles!=null){
             for (int i = 0; i < templateFiles.length; i++) {
                 tmp=templateFiles[i];
-                FileUtil.file(modelPath+tmp.getName()+"/").mkdirs();
+
                 if(tmp.isDirectory()){
+                    FileUtil.file(modelPath+tmp.getName()+"/").mkdirs();
                     files=tmp.listFiles();
                     if(files!=null){
                         for (int j = 0; j < files.length; j++) {
@@ -534,7 +536,7 @@ public class GenSrv {
                     tmp=templateFiles[i];
                     outFileName=tmp.getName();
                     outFileName=outFileName.substring(0,outFileName.indexOf("."));
-                    engine.getTemplate(tPath+tmp.getName()).render(param,new File(modelPath+outFileName+"JAVA_FILE_SUFFIX"));
+                    engine.getTemplate(tPath+tmp.getName()).render(param,new File(modelPath+outFileName+JAVA_FILE_SUFFIX));
                 }
             }
         }
@@ -679,7 +681,31 @@ public class GenSrv {
             }
         }
     }
-    
+
+
+    public String genFrontendProject(Map<String,String> param){
+        String ret=null;
+        initEngine();
+        String projectName=param.get("projectName")+"_frontend";
+        String templateName=param.get("templateName");
+        String templateRoot="/com/sc/ap/gen/tmpl/"+templateName+"/";
+        //判断项目模板目录是否存在
+        if(!FileUtil.exist(PathKit.getRootClassPath()+"/"+templateRoot))throw new CoreException("模板目录不存在");
+        //创建导出的目录
+        String now=DateKit.dateToStr(new Date(),DateKit.yyyyMMdd);
+        String zipName=templateName+"/"+now +"/"+param.get("projectName")+".zip";
+        String outDirPath=GEN_CODE_OUT_PATH+templateName+"/"+now +"/";
+        File outDir=null;
+        if(!FileUtil.exist(outDirPath)){outDir=FileUtil.file(outDirPath);outDir.mkdirs();}
+        else FileUtil.del(new File(outDirPath));
+        LogKit.info("创建导出的目录成功");
+        String projectPath=outDirPath+projectName+"/";
+        File projectFile=FileUtil.file(projectPath);projectFile.mkdirs();
+        FileUtil.copyContent(new File(PathKit.getRootClassPath()+templateRoot),projectFile,true);
+        engine.getTemplate("/com/sc/ap/gen/tmpl/"+templateName+"/package.json").render(param,new File(projectPath+"package.json"));
+        ZipUtil.zip(projectPath,outDirPath+param.get("projectName")+".zip",true);
+        return zipName;
+    }
     
     class FileInfo{
         public FileInfo(String name,String path,String soruce){

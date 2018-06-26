@@ -19,7 +19,7 @@ public class ColNoteResolve extends Directive {
         String[] strings=null;
         strings=note.split("-");
         StringBuilder ret=new StringBuilder();
-        if(strings!=null){
+        if(strings!=null&&strings.length==2){
             String data=strings[1];
             if(StrUtil.isNotBlank(data)) {
                 strings = data.split(",");

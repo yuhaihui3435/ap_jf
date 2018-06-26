@@ -17,7 +17,11 @@ public class #(tbl.className)Validator extends CoreValidator {
         if(ak.contains("#(tbl.modelName)/save")||ak.contains("#(tbl.modelName)/update")){
             #for(col:tbl.genCfgColList)
                 #if(col.configJSON.isRequired??false&&(col.configJSON.inputType=='text'||col.configJSON.inputType=='textArea'))
-                    if(StrUtil.isBlank(#(tbl.modelName).get#(firstCharToUpperCase(col.col))())){
+                    #if(col.tpe=='java.lang.String')
+                        if(StrUtil.isBlank(#(tbl.modelName).get#(firstCharToUpperCase(col.col))())){
+                    #else
+                        if(#(tbl.modelName).get#(firstCharToUpperCase(col.col))()==null){
+                    #end
                         addError(Consts.REQ_JSON_CODE.fail.name(), "#(col.note)值不能为空");
                         return;
                     }
@@ -33,8 +37,11 @@ public class #(tbl.className)Validator extends CoreValidator {
                 #end
 
                 #if(notBlank((col.configJSON.min??null))&&(col.configJSON.inputType=='text'||col.configJSON.inputType=='textArea'))
-
+                                            #if(col.tpe=='java.lang.String')
                                              if (StrUtil.isNotBlank(#(tbl.modelName).get#(firstCharToUpperCase(col.col))())) {
+                                            #else
+                                             if (#(tbl.modelName).get#(firstCharToUpperCase(col.col))()!=null) {
+                                            #end
                                                    int len=StrUtil.totalLength(#(tbl.modelName).get#(firstCharToUpperCase(col.col))());
                                                    if(len<#(col.configJSON.min)){
                                                         addError(Consts.REQ_JSON_CODE.fail.name(), "#(col.note)长度不能小于#(col.configJSON.min)");
@@ -43,8 +50,11 @@ public class #(tbl.className)Validator extends CoreValidator {
                                              }
                 #end
                 #if(notBlank((col.configJSON.max??null))&&(col.configJSON.inputType=='text'||col.configJSON.inputType=='textArea'))
-
+                                            #if(col.tpe=='java.lang.String')
                                              if (StrUtil.isNotBlank(#(tbl.modelName).get#(firstCharToUpperCase(col.col))())) {
+                                            #else
+                                              if (#(tbl.modelName).get#(firstCharToUpperCase(col.col))()!=null) {
+                                            #end
                                                    int len=StrUtil.totalLength(#(tbl.modelName).get#(firstCharToUpperCase(col.col))());
                                                    if(len>#(col.configJSON.max)){
                                                         addError(Consts.REQ_JSON_CODE.fail.name(), "#(col.note)长度不能大于#(col.configJSON.max)");

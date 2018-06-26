@@ -275,6 +275,14 @@
                 <includes>
                     <include>**/*.properties</include>
                     <include>**/*.txt</include>
+                    <include>**/*.html</include>
+                    <include>**/*.js</include>
+                    <include>**/*.png</include>
+                    <include>**/*.vue</include>
+                    <include>**/*.json</include>
+                    <include>**/*.md</include>
+                    <include>**/.babelrc</include>
+                    <include>**/.editorconfig</include>
                 </includes>
             </resource>
             <resource>

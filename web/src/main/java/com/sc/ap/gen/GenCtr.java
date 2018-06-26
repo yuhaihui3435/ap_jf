@@ -96,7 +96,11 @@ public class GenCtr extends CoreController {
 
 
     public void getProjectTemplates(){
-        renderJson(CacheKit.get(Consts.CACHE_NAMES.dd.name(),"projectType".concat("List")));
+        String action=getPara("action");
+        if("backendProject".equals(action))
+            renderJson(CacheKit.get(Consts.CACHE_NAMES.dd.name(),"backendProjectType".concat("List")));
+        else
+            renderJson(CacheKit.get(Consts.CACHE_NAMES.dd.name(),"frontendProjectType".concat("List")));
     }
 
     public void genProject(){
@@ -105,13 +109,23 @@ public class GenCtr extends CoreController {
         String groupId=getPara("groupId");
         String artifactId=getPara("artifactId");
         String projectName=getPara("projectName");
+        String projectDesc=getPara("projectDesc");
+        String projectAuthor=getPara("projectAuthor");
+        String action=getPara("action");
         Map<String,String> map=new HashMap<>();
         map.put("templateName",templateName);
         map.put("groupId",groupId);
         map.put("artifactId",artifactId);
         map.put("projectName",projectName);
-        String ret=genSrv.genProject(map);
-        renderSuccessJSON("项目生成成功",ret);
+        map.put("projectDesc",projectDesc);
+        map.put("projectAuthor",projectAuthor);
+        String ret=null;
+        if("backendProject".equals(action)) {
+            ret= genSrv.genBackendProject(map);
+        }else {
+            ret=genSrv.genFrontendProject(map);
+        }
+        renderSuccessJSON("项目生成成功", ret);
     }
 
 }

@@ -8,8 +8,6 @@ import #(groupId).#(artifactId).controller.ser.SerController;
 import #(groupId).#(artifactId).controller.user.UserController;
 import #(groupId).#(artifactId).core.CoreData;
 import #(groupId).#(artifactId).core._MappingKit;
-import #(groupId).#(artifactId).gen.GenCtr;
-import #(groupId).#(artifactId).gen.GenSourceCtr;
 import #(groupId).#(artifactId).interceptors.UserInterceptor;
 import #(groupId).#(artifactId).controller.dd.DdCtr;
 import #(groupId).#(artifactId).controller.param.ParamCtr;
@@ -81,8 +79,6 @@ public class CoreConfig extends JFinalConfig {
 			public void config() {
 				add("/param", ParamCtr.class);
 				add("/dd", DdCtr.class);
-				add("/gen", GenCtr.class);
-				add("/genSource", GenSourceCtr.class);
 				add("/user", UserController.class);
 				add("/role", RoleController.class);
 				add("/res", ResController.class);

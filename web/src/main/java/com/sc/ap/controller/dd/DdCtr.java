@@ -2,6 +2,7 @@ package com.sc.ap.controller.dd;
 
 import com.jfinal.aop.Before;
 import com.sc.ap.core.CoreController;
+import com.sc.ap.core.CoreData;
 import com.sc.ap.model.Dd;
 import com.sc.ap.validator.dd.DdValidator;
 
@@ -29,6 +30,7 @@ public class DdCtr extends CoreController {
         Dd dd=getApModel(Dd.class);
         if(currUser()!=null)dd.setOpId(currUser().getId());
         dd.save();
+        CoreData.loadDd();
         renderSuccessJSON("数据字典新增成功");
     }
     @Before({DdValidator.class})
@@ -36,6 +38,7 @@ public class DdCtr extends CoreController {
         Dd dd=getApModel(Dd.class);
         if(currUser()!=null)dd.setOpId(currUser().getId());
         dd.update();
+        CoreData.loadDd();
         renderSuccessJSON("数据字典修改成功");
     }
 
@@ -43,6 +46,7 @@ public class DdCtr extends CoreController {
         int id=getParaToInt("id");
         Dd dd=Dd.dao.findById(id);
         dd.apDel();
+        CoreData.loadDd();
         renderSuccessJSON("数据字典删除成功");
     }
 

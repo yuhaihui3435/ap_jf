@@ -1,6 +1,3 @@
-#namespace("genSql")
-  #include("gen.sql")
-#end
 #namespace("resSql")
   #include("res.sql")
 #end

@@ -23,7 +23,7 @@ public final class GenKit {
     public static String getModelName(String tbl, Integer gsId) {
         GenSource genSource = GenSource.dao.findById(gsId);
         String prefixs = genSource.getRemovePrefix();
-        String[] prefixs_array = prefixs.split(",");
+        String[] prefixs_array = prefixs!=null?prefixs.split(","):null;
 
         String tblName = tbl;
         String[] strings = tblName.split("_");
@@ -34,7 +34,7 @@ public final class GenKit {
             }
         } else {
             for (int i = 0; i < strings.length; i++) {
-                stringBuilder.append(strings[i]);
+                stringBuilder.append(StrUtil.upperFirst(strings[i]));
             }
         }
         return stringBuilder.toString();
