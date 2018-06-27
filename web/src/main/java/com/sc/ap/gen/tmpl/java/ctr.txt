@@ -1,4 +1,4 @@
-package #(basePackage).controller.#(tbl.modelName);
+package #(basePackage).controller.#(tbl.className)Controller;
 import #(basePackage).model.#(tbl.className);
 import #(basePackage).query.#(tbl.className)Query;
 import #(basePackage).validator.#(tbl.modelName).#(tbl.className)Validator;

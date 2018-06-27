@@ -1,4 +1,4 @@
-package #(basePackage).validator.#(tbl.modelName);
+package #(basePackage).validator.#(tbl.className)Validator;
 
 import cn.hutool.core.util.StrUtil;
 import com.jfinal.core.Controller;

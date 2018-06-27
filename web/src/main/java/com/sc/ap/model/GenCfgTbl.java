@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import com.jfinal.kit.StrKit;
+import com.sc.ap.gen.GenKit;
 import com.sc.ap.model.base.BaseGenCfgTbl;
 
 import java.sql.Struct;
@@ -55,7 +56,7 @@ public class GenCfgTbl extends BaseGenCfgTbl<GenCfgTbl> {
 
 	public String getClassName() {
 
-		return StrUtil.isNotBlank(modelName)?StrKit.firstCharToUpperCase(modelName):null;
+		return this.className;
 	}
 
 	public void setClassName(String className) {
