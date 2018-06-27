@@ -57,9 +57,9 @@ public class AdminAAuthInterceptor implements Interceptor{
             invocation.invoke();
         } else {
             if(ReqKit.isAjaxRequest(controller.getRequest())){
-                controller.renderUnauthorizationJSON("sm");
+                controller.renderAuth403(null);
             }else {
-                throw new CoreException("访问权限认证失败！");
+                throw new CoreException(CoreController.ERR_MSG_403);
             }
         }
     }

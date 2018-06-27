@@ -55,7 +55,7 @@ public class GenCfgTbl extends BaseGenCfgTbl<GenCfgTbl> {
 
 	public String getClassName() {
 
-		return StrUtil.isNotBlank(modelName)?StrKit.firstCharToUpperCase(modelName):null;
+		return this.className;
 	}
 
 	public void setClassName(String className) {

@@ -34,6 +34,29 @@ public final class GenKit {
             }
         } else {
             for (int i = 0; i < strings.length; i++) {
+                if(i==0)
+                    stringBuilder.append(strings[i]);
+                else
+                    stringBuilder.append(StrUtil.upperFirst(strings[i]));
+            }
+        }
+        return stringBuilder.toString();
+    }
+
+    public static String getClassName(String tbl, Integer gsId) {
+        GenSource genSource = GenSource.dao.findById(gsId);
+        String prefixs = genSource.getRemovePrefix();
+        String[] prefixs_array = prefixs!=null?prefixs.split(","):null;
+
+        String tblName = tbl;
+        String[] strings = tblName.split("_");
+        StringBuilder stringBuilder = new StringBuilder();
+        if (prefixs_array!=null&&ArrayUtil.contains(prefixs_array, strings[0]+"_")) {
+            for (int i = 1; i < strings.length; i++) {
+                stringBuilder.append(StrUtil.upperFirst(strings[i]));
+            }
+        } else {
+            for (int i = 0; i < strings.length; i++) {
                 stringBuilder.append(StrUtil.upperFirst(strings[i]));
             }
         }

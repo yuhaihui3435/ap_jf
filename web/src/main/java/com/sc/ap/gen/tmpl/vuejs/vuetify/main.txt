@@ -1,5 +1,5 @@
 <template>
-<div >
+<v-container>
   <v-dialog v-model="dialog" persistent max-width="500px">
       <v-card >
         <v-card-title>
@@ -41,8 +41,8 @@
                               <v-menu
                                         ref="#(col.col)DateMenu"
                                         :close-on-content-click="false"
-                                        v-model="#(col.col)Menu"
-                                        :return-value.sync="#(tbl.modelName).#(col.col)"
+                                        v-model="#(col.col)DateMenu"
+                                        :return-value.sync="vo.#(col.col)"
                                         :nudge-right="40"
                                         lazy
                                         transition="scale-transition"
@@ -60,7 +60,7 @@
                                           readonly
                                           :rules="[#if(col.configJSON.isRequired??false)rules.required#end]"
                                         ></v-text-field>
-                                        <v-date-picker v-model="#(tbl.modelName).#(col.col)" locale="zh-cn"  @input="$refs.#(col.col)Menu.save(#(tbl.modelName).#(col.col))"></v-date-picker>
+                                        <v-date-picker v-model="vo.#(col.col)" locale="zh-cn"  @input="$refs.#(col.col)DateMenu.save(vo.#(col.col))"></v-date-picker>
                                       </v-menu>
                            </v-flex>
                         #end
@@ -69,8 +69,8 @@
                                                       <v-menu
                                                                 ref="#(col.col)TimeMenu"
                                                                 :close-on-content-click="false"
-                                                                v-model="#(col.col)Menu"
-                                                                :return-value.sync="#(tbl.modelName).#(col.col)"
+                                                                v-model="#(col.col)TimeMenu"
+                                                                :return-value.sync="vo.#(col.col)"
                                                                 :nudge-right="40"
                                                                 lazy
                                                                 transition="scale-transition"
@@ -88,24 +88,24 @@
                                                                   readonly
                                                                   :rules="[#if(col.configJSON.isRequired??false)rules.required#end]"
                                                                 ></v-text-field>
-                                                                <v-time-picker v-model="#(tbl.modelName).#(col.col)" locale="zh-cn"  @input="$refs.#(col.col)Menu.save(#(tbl.modelName).#(col.col))"></v-time-picker>
+                                                                <v-time-picker v-model="vo.#(col.col)" locale="zh-cn"  @input="$refs.#(col.col)TimeMenu.save(vo.#(col.col))"></v-time-picker>
                                                               </v-menu>
                              </v-flex>
                         #end
 
                         #if((col.configJSON.inputType??''=='select')&&(col.configJSON.addShow??false||col.configJSON.editShow??false))
                            <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt=='add'#end#if(col.configJSON.addShow??false&&col.configJSON.editShow??false)||#end#if(col.configJSON.editShow??false)opt=='edit'#end">
-                                <v-select :items="#(tbl.modelName)SelectData" v-model="vo.#(col.col)" :rules="[#if(col.configJSON.isRequired??false)rules.required#end]" label="#genColLabel(col.note)" #if(col.configJSON.isRequired??false)required#end  item-value="value" item-text="text"></v-select>
+                                <v-select :items="#(col.col)SelectData" v-model="vo.#(col.col)" :rules="[#if(col.configJSON.isRequired??false)rules.required#end]" label="#genColLabel(col.note)" #if(col.configJSON.isRequired??false)required#end  item-value="value" item-text="text"></v-select>
                            </v-flex>
                         #end
                         #if((col.configJSON.inputType??''=='radio')&&(col.configJSON.addShow??false||col.configJSON.editShow??false))
                            <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt=='add'#end#if(col.configJSON.addShow??false&&col.configJSON.editShow??false)||#end#if(col.configJSON.editShow??false)opt=='edit'#end">
-                                #genColLabel(col.note)<v-radio-group v-model="vo.#(col.col)" row :rules="[#if(col.configJSON.isRequired??false)rules.required#end]" #if(col.configJSON.isRequired??false)required#end> <v-radio v-for="n in #(tbl.modelName)RadioData"  :key="n.value" :label="n.text" :value="n.value" ></v-radio></v-radio-group>
+                                #genColLabel(col.note)<v-radio-group v-model="vo.#(col.col)" row :rules="[#if(col.configJSON.isRequired??false)rules.required#end]" #if(col.configJSON.isRequired??false)required#end> <v-radio v-for="n in #(col.col)RadioData"  :key="n.value" :label="n.text" :value="n.value" ></v-radio></v-radio-group>
                            </v-flex>
                         #end
                         #if((col.configJSON.inputType??''=='checkbox')&&(col.configJSON.addShow??false||col.configJSON.editShow??false))
                            <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt=='add'#end#if(col.configJSON.addShow??false&&col.configJSON.editShow??false)||#end#if(col.configJSON.editShow??false)opt=='edit'#end">
-                                #genColLabel(col.note)<v-checkbox v-model="vo.#(col.col)" :rules="[#if(col.configJSON.isRequired??false)rules.required#end]" v-for="n in #(tbl.modelName)CheckboxData" #if(col.configJSON.isRequired??false)required#end :label="n.text" :value="n.value"></v-checkbox>
+                                #genColLabel(col.note)<v-checkbox v-model="vo.#(col.col)" :rules="[#if(col.configJSON.isRequired??false)rules.required#end]" v-for="n in #(col.col)CheckboxData" #if(col.configJSON.isRequired??false)required#end :label="n.text" :value="n.value"></v-checkbox>
                            </v-flex>
                         #end
                         #if((col.configJSON.inputType??''=='switch')&&(col.configJSON.addShow??false||col.configJSON.editShow??false))
@@ -210,17 +210,17 @@
                    #end
                    #if((col.configJSON.inputType??''=='select')&&(col.configJSON.equalQuery??false||col.configJSON.likeQuery??false))
                     <v-flex xs12 sm3 md3>
-                        <v-select :items="#(tbl.modelName)SelectData" v-model="#(tbl.modelName)Query.#(col.col)" label="#genColLabel(col.note)"  item-value="value" item-text="text"></v-select>
+                        <v-select :items="#(col.col)SelectData" v-model="#(tbl.modelName)Query.#(col.col)" label="#genColLabel(col.note)"  item-value="value" item-text="text"></v-select>
                     </v-flex>
                    #end
                    #if((col.configJSON.inputType??''=='radio')&&(col.configJSON.equalQuery??false||col.configJSON.likeQuery??false))
                         <v-flex xs12 sm3 md3>
-                        #genColLabel(col.note)<v-radio-group v-model="#(tbl.modelName)Query.#(col.col)" row> <v-radio v-for="n in #(tbl.modelName)RadioData" :key="n.value" :label="n.text" :value="n.value" ></v-radio></v-radio-group>
+                        #genColLabel(col.note)<v-radio-group v-model="#(tbl.modelName)Query.#(col.col)" row> <v-radio v-for="n in #(col.col)RadioData" :key="n.value" :label="n.text" :value="n.value" ></v-radio></v-radio-group>
 
                    #end
                    #if((col.configJSON.inputType??''=='checkbox')&&(col.configJSON.equalQuery??false||col.configJSON.likeQuery??false))
                         <v-flex xs12 sm3 md3>
-                        #genColLabel(col.note)<v-checkbox v-model="#(tbl.modelName)Query.#(col.col)" v-for="n in #(tbl.modelName)CheckboxData" :label="n.text" :value="n.value"></v-checkbox>
+                        #genColLabel(col.note)<v-checkbox v-model="#(tbl.modelName)Query.#(col.col)" v-for="n in #(col.col)CheckboxData" :label="n.text" :value="n.value"></v-checkbox>
                         </v-flex>
                    #end
                    #if((col.configJSON.inputType??''=='switch')&&(col.configJSON.equalQuery??false||col.configJSON.likeQuery??false))
@@ -275,14 +275,16 @@
               </template>
           </v-data-table>
       </v-card>
-</div>
+</v-container>
 </template>
 <script>
 import { mapState } from "vuex";
-import Kit from "../../../libs/kit.js";
+import Kit from "../../libs/kit.js";
 #for(col:tbl.genCfgColList)
-    #if(col.configJSON.inputType??''=='date')
+    #set(hasDate=false)
+    #if(col.configJSON.inputType??''=='date'&&!hasDate)
         var moment = require('moment');
+        #set(hasDate=true)
     #end
 #end
 export default {
@@ -345,16 +347,24 @@ export default {
     })
   },
   mounted() {
-    this.#(tbl.modelName)Query["pn"] = this.serQuery.page;
+    this.#(tbl.modelName)Query["pn"] = this.#(tbl.modelName)Query.page;
     this.search();
+    this.init();
   },
   methods: {
+    init(){
+        let vm=this;
+        this.$store.dispatch("init_#(tbl.modelName)").then(res => {
+
+        });
+    },
     search() {
       this.$store.dispatch("page_#(tbl.modelName)",this.#(tbl.modelName)Query).catch(res=>{});
     },
     add() {
           this.loading=false;
           this.$refs.form.reset();
+          this.vo={};
           this.opt = "add";
           this.title = "新增#(tbl.note)";
           this.dialog = true;

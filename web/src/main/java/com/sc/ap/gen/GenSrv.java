@@ -122,6 +122,7 @@ public class GenSrv {
         GenCfgTbl genCfgTbl=GenCfgTbl.dao.findById(tblId);
         GenSource genSource=GenSource.dao.findById(genCfgTbl.getGsId());
         genCfgTbl.setModelName(GenKit.getModelName(genCfgTbl.getTbl(),genCfgTbl.getGsId()));
+        genCfgTbl.setClassName(GenKit.getClassName(genCfgTbl.getTbl(),genCfgTbl.getGsId()));
         Map<String,Object> ret=new HashMap();
         ret.put("basePackage",genSource.getBasePackage());
         ret.put("baseModelPackage",genSource.getBaseModelPackage());

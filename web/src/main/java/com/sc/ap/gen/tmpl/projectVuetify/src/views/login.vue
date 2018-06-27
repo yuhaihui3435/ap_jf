@@ -11,9 +11,9 @@
               <v-card-text>
                 <v-form v-model="fValid" ref="form" lazy-validation>
                   <v-text-field prepend-icon="person" v-model="form.loginname" :rules="[ rules.required,]" label="用户名" type="text"></v-text-field>
-                  
+
                   <v-text-field id="password" prepend-icon="lock" :rules="[ rules.required,]" v-model="form.password" label="密码" type="password" ></v-text-field>
-                  
+
                   <v-layout row >
                   <v-flex xs12 md6 lg8>
                   <v-text-field id="checkCode" prepend-icon="text_format" :rules="[ rules.required,]" v-model="form.checkCode" label="验证码" type="text"></v-text-field>
@@ -27,13 +27,13 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" :loading="loading||!fValid" @click="login">登录<v-icon right dark>fas fa-sign-in-alt</v-icon></v-btn>
+                <v-btn color="primary" :loading="loading" @click="login">登录<v-icon right dark>fas fa-sign-in-alt</v-icon></v-btn>
               </v-card-actions>
             </v-card>
           </v-flex>
         </v-layout>
       </v-container>
-    
+
 </template>
 <script>
 import Kit from "../libs/kit.js";
@@ -69,7 +69,7 @@ export default {
             vm.loading=false;
             localStorage.removeItem('currMenuState');
           if (res.resCode&&res.resCode == "success") {
-           
+
             let resData=JSON.parse(res.resData);
             vm.$store.commit('setNickname',resData.nickname);
             localStorage.setItem("nickname", resData.nickname);

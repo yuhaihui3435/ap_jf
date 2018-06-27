@@ -1,4 +1,4 @@
-package #(basePackage).controller.#(tbl.modelName);
+package #(basePackage).controller.#(tbl.className)Controller;
 import #(basePackage).model.#(tbl.className);
 import #(basePackage).query.#(tbl.className)Query;
 import #(basePackage).validator.#(tbl.modelName).#(tbl.className)Validator;
@@ -66,5 +66,10 @@ public class #(tbl.className)Controller extends CoreController{
     public void get(){
         Integer id=getParaToInt("id");
         renderJson(#(tbl.modelName)Service.findOne(id));
+    }
+    public void init(){
+           Map<String ,Object> ret=new HashMap<>();
+
+           renderJson(ret);
     }
 }

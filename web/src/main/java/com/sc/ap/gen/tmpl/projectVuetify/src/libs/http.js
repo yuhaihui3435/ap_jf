@@ -28,7 +28,7 @@ axiosIns.defaults.transformRequest = [function (data) {
 
         return data;
     }
-    
+
     return qs.stringify(data);
 }
 ];
@@ -39,7 +39,7 @@ axiosIns.interceptors.request.use(function (config) {
     store.commit('setLoadingStatus',true)
     //配置config
     config.headers.Accept = 'application/json';
-    
+
     return config;
 });
 
@@ -71,31 +71,24 @@ ajaxMethod.forEach((method)=> {
                     resolve(data);
 
             }).catch((response)=> {
-                if (response.status === 401) {
-                    Kit.msg.err('身份失效或被禁用，请重新登录')
-                    store.commit('logout')
-                    router.push({
-                       path: "/login"
-                    });
-                }else if (response.status === 403) {
-                    Kit.msg.err('您没有权限访问')
-                    reject(response)
-                }
-                else if (response.status === 500) {
-                    Kit.msg.err('服务器错误')
-                    reject(response)
-                }
-                else if (response.status === 404) {
-                    Kit.msg.err('您访问的地址不存在')
-                    reject(response)
-                }
-                else if (response.status === 900) {
-                    Kit.msg.err('您的账户正在其他地方进行登录操作')
-                    store.commit('logout')
-                    router.push({
-                       path: "/login"
-                    });
-                }
+            if (response.status === 401||response.status === 900||response.status === 901) {
+            Kit.msg.err(response.data.resMsg)
+            store.commit('logout')
+            router.push({
+              path: "/login"
+            });
+          }else if (response.status === 403) {
+            Kit.msg.err(response.data.resMsg)
+            reject(response)
+          }
+          else if (response.status === 500) {
+            Kit.msg.err('服务器错误')
+            reject(response)
+          }
+          else if (response.status === 404) {
+            Kit.msg.err('您访问的资源不存在404')
+            reject(response)
+          }
             })
         })
     }

@@ -64,39 +64,30 @@ public class LoginCtr extends CoreController {
                 CacheKit.remove(Consts.CACHE_NAMES.login.name(),loginname+LOGIN_RETRY_DATE);
             }
         }
-
         if (StrUtil.isBlank(loginname)) {
             renderFailJSON("用户名不能为空");
             return;
         }
-
         if (StrUtil.isBlank(password)) {
             renderFailJSON("密码不能为空");
             return;
         }
-
-
-
         String mpId=CacheKit.get(Consts.CACHE_NAMES.paramCache.name(),"mpId");
         String[] mpIds= StrUtil.isNotBlank(mpId)?mpId.split(";"):null;
         if(StrUtil.isNotBlank(from)&&mpIds!=null&& ArrayUtil.contains(mpIds,from)) {
             LogKit.info("通过小程序端登录，不需要使用验证码");
         }else{
-            if (ResKit.getConfigBoolean("userAuth")) {
+
                 if (!validateCaptcha("checkCode")) {
                     renderFailJSON("验证码不正确");
                     return;
                 }
-            }
         }
-
         User user = User.dao.findFirst("select * from s_user where loginname=? and dAt is null", loginname);
-
         if (user == null) {
             renderFailJSON("用户不存在!");
             return;
         }
-
         if (BCrypt.checkpw(password, user.getPassword())) {
             CacheKit.remove(Consts.CACHE_NAMES.login.name(), loginname + "LOGIN_RETRY_DATE");
             CacheKit.remove(Consts.CACHE_NAMES.login.name(), loginname + "LOGIN_RETRY_COUNT");
@@ -214,6 +205,12 @@ public class LoginCtr extends CoreController {
         renderSuccessJSON("退出系统成功");
     }
 
+
+    public void kickOffOnlineUser(){
+        Integer userId=getParaToInt("userId");
+        CacheKit.remove(Consts.CURR_USER_COOKIE,"user_"+userId.toString());
+        renderSuccessJSON("在线用户被强制退出");
+    }
 
 
     public void createCaptch() {

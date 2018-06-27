@@ -1,4 +1,4 @@
-package #(basePackage).service.#(tbl.modelName);
+package #(basePackage).service.#(tbl.className)Service;
 import #(basePackage).core.CoreService;
 import #(basePackage).model.#(tbl.className);
 import #(basePackage).query.#(tbl.className)Query;
