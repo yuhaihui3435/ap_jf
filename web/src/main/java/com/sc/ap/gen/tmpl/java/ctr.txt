@@ -67,4 +67,9 @@ public class #(tbl.className)Controller extends CoreController{
         Integer id=getParaToInt("id");
         renderJson(#(tbl.modelName)Service.findOne(id));
     }
+    public void init(){
+           Map<String ,Object> ret=new HashMap<>();
+
+           renderJson(ret);
+    }
 }

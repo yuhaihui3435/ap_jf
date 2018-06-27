@@ -38,17 +38,7 @@ export const otherRouter = {
       component: resolve => {
         require(['@/views/personCenter.vue'], resolve);
       }
-    },
-    {
-      path: 'genCfg',
-      title: '代码生成配置',
-      meta:{title:'代码生成配置'},
-      icon: "fab fa-java",
-      name: 'gen_cfg',
-      component: resolve => {
-        require(['@/views/sys-manage/gen/genCfg.vue'], resolve);
-      }
-    },
+    }
 
   ]
 };

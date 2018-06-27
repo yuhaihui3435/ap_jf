@@ -33,7 +33,7 @@ const #(tbl.modelName) = {
       }, param) {
         let vm=this._vm;
         return new Promise(function (resolve, reject) {
-        vm.$http.post('/api/#(tbl.modelName)/list',param).then((res) => {
+        vm.$http.post('/#(tbl.modelName)/list',param).then((res) => {
           commit('set#(tbl.className)List', res)
           resolve(res)
         }).catch((res)=>{
@@ -47,7 +47,7 @@ const #(tbl.modelName) = {
       }, param) {
          let vm=this._vm;
                  return new Promise(function (resolve, reject) {
-         vm.$http.post('/api/#(tbl.modelName)/page',param).then((res) => {
+         vm.$http.post('/#(tbl.modelName)/page',param).then((res) => {
             commit('set#(tbl.className)Page', res)
             resolve(res)
          }).catch((res)=>{
@@ -61,7 +61,7 @@ const #(tbl.modelName) = {
       }, param) {
           let vm=this._vm;
         return new Promise(function (resolve, reject) {
-          vm.$http.post('/api/#(tbl.modelName)/save', state.#(tbl.modelName)).then((res) => {
+          vm.$http.post('/#(tbl.modelName)/save', param).then((res) => {
               resolve(res)
           }).catch((res)=>{
                       reject(res)
@@ -75,7 +75,7 @@ const #(tbl.modelName) = {
       }, param) {
           let vm=this._vm;
         return new Promise(function (resolve, reject) {
-          vm.$http.post('/api/#(tbl.modelName)/update', state.#(tbl.modelName)).then((res) => {
+          vm.$http.post('/#(tbl.modelName)/update', param).then((res) => {
               resolve(res)
           }).catch((res)=>{
                       reject(res)
@@ -88,7 +88,7 @@ const #(tbl.modelName) = {
       }, param) {
           let vm=this._vm;
         return new Promise(function (resolve, reject) {
-          vm.$http.post('/api/#(tbl.modelName)/logicDel', param).then((res) => {
+          vm.$http.post('/#(tbl.modelName)/logicDel', param).then((res) => {
               resolve(res)
           }).catch((res)=>{
                       reject(res)
@@ -101,13 +101,26 @@ const #(tbl.modelName) = {
       }, param) {
           let vm=this._vm;
         return new Promise(function (resolve, reject) {
-          vm.$http.post('/api/#(tbl.modelName)/get', param).then((res) => {
+          vm.$http.post('/#(tbl.modelName)/get', param).then((res) => {
               resolve(res)
           }).catch((res)=>{
                       reject(res)
                     });
         })
       },
+      init_#(tbl.modelName): function ({
+            commit,
+            state
+          }, param) {
+            let vm = this._vm;
+            return new Promise(function (resolve, reject) {
+              vm.$http.post('/#(tbl.modelName)/init', param).then((res) => {
+                resolve(res)
+              }).catch((res) => {
+                reject(res)
+              });
+            })
+          }
     },
 
   }
