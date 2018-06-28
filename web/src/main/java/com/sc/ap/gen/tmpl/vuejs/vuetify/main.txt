@@ -24,8 +24,8 @@
                            </v-flex>
                         #end
                         #if((col.configJSON.inputType??''=='textArea')&&(col.configJSON.addShow??false||col.configJSON.editShow??false))
-                            <v-flex xs12 sm6 md4 v-show="#if(col.configJSON.addShow??false)opt=='add'#end#if(col.configJSON.addShow??false&&col.configJSON.editShow??false)||#end#if(col.configJSON.editShow??false)opt=='edit'#end">
-                                                      <v-text-field v-model="vo.#(col.col)"  label="#(col.note)" textarea #if(col.configJSON.isRequired??false)required#end
+                            <v-flex xs12 sm12 md12 v-show="#if(col.configJSON.addShow??false)opt=='add'#end#if(col.configJSON.addShow??false&&col.configJSON.editShow??false)||#end#if(col.configJSON.editShow??false)opt=='edit'#end">
+                                                      <v-textarea v-model="vo.#(col.col)"  label="#(col.note)" outline #if(col.configJSON.isRequired??false)required#end
                                                           :rules="[
                                                           #if(col.configJSON.isRequired??false)rules.required,#end
                                                           #if(notBlank(col.configJSON.rule))rules.#(col.configJSON.rule),#end
@@ -33,7 +33,7 @@
                                                           #if(notBlank(col.configJSON.min??null))#if(col.configJSON.isRequired??false)(v) => !!v#else(v)=>!!!v#end&&v.length >= #(col.configJSON.min) || '最少 #(col.configJSON.min) 字符',#end
                                                           ]"
                                                           #if(notBlank(col.configJSON.max??null)):counter="#(col.configJSON.max)"#end>
-                                                      </v-text-field>
+                                                      </v-textarea>
                             </v-flex>
                         #end
                         #if((col.configJSON.inputType??''=='date')&&(col.configJSON.addShow??false||col.configJSON.editShow??false))
@@ -364,7 +364,7 @@ export default {
     add() {
           this.loading=false;
           this.$refs.form.reset();
-          this.vo={};
+          this.vo={#if((col.configJSON.inputType??''=='date')&&((col.configJSON.addShow??false)||(col.configJSON.editShow??false)))#(col.col):moment(new Date).format("YYYY-MM-DD"), #end};
           this.opt = "add";
           this.title = "新增#(tbl.note)";
           this.dialog = true;
@@ -440,25 +440,29 @@ export default {
     },
     clearQueryParam(){
     #for(col:tbl.genCfgColList)
-      #if(col.configJSON.equalQuery??false||col.configJSON.likeQuery??false)
+      #if((col.configJSON.equalQuery??false||col.configJSON.likeQuery??false)&&col.tpe!='java.util.Date')
         this.#(tbl.modelName)Query['#(col.col)']='';
       #else if(col.configJSON.dateQuery??false)
         this.#(tbl.modelName)Query['begin#(firstCharToUpperCase(col.col))']='';
         this.#(tbl.modelName)Query['end#(firstCharToUpperCase(col.col))']='';
       #end
     #end
+    this.search();
     }
   },
-  #for(col:tbl.genCfgColList)
-      #if(col.configJSON.inputType??''=='date')
   filters: {
+  #set(hasDate=false)
+  #for(col:tbl.genCfgColList)
+      #if(col.configJSON.inputType??''=='date'&&!hasDate)
+          #set(hasDate=true)
           formatDate(time) {
               if(!!!time)return ''
               var date = new Date(time);
               return moment(date).format("YYYY-MM-DD hh:mm:ss");
           }
-      },
+
   #end#end
+  },
     watch: {
         #(tbl.modelName)Query: {
           handler (val,oldVal) {

@@ -207,8 +207,8 @@ public class LoginCtr extends CoreController {
 
 
     public void kickOffOnlineUser(){
-        Integer userId=getParaToInt("userId");
-        CacheKit.remove(Consts.CURR_USER_COOKIE,"user_"+userId.toString());
+        String userId=getPara("userId");
+        CacheKit.remove(Consts.CURR_USER_COOKIE,"user_"+userId);
         renderSuccessJSON("在线用户被强制退出");
     }
 

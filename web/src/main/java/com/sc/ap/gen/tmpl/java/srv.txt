@@ -16,7 +16,7 @@ public class #(tbl.className)Service extends CoreService{
     public List<#(tbl.className)> findAll(#(tbl.className)Query #(tbl.modelName)Query){
          Kv kv= Kv.create();
          #for(col:tbl.genCfgColList)
-            #if(col.configJSON.equalQuery??false)
+            #if(col.configJSON.equalQuery??false&&col.tpe!='java.util.Date')
                 #if(col.tpe!='java.lang.String')
                     if(#(tbl.modelName)Query.get#(firstCharToUpperCase(col.col))()!=null){
                         kv.put("#(col.orgCol)=",#(tbl.modelName)Query.get#(firstCharToUpperCase(col.col))());
@@ -57,7 +57,7 @@ public class #(tbl.className)Service extends CoreService{
     public Page<#(tbl.className)> findPage(#(tbl.className)Query #(tbl.modelName)Query){
         Kv kv= Kv.create();
              #for(col:tbl.genCfgColList)
-                #if(col.configJSON.equalQuery??false)
+                #if(col.configJSON.equalQuery??false&&col.tpe!='java.util.Date')
                     #if(col.tpe!='java.lang.String')
                         if(#(tbl.modelName)Query.get#(firstCharToUpperCase(col.col))()!=null){
                             kv.put("#(col.orgCol)=",#(tbl.modelName)Query.get#(firstCharToUpperCase(col.col))());
