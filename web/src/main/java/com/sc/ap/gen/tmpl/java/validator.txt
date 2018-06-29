@@ -14,7 +14,7 @@ public class #(tbl.className)Validator extends CoreValidator {
         #(tbl.className) #(tbl.modelName)=controller.getModel(#(tbl.className).class,"",true);
         String ak=getActionKey();
         List<#(tbl.className)> list=null;
-        if(ak.contains("#(tbl.modelName)/save")||ak.contains("#(tbl.modelName)/update")){
+        if(ak.equals("/#(tbl.modelName)/save")||ak.equals("/#(tbl.modelName)/update")){
             #for(col:tbl.genCfgColList)
                 #if(col.configJSON.isRequired??false&&(col.configJSON.inputType=='text'||col.configJSON.inputType=='textArea'))
                     #if(col.tpe=='java.lang.String')
@@ -63,14 +63,14 @@ public class #(tbl.className)Validator extends CoreValidator {
                                              }
                 #end
             #end
-        }else if(ak.contains("#(tbl.modelName)/del")||ak.contains("#(tbl.modelName)/logicDel")){
+        }else if(ak.equals("/#(tbl.modelName)/del")||ak.contains("/#(tbl.modelName)/logicDel")){
             String ids =controller.getPara("ids");
             if(StrUtil.isBlank(ids)){
                 addError(Consts.REQ_JSON_CODE.fail.name(), "缺少删除数据的关键数据");
                 return;
             }
         }
-        if(ak.contains("#(tbl.modelName)/save")){
+        if(ak.equals("/#(tbl.modelName)/save")){
              #for(col:tbl.genCfgColList)
                    #if(col.configJSON.onlyOne??false)
                        #if(!(col.configJSON.isRequired??false))
@@ -86,7 +86,7 @@ public class #(tbl.className)Validator extends CoreValidator {
                        #end
                    #end
              #end
-        }else if(ak.contains("#(tbl.modelName)/update")){
+        }else if(ak.equals("/#(tbl.modelName)/update")){
             #for(col:tbl.genCfgColList)
                                #if(col.configJSON.onlyOne??false)
 

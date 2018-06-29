@@ -394,7 +394,7 @@ export default {
           });
       }
     },
-    update(#(tbl.modelName)) {
+    update() {
       let vm = this;
 
       if (this.$refs.form.validate()) {
@@ -432,7 +432,9 @@ export default {
     view(#(tbl.modelName)){
         let vm = this;
         vm.viewDialog=true;
+        vm.loading=true;
         vm.$store.dispatch("get_#(tbl.modelName)", { id: #(tbl.modelName).id }).then(res=>{
+            vm.loading = false;
             vm.#(tbl.modelName)View=res;
         }).catch((res) => {
                       vm.loading = false;
