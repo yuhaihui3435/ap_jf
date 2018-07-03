@@ -77,12 +77,8 @@ ajaxMethod.forEach((method)=> {
             router.push({
               path: "/login"
             });
-          }else if (response.status === 403) {
+          }else if (response.status === 403||response.status==999||response.status==500) {
             Kit.msg.err(response.data.resMsg)
-            reject(response)
-          }
-          else if (response.status === 500) {
-            Kit.msg.err('服务器错误')
             reject(response)
           }
           else if (response.status === 404) {

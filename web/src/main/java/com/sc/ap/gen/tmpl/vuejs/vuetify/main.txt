@@ -291,7 +291,6 @@ export default {
   data() {
     return {
       fValid: true,
-      valid: true,
       vo:{},
       rowsPerPageItems: [15],
       #(tbl.modelName)Query:{pn:1,sortBy:'',descending:''},//列表查询参数数据对象

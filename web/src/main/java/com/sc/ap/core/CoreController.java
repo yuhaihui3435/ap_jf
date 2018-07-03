@@ -125,6 +125,11 @@ public class CoreController extends Controller {
         renderFailJSON(StrUtil.isBlank(msg)?ERR_MSG_901:msg);
         return;
     }
+    public void renderAuth999(String msg){
+        getResponse().setStatus(999);
+        renderFailJSON(StrUtil.isBlank(msg)?"":msg);
+        return;
+    }
     private static  ValueFilter filter = new ValueFilter() {
         public Object process(Object obj, String s, Object v) {
             if(v==null)
