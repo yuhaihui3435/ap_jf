@@ -10,14 +10,8 @@ require('es6-promise').polyfill()
 let env=process.env.NODE_ENV;
 
 let axiosIns = axios.create({});
-if (env == 'development') {
-    axiosIns.defaults.baseURL = '/api';
-} else if (env == 'debug') {
-    axiosIns.defaults.baseURL = '/api';
-} else if (env == 'production') {
-    axiosIns.defaults.baseURL = '';
-}
 
+axiosIns.defaults.baseURL = Kit.env;
 
 axiosIns.defaults.headers.post['X-Requested-With'] = 'XMLHttpRequest';
 axiosIns.defaults.headers.get['X-Requested-With'] = 'XMLHttpRequest';

@@ -133,6 +133,6 @@
 	</dependencies>
 
 	<build>
-		<finalName>ap_jf</finalName>
+		<finalName>ap</finalName>
 	</build>
 </project>

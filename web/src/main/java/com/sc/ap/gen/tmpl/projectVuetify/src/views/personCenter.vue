@@ -1,7 +1,7 @@
 <template>
     <v-container>
   <v-card>
-    
+
          <v-tabs color="blue"  icons-and-text dark >
              <v-tab   href="#tab-2">
                 个人资料
@@ -11,7 +11,7 @@
                 密码修改
                 <v-icon>lock</v-icon>
              </v-tab>
-            
+
              <v-tab-item id="tab-2">
                <v-container fluid>
                   <v-flex md4 sm6 xs8 >
@@ -36,7 +36,7 @@
                                   :counter="100"></v-text-field>
                       <v-text-field v-model="user.statusStr" label="状态"  disabled></v-text-field>
                       <v-avatar size="68px">
-                        <img :src="user.avatar=='undefiend'?imgUrl:user.avatar">
+                        <img :src="user.avatar==undefiend||user.avatar=='undefiend'?imgUrl:user.avatar">
                       </v-avatar>
                       <vue-core-image-upload
                         class=""
@@ -48,11 +48,11 @@
                         @errorhandle="errorhandle"
                         @imageuploading="imageuploading"
                         :max-file-size="imgMaxSize"
-                        :url="uploadUrl" 
+                        :url="uploadUrl"
                         :isXhr="false"
                         >
                       </vue-core-image-upload>
-                      
+
                       <v-btn color="primary"  @click="saveUserInfo" :loading="loading||uploadLoading" :disabled="loading" >保存</v-btn>
                     </v-form>
                   </v-flex>
@@ -85,9 +85,9 @@
                </v-container>
              </v-tab-item>
          </v-tabs>
-    
+
   </v-card>
-  
+
 </v-container>
 
 </template>
@@ -110,17 +110,17 @@ export default {
       loading: false,
       rules: Kit.inputRules,
       checkPwd:function(val){
-        
+
         let newPwd=document.getElementById('newPwd');
         let reNewPwd=document.getElementById('reNewPwd');
-        
+
         if(newPwd==undefined&&reNewPwd==undefined)return '';
         newPwd=newPwd.value;
         reNewPwd=reNewPwd.value;
         return (newPwd===reNewPwd)||'两次输入的密码不一致'
       },
       env:Kit.env,
-      imgUrl: '../../static/none.png',
+      imgUrl: Kit.envImg+'/static/none.png',
       uploadUrl:Kit.env==''?'/cmn/act01':'/api/cmn/act01',
       imgMaxSize:52428
     };
@@ -166,7 +166,7 @@ export default {
           .then(res => {
             vm.loading = false;
             if (res.resCode == "success") {
-              
+
             }
           })
           .catch((response) => {
@@ -176,7 +176,7 @@ export default {
     },
     imageuploaded(res) {
       this.uploadLoading=false;
-     
+
     },
     errorhandle(res){
        this.uploadLoading=false;
@@ -189,12 +189,12 @@ export default {
     },
     imagechanged(file){
       let vm=this;
-      var reader = new FileReader(); 
-      reader.readAsDataURL(file); 
-      reader.onload = function(e){ 
+      var reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = function(e){
         vm.imgUrl=this.result
         vm.user.avatar=this.result
-      } 
+      }
     }
   }
 };

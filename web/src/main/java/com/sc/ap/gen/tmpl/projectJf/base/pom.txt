@@ -239,7 +239,7 @@
                 <version>2.3</version>
                 <configuration>
                     <!--<warSourceExcludes>*/lib/jsp-api-2.2.jar</warSourceExcludes>-->
-                    <warName>mb-pac</warName>
+                    <warName>#(projectName)</warName>
                     <webResources>
                         <!--动态指定文件-->
                         <resource>

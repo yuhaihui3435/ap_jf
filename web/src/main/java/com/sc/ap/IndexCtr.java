@@ -8,11 +8,11 @@ import com.sc.ap.interceptors.AdminAAuthInterceptor;
 import com.sc.ap.interceptors.AdminIAuthInterceptor;
 import com.sc.ap.kits.ResKit;
 
-@Clear(AdminIAuthInterceptor.class)
+@Clear({AdminIAuthInterceptor.class,AdminAAuthInterceptor.class})
 public class IndexCtr extends CoreController{
     public void index(){
         String domain= ResKit.getConfig("domain");
-        redirect(domain+"/ad/index.html");
+        redirect(domain+"index.html");
     }
 
 

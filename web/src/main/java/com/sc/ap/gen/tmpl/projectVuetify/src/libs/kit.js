@@ -2,7 +2,7 @@ import store from '../store/index'
 import IDV from './IDValidator'
 let env=process.env.NODE_ENV;
 let kit = {
-  
+
   msg: {
 
   },
@@ -15,7 +15,7 @@ let kit = {
     },
     digital:(val)=>{
       const pattern=/^[0-9]*$/
-      return (!!!val||pattern.test(val)) || '必须是数字' 
+      return (!!!val||pattern.test(val)) || '必须是数字'
     },
     chart:(val)=>{
       if(!!!val)return true
@@ -35,17 +35,17 @@ let kit = {
     url:(val)=>{
       if(!!!val)return true
       const pattern = "^((https|http|ftp|rtsp|mms)?://)"
-      + "?(([0-9a-z_!~*'().&=+$%-]+: )?[0-9a-z_!~*'().&=+$%-]+@)?" //ftp的user@ 
-       + "(([0-9]{1,3}\.){3}[0-9]{1,3}" // IP形式的URL- 199.194.52.184 
+      + "?(([0-9a-z_!~*'().&=+$%-]+: )?[0-9a-z_!~*'().&=+$%-]+@)?" //ftp的user@
+       + "(([0-9]{1,3}\.){3}[0-9]{1,3}" // IP形式的URL- 199.194.52.184
        + "|" // 允许IP和DOMAIN（域名）
-       + "([0-9a-z_!~*'()-]+\.)*" // 域名- www. 
-       + "([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\." // 二级域名 
-       + "[a-z]{2,6})" // first level domain- .com or .museum 
-       + "(:[0-9]{1,4})?" // 端口- :80 
-       + "((/?)|" // a slash isn't required if there is no file name 
-       + "(/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$"; 
+       + "([0-9a-z_!~*'()-]+\.)*" // 域名- www.
+       + "([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\." // 二级域名
+       + "[a-z]{2,6})" // first level domain- .com or .museum
+       + "(:[0-9]{1,4})?" // 端口- :80
+       + "((/?)|" // a slash isn't required if there is no file name
+       + "(/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$";
       return pattern.test(val)||'URL格式不正确'
-      
+
     },
     userName:(val)=>{
       if(!!!val)return true
@@ -151,5 +151,5 @@ kit.msg.err = function (msg) {
 
 }
 kit.env=(env == 'development' ? '/api' : '');
-
+kit.envImg=(env == 'development' ? '' : '/');//修改生成环境的上下文路径
 export default kit

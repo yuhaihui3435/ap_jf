@@ -10,7 +10,7 @@
                 <v-container grid-list-md>
                   <v-layout wrap>
                            <v-flex xs12 sm6 md4 v-show="opt=='add'||opt=='edit'">
-                              <v-text-field v-model="vo.loginname"  label="登录账号" 
+                              <v-text-field v-model="vo.loginname"  label="登录账号"
                                   :rules="[
                                   rules.required,
                                   (v) => !!v||(v!=undefined&&v.length <= 50) || '最多 50 字符',
@@ -20,7 +20,7 @@
                               </v-text-field>
                            </v-flex>
                            <v-flex xs12 sm6 md4 v-show="opt=='add'||opt=='edit'">
-                              <v-text-field v-model="vo.nickname"  label="昵称" 
+                              <v-text-field v-model="vo.nickname"  label="昵称"
                                   :rules="[
                                   rules.required,
                                   (v) => !!v||(v!=undefined&&v.length <= 50) || '最多 50 字符',
@@ -29,7 +29,7 @@
                               </v-text-field>
                            </v-flex>
                            <v-flex xs12 sm6 md4 v-show="opt=='add'||opt=='edit'">
-                              <v-text-field v-model="vo.phone"  label="电话号" 
+                              <v-text-field v-model="vo.phone"  label="电话号"
                                   :rules="[
                                   rules.required,
                                   rules.phone,
@@ -39,7 +39,7 @@
                               </v-text-field>
                            </v-flex>
                            <v-flex xs12 sm6 md4 v-show="opt=='add'||opt=='edit'">
-                              <v-text-field v-model="vo.email"  label="邮件" 
+                              <v-text-field v-model="vo.email"  label="邮件"
                                   :rules="[
                                   rules.email,
                                   (v)=>!!!v||(v!=undefined&&v.length <= 100) || '最多 100 字符',
@@ -71,7 +71,7 @@
             <v-divider></v-divider>
                   <v-list dense>
                              <v-list-tile>
-                                    <v-list-tile-content>头像:</v-list-tile-content><v-list-tile-content class="align-end"><v-avatar size="38px"><img :src="userView.avatar?userView.avatar:'../../../../static/none.png'"></v-avatar></v-list-tile-content>
+                                    <v-list-tile-content>头像:</v-list-tile-content><v-list-tile-content class="align-end"><v-avatar size="38px"><img :src="userView.avatar?userView.avatar:envImg+'/static/none.png'"></v-avatar></v-list-tile-content>
                               </v-list-tile>
                               <v-list-tile>
                                     <v-list-tile-content>登录账号:</v-list-tile-content><v-list-tile-content class="align-end">{{userView.loginname}}</v-list-tile-content>
@@ -85,7 +85,7 @@
                               <v-list-tile>
                                     <v-list-tile-content>邮件:</v-list-tile-content><v-list-tile-content class="align-end">{{userView.email}}</v-list-tile-content>
                              </v-list-tile>
-                              
+
                               <v-list-tile>
                                     <v-list-tile-content>状态:</v-list-tile-content><v-list-tile-content class="align-end">{{userView.statusStr}}</v-list-tile-content>
                              </v-list-tile>
@@ -131,7 +131,7 @@
           <v-btn  class="blue--text" @click.native="add()">新增<v-icon>add</v-icon></v-btn>
           </v-toolbar>
           <v-card >
-              
+
               <v-container grid-list-md>
                       <v-layout row wrap>
                          <v-flex xs12 sm3 md3>
@@ -150,14 +150,14 @@
                             <v-select :items="userSelectData" v-model="userQuery.status" label="状态"  item-value="value" item-text="text"></v-select>
                         </v-flex>
                          <v-flex xs12 sm3 md3 >
-                              <v-menu ref="cAtQueryBeginDateMenu" :close-on-content-click="false" v-model="cAtQueryBeginDateMenu" 
+                              <v-menu ref="cAtQueryBeginDateMenu" :close-on-content-click="false" v-model="cAtQueryBeginDateMenu"
                                    :nudge-right="40" lazy transition="scale-transition" offset-y full-width max-width="290px" min-width="290px" >
                                    <v-text-field slot="activator" v-model="userQuery.beginCAt" label="创建时间查询开始日期" prepend-icon="event" readonly ></v-text-field>
                                    <v-date-picker v-model="userQuery.beginCAt" locale="zh-cn"  @input="$refs.cAtQueryBeginDateMenu.save(userQuery.beginCAt)"></v-date-picker>
                              </v-menu>
                          </v-flex>
                          <v-flex xs12 sm3 md3 >
-                              <v-menu ref="cAtQueryEndDateMenu" :close-on-content-click="false" v-model="cAtQueryEndDateMenu" 
+                              <v-menu ref="cAtQueryEndDateMenu" :close-on-content-click="false" v-model="cAtQueryEndDateMenu"
                                     :nudge-right="40" lazy transition="scale-transition" offset-y full-width max-width="290px" min-width="290px" >
                                     <v-text-field slot="activator" v-model="userQuery.endCAt" label="创建时间查询截至日期" prepend-icon="event" readonly ></v-text-field>
                                     <v-date-picker v-model="userQuery.endCAt" locale="zh-cn"  @input="$refs.cAtQueryEndDateMenu.save(userQuery.endCAt)"></v-date-picker>
@@ -173,7 +173,7 @@
                         </v-flex>
                       </v-layout>
               </v-container>
-              
+
             <v-data-table :headers="userHeaders" :total-items="totalRow" :items="userList" :rows-per-page-items="rowsPerPageItems" :pagination.sync="userQuery"  class="elevation-1" no-data-text="数据为空" no-results-text="没有筛选到正确的数据">
               <template slot="items" slot-scope="props">
                     <td>
@@ -223,7 +223,7 @@
               </template>
             </v-data-table>
           </v-card>
-</v-container> 
+</v-container>
 </template>
 <script>
 import { mapState } from "vuex";
@@ -284,6 +284,7 @@ export default {
       viewDialog: false,
       setRoleDialog:false,
       opt: "",
+      envImg:Kit.envImg,
       userSelectData: [
         { text: "正常", value: "0" },
         { text: "禁用", value: "1" }
@@ -350,7 +351,7 @@ export default {
     },
     save() {
       let vm = this;
-      
+
       if (this.$refs.form.validate()) {
         this.loading = true;
         this.$store
@@ -370,7 +371,7 @@ export default {
     },
     update(user) {
       let vm = this;
-      
+
       if (this.$refs.form.validate()) {
         this.loading = true;
         this.$store
