@@ -239,7 +239,7 @@
                 <version>2.3</version>
                 <configuration>
                     <!--<warSourceExcludes>*/lib/jsp-api-2.2.jar</warSourceExcludes>-->
-                    <warName>mb-pac</warName>
+                    <warName>ap</warName>
                     <webResources>
                         <!--动态指定文件-->
                         <resource>
@@ -282,6 +282,7 @@
                     <include>**/*.json</include>
                     <include>**/*.md</include>
                     <include>**/.babelrc</include>
+                    <include>**/*.sql</include>
                     <include>**/.editorconfig</include>
                 </includes>
             </resource>
