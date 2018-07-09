@@ -17,13 +17,13 @@ public class #(tbl.className)Controller extends CoreController{
     public void list(){
         #(tbl.className)Query #(tbl.modelName)Query=(#(tbl.className)Query)getQueryModel(#(tbl.className)Query.class);
         List<#(tbl.className)> ret=#(tbl.modelName)Service.findAll(#(tbl.modelName)Query);
-        renderJson(ret);
+        renderJson(JSON.toJSONString(ret, SerializerFeature.DisableCircularReferenceDetect));
     }
 
     public void page(){
         #(tbl.className)Query #(tbl.modelName)Query=(#(tbl.className)Query)getQueryModel(#(tbl.className)Query.class);
         Page<#(tbl.className)> ret=#(tbl.modelName)Service.findPage(#(tbl.modelName)Query);
-        renderJson(ret);
+        renderJson(JSON.toJSONString(ret, SerializerFeature.DisableCircularReferenceDetect));
     }
     @Before({#(tbl.className)Validator.class})
     public void save(){
