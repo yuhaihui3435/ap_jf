@@ -7,6 +7,11 @@ import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.SqlPara;
 import com.sc.ap.model.GenSource;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,23 +69,55 @@ public final class GenKit {
     }
 
 
-    public static String getColumnComment(String tableSchema,String tableName,String columnName){
-        Map<String,String> map=new HashMap<>();
-        map.put("tableName",tableName);
-        map.put("tableSchema",tableSchema);
-        map.put("columnName",columnName);
-        SqlPara sqlPara= Db.getSqlPara("queryColumnComment",map);
-        Record record=Db.findFirst(sqlPara);
-        return record.getStr("column_comment");
+    public static String getColumnComment(Connection connection, String tableSchema, String tableName, String columnName){
+//        Map<String,String> map=new HashMap<>();
+//        map.put("tableName",tableName);
+//        map.put("tableSchema",tableSchema);
+//        map.put("columnName",columnName);
+
+        String sql="select column_comment from INFORMATION_SCHEMA.Columns where table_name='"+tableName+"' and table_schema='"+tableSchema+"' and column_name='"+columnName+"'";
+
+        try {
+            PreparedStatement statement=connection.prepareStatement(sql);
+            ResultSet resultSet=statement.executeQuery();
+            resultSet.next();
+            return resultSet.getString("column_comment");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+//        SqlPara sqlPara= Db.getSqlPara("queryColumnComment",map);
+//        Record record=Db.findFirst(sqlPara);
+        return "";
     }
 
-    public static String getTableComment(String tableSchema,String tableName){
-        Map<String,String> map=new HashMap<>();
-        map.put("tableName",tableName);
-        map.put("tableSchema",tableSchema);
-        SqlPara sqlPara= Db.getSqlPara("queryTableComment",map);
-        Record record=Db.findFirst(sqlPara);
-        return record.getStr("table_comment");
+    public static String getTableComment(Connection connection, String tableSchema, String tableName) throws SQLException {
+//        Map<String,String> map=new HashMap<>();
+//        map.put("tableName",tableName);
+//        map.put("tableSchema",tableSchema);
+        String sql="select table_comment from INFORMATION_SCHEMA.Tables where table_name='"+tableName+"' and table_schema='"+tableSchema+"'";
+//        SqlPara sqlPara= Db.getSqlPara("queryTableComment",map);
+//        Record record=Db.findFirst(sqlPara);
+//        return record.getStr("table_comment");
+
+        try {
+            PreparedStatement statement=connection.prepareStatement(sql);
+            ResultSet resultSet=statement.executeQuery();
+            resultSet.next();
+            return resultSet.getString("table_comment");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+           if(connection!=null){
+               connection.close();
+           }
+        }
+        return "";
     }
 
 }

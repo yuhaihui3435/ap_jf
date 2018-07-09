@@ -1,10 +1,16 @@
 package com.sc.ap.gen;
 
+import cn.hutool.db.DbUtil;
+import cn.hutool.db.ds.simple.SimpleDataSource;
+import com.alibaba.druid.util.JdbcConstants;
+import com.alibaba.druid.util.JdbcUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.jfinal.aop.Duang;
+import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.activerecord.generator.ColumnMeta;
 import com.jfinal.plugin.activerecord.generator.TableMeta;
+import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.plugin.ehcache.CacheKit;
 import com.sc.ap.Consts;
 import com.sc.ap.core.CoreController;
@@ -12,8 +18,12 @@ import com.sc.ap.model.GenCfgCol;
 import com.sc.ap.model.GenCfgTbl;
 import com.sc.ap.model.GenSource;
 
+import javax.sql.DataSource;
 import java.io.File;
 import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.sql.Driver;
+import java.sql.SQLException;
 import java.util.*;
 
 public class GenCtr extends CoreController {
@@ -25,10 +35,11 @@ public class GenCtr extends CoreController {
      * 同步数据源中 表，字段的到本地数据库
      *
      */
-    public void syncLocal(){
+    public void syncLocal() throws SQLException {
         int gsId=getParaToInt("gsId");
         GenSource genSource=GenSource.dao.findById(gsId);
         List<TableMeta> list=genSrv.initDataSource(genSource.getUrl(),genSource.getUser(),genSource.getPwd()).getTableMetas();
+        DataSource ds = new SimpleDataSource(genSource.getUrl(), genSource.getUser(), genSource.getPwd(),"com.mysql.jdbc.Driver");
         GenCfgTbl genCfgTbl=null;
         GenCfgCol genCfgCol=null;
         List<GenCfgTbl> genCfgTbls=new ArrayList<>();
@@ -36,14 +47,14 @@ public class GenCtr extends CoreController {
             genCfgTbl = new GenCfgTbl();
             genCfgTbl.setGsId(gsId);
             genCfgTbl.setTbl(tableMeta.name);
-            genCfgTbl.setNote(GenKit.getTableComment(genSource.getName(),tableMeta.name));
+            genCfgTbl.setNote(GenKit.getTableComment(ds.getConnection(),genSource.getName(),tableMeta.name));
             for (ColumnMeta columnMeta : tableMeta.columnMetas) {
                 genCfgCol = new GenCfgCol();
                 genCfgCol.setTpe(columnMeta.javaType);
                 genCfgCol.setCol(columnMeta.attrName);
                 genCfgCol.setOrgCol(columnMeta.name);
                 genCfgCol.setCAt(new Date());
-                genCfgCol.setNote(GenKit.getColumnComment(genSource.getName(),tableMeta.name,columnMeta.name));
+                genCfgCol.setNote(GenKit.getColumnComment(ds.getConnection(),genSource.getName(),tableMeta.name,columnMeta.name));
                 genCfgTbl.addGenCfgCol(genCfgCol);
             }
             genCfgTbls.add(genCfgTbl);

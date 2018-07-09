@@ -23,6 +23,7 @@ import com.sc.ap.model.GenCfgTbl;
 import com.sc.ap.model.GenSource;
 import sun.rmi.runtime.Log;
 
+import javax.sql.DataSource;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -45,6 +46,7 @@ public class GenSrv {
     protected String ctrtemplate = "/com/sc/ap/gen/tmpl/java/ctr.txt";
     protected String validatortemplate = "/com/sc/ap/gen/tmpl/java/validator.txt";
     protected String queryModeltemplate = "/com/sc/ap/gen/tmpl/java/queryModel.txt";
+
 
     public GenSrv() {
         this.getterTypeMap = new HashMap<String, String>() {
