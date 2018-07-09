@@ -8,6 +8,8 @@ import #(basePackage).core.CoreController;
 import #(basePackage).service.#(tbl.modelName).#(tbl.className)Service;
 import com.jfinal.aop.Duang;
 import java.util.*;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 
 
 public class #(tbl.className)Controller extends CoreController{
