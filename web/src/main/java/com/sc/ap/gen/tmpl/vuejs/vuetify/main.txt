@@ -474,6 +474,8 @@ export default {
         #(tbl.modelName)Query: {
           handler (val,oldVal) {
           if (this.#(tbl.modelName)Query.sortBy != ""||val.page!=oldVal.page) {
+
+            this.#(tbl.modelName)Query.pn=val.page;
             this.search()
           }
           },
