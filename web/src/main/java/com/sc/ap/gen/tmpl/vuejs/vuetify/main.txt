@@ -139,7 +139,7 @@
             <v-divider></v-divider>
                   <v-list dense>
                         #for(col:tbl.genCfgColList)
-                          #if(col.configJSON.viewShow??false)
+                          #if(col.configJSON.viewShow??false&&col.configJSON.inputType!='textArea')
                               <v-list-tile>
                               #if(col.configJSON.inputType??''=='select'||col.configJSON.inputType??''=='checkbox'||col.configJSON.inputType??''=='radio')
                                     <v-list-tile-content>#genColLabel(col.note):</v-list-tile-content><v-list-tile-content class="align-end">{{#(tbl.modelName)View.#(col.col)Str}}</v-list-tile-content>
@@ -149,6 +149,12 @@
                                     <v-list-tile-content>#(col.note):</v-list-tile-content><v-list-tile-content class="align-end">{{#(tbl.modelName)View.#(col.col)}}</v-list-tile-content>
                               #end
                              </v-list-tile>
+
+                           #else
+                             <v-card >
+                                <v-card-title>#(col.note):</v-card-title>
+                                  <v-card-text>{{#(tbl.modelName)View.#(col.col)}}</v-card-text>
+                             </v-card>
                           #end
                         #end
 
